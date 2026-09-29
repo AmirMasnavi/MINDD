@@ -1,0 +1,12 @@
+.venv/
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+.idea/
+.DS_Store
+.env
+.env.*
+!.env.example
+Charging_Data_educational.csv
+data/
+models/
