@@ -7,8 +7,9 @@ only information available when the session starts. The intended benefit is earl
 monitoring and better maintenance and service decisions.
 
 Target: `is_Abnormal = 1` for abnormal sessions and `0` for normal sessions.
-The local CSV currently lacks this column; resolving its definition is the first
-data dependency. We must not infer the label mapping from names alone.
+The local CSV lacks this column. For Task 1 EDA, we derive it from `end_cause`
+using the explicit team assumption in [DATASET.md](DATASET.md). The mapping
+requires instructor confirmation before final model claims.
 
 ## Scope
 
@@ -17,9 +18,8 @@ audit, and prepare the data**. Its broader project goal includes classification,
 critical evaluation, and historical-feature ablation. Detailed later-task briefs,
 deadlines, required models, metrics, and report limits have not been supplied.
 
-For now, deliver a justified preparation strategy supported by a notebook and a
-concise report section. This setup phase creates documentation and the local
-environment only. Start implementation only when the user asks to proceed.
+Task 1 now has an explanatory notebook and a concise report draft. The current
+work is EDA and a justified preparation strategy, without classifier modelling.
 
 ## Approach
 

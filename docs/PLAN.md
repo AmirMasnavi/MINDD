@@ -1,7 +1,7 @@
 # Work plan
 
 This is the team's proposed sequence. Requirement IDs refer to REQUIREMENTS.md.
-Only setup has been performed. Owners and reviewers remain unassigned; replace
+Task 1 has started. Owners and reviewers remain unassigned; replace
 `—` when the team allocates work. No deadlines have been invented.
 
 ## Task 1 sequence
@@ -9,18 +9,18 @@ Only setup has been performed. Owners and reviewers remain unassigned; replace
 | Step | Work and completion evidence | Depends on | Owner / reviewer | Status |
 | --- | --- | --- | --- | --- |
 | 0 | Prepare documentation and local notebook environment; verify imports without running analysis. | — | — / — | Complete — 2026-09-29 |
-| 1 | Confirm official target mapping/source, unknown-label handling, submission logistics, and ambiguous preprocessing wording. Record answers in MEMORY.md. | — | — / — | Open |
-| 2 | Inventory actual shape, schema/types, timestamp parsing/coverage, identifiers, and field meanings. Record the source fingerprint and investigate differences from the brief. | User asks to implement | — / — | Planned |
-| 3 | Build the target from the official definition if needed, validate binary values/missingness, and classify each input by prediction-time availability. | 1, 2 | — / — | Planned |
-| 4 | Propose chronological train/validation/test boundaries using observed coverage and label availability; reserve the final test period before adaptive feature/preparation choices. | 2, 3 | — / — | Planned |
-| 5 | Audit missingness, duplicates, inconsistencies, numeric ranges/outliers, rare categories/cardinality, and relevant relationships. Investigate each suspected problem before correction. | 2, 4 | — / — | Planned |
-| 6 | Examine temporal changes in volume, prevalence, eligible predictors, and user/post activity; study cold starts and history availability. Interpret implications. | 3–5 | — / — | Planned |
-| 7 | Choose and document preparation and retained feature groups; implement only justified operations, fitting learned transformations on training data. | 5, 6 | — / — | Planned |
-| 8 | Write the concise report section and Task 1 synthesis; cross-check R1–R9, marking later ablation as pending. Restart and run the notebook in order, then peer-review and submit both artifacts. | 7 | — / — | Planned |
+| 1 | Confirm official target mapping/source, unknown-label handling, submission logistics, and ambiguous preprocessing wording. Record answers in MEMORY.md. | — | — / — | Team mapping documented for EDA; instructor confirmation open |
+| 2 | Inventory actual shape, schema/types, timestamp parsing/coverage, identifiers, and field meanings. Record the source fingerprint and investigate differences from the brief. | User asks to implement | — / — | Complete — 2026-09-29 |
+| 3 | Build the target from the stated definition, validate binary values/missingness, and classify each input by prediction-time availability. | 1, 2 | — / — | Complete for EDA; mapping is an assumption |
+| 4 | Propose chronological train/validation/test boundaries using observed coverage and label availability; reserve the final test period before adaptive feature/preparation choices. | 2, 3 | — / — | Calendar proposal recorded; cutoff check belongs to modelling |
+| 5 | Audit missingness, duplicates, inconsistencies, numeric ranges/outliers, rare categories/cardinality, and relevant relationships. Investigate each suspected problem before correction. | 2, 4 | — / — | Complete for EDA; semantics of flagged fields remain open |
+| 6 | Examine temporal changes in volume, prevalence, eligible predictors, and user/post activity; study cold starts and history availability. Interpret implications. | 3–5 | — / — | Complete for EDA under stated mapping |
+| 7 | Choose and document preparation and retained feature groups; implement only justified operations, fitting learned transformations on training data. | 5, 6 | — / — | Strategy documented; only target derived, no learned operation needed for EDA |
+| 8 | Write the concise report section and Task 1 synthesis; cross-check R1–R9, marking later ablation as pending. Restart and run the notebook in order, then peer-review and submit both artifacts. | 7 | — / — | Notebook and draft report complete; teammate review pending |
 
-Target-independent inventory and quality checks can proceed while step 1 is unresolved
-once implementation is requested. Class prevalence, label-conditioned analysis,
-supervised preparation, and modelling require the confirmed target.
+Task 1 EDA uses the explicit target assumption in DATASET.md. Instructor
+confirmation remains necessary before final modelling claims. Team review and
+submission logistics remain open.
 
 ## Notebook outline to add when implementation starts
 

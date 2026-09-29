@@ -1,6 +1,6 @@
 # Assignment requirements
 
-Source: [TP1-MINDD2026_27-Task1.pdf](TP1-MINDD2026_27-Task1.pdf), four pages,
+Source: [TP1-MINDD2026_27-Task1.pdf](../TP1-MINDD2026_27-Task1.pdf), four pages,
 MINDD 2026/2027, Project 1. This is a requirements summary, not analysis results.
 The PDF takes precedence; team proposals are labelled separately in PLAN.md.
 
@@ -43,8 +43,9 @@ and interpretation, rather than the number of plots or operations (p. 4).
 ## Source ambiguity and local mismatch
 
 1. **Missing target:** the local CSV header contains 47 fields and `end_cause`, but
-   no `is_Abnormal`. Obtain the official target field or mapping and handling of
-   unknown/missing termination reasons. Do not fabricate labels.
+   no `is_Abnormal`. The team now uses an explicit derived mapping for Task 1 EDA,
+   documented in DATASET.md. This is an assumption, not a PDF requirement. Obtain
+   instructor confirmation before treating it as the definitive target.
 2. **Exact names differ:** PDF `End cause` is CSV `end_cause`; PDF
    `Transaction power/kWh` is CSV `Transaction power/kwh`. Use actual CSV names.
 3. **Incomplete sentence:** the final paragraph on p. 3 lists learned preparation
