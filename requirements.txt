@@ -1,7 +1,10 @@
-# Task 1 direct dependencies, verified with Python 3.12 on 2026-09-29.
-# Transitive dependencies are resolved by pip; this is not a full environment lock.
+# Task 1 direct dependencies, pinned to the exact versions that ran the notebook top to bottom
+# (Python 3.12.3, 2026-10-02). scikit-learn is pinned because a different version changes the
+# §14–§15 diagnostic metrics in the third decimal. pip resolves the transitive dependencies.
 pandas==3.0.6
 numpy==2.5.3
+scipy==1.18.1
+scikit-learn==1.9.1
 matplotlib==3.11.2
 seaborn==0.13.2
 jupyterlab==4.6.4

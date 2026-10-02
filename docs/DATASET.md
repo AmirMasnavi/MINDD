@@ -1,49 +1,51 @@
 # Dataset guide
 
-This explains the supplied `Charging_Data_educational.csv`, based on the assignment
-and the checks in [main.ipynb](../main.ipynb). It is an educational adaptation of
-the China EV Charging Dataset cited in the assignment. The local file has 441,077
-rows and 47 original columns, covering session starts from 31 December 2019 to
-31 December 2021. Each row appears to represent one charging transaction. No full
-row or `(UserID, Charging Post ID, Start Time)` duplicate was found.
+This guide describes the supplied `Charging_Data_educational.csv`. It draws on the assignment
+and on the checks in [TP1_Task1_Data_Understanding_and_Preparation.ipynb](../TP1_Task1_Data_Understanding_and_Preparation.ipynb). The file is an educational adaptation of
+the China EV Charging Dataset cited in the assignment. The local copy has 441,077
+rows and 47 original columns, and its session starts run from 31 December 2019 to
+31 December 2021. Each row appears to be one charging transaction. The checks found no
+full-row duplicate and no duplicate `(UserID, Charging Post ID, Start Time)` key.
 
 ## Reading the outcome
 
-The original CSV has no `is_Abnormal` column. The notebook creates it **in memory**
-from `end_cause`, under this explicit project assumption:
+The original CSV has no `is_Abnormal` column. The notebook creates it in memory
+from `end_cause` under this project assumption:
 
 | Label | Termination reasons | Reasoning |
 | --- | --- | --- |
-| 0 — normal | `Charging ends normally`; `User stops charging` | A user-requested stop is treated as an intentional end, not an equipment or vehicle fault. |
-| 1 — abnormal | The other 13 recorded causes, all containing “fault” or “failure” | These describe equipment, vehicle, connection, communication, or power failures. |
+| 0 = normal | `Charging ends normally`; `User stops charging` | A user-requested stop counts as an intentional end, not an equipment or vehicle fault. |
+| 1 = abnormal | The other 13 recorded causes. Each name contains "fault" or "failure" | These describe equipment, vehicle, connection, communication, or power failures. |
 
-This is a team definition, **not a mapping stated in the PDF**. It yields 81,934
-abnormal sessions (18.58%) and 359,143 normal sessions (81.42%). If “User stops
-charging” were instead counted abnormal, the abnormal share would be 53.93%.
-That sensitivity is large, so the team should seek an instructor definition before
-using this label for final model claims. New or missing cause values should stop the
-mapping for review, rather than silently becoming abnormal. `end_cause` and the
-derived label are outcomes, never predictors at session start.
+The PDF does not state this definition. The notebook (§4.2) tests it against the dataset's own
+abnormal-count history columns, and it reproduces them in at least 99.97% of rows in all six windows. It yields 81,934
+abnormal sessions (18.58%) and 359,143 normal sessions (81.42%). If "User stops
+charging" counted as abnormal, the abnormal share would be 53.93%.
+That alternative matches the history columns in at most 36% of rows. The team should still get
+the instructor's confirmation before making final model claims with this label. A new or missing cause value must stop the
+mapping for review instead of silently becoming abnormal. `end_cause` and the
+derived label are outcomes, so neither can be a predictor at session start.
 
-One `Location Information` category carries a trailing tab in 18,370 rows.
-Removing surrounding whitespace leaves the same 13 categories and is a justified
-cleanup for future encoding. The original CSV remains unchanged.
+One `Location Information` category has a trailing tab in 18,370 rows.
+Stripping the surrounding whitespace leaves the same 13 categories and is a justified
+cleanup before encoding. The original CSV stays unchanged.
 
 ## Original field dictionary
 
-Names below match the CSV exactly. `1D`, `7D`, `30D`, `180D`, and `730D` mean
-lookback windows of that many days. A “previous completed” outcome excludes
-earlier-started sessions still active at prediction time, according to PDF p. 3.
-Smoothed rates are provided; the smoothing formula is not specified in the PDF,
-so do not assume each equals abnormal count divided by session count.
+Names match the CSV exactly. The suffixes `1D`, `7D`, `30D`, `180D` and `730D` mean
+lookback windows of that many days. According to PDF p. 3, a "previous completed" outcome
+excludes earlier-started sessions that are still active at prediction time.
+The PDF does not give the smoothing formula for the rates. The notebook (§4.3) finds that every
+rate equals (abnormal + 1) / (sessions + 5), a prior of 0.2 with weight 5, so an entity with no
+history gets 0.2.
 
 | CSV field | Meaning and timing |
 | --- | --- |
-| `UserID` | Account identifier; available for lookup, sensitive/high-cardinality. |
-| `Charging Post ID` | Charging-post identifier; available for lookup. |
+| `UserID` | Account identifier. Available for lookup, but sensitive and high-cardinality. |
+| `Charging Post ID` | Charging-post identifier. Available for lookup. |
 | `Location Information` | Station location; known at start. |
-| `District Name` | District of station; known at start. |
-| `Order creation time` | Recorded order creation timestamp; theoretically before start, but ordering conflicts in many rows. |
+| `District Name` | District of the station; known at start. |
+| `Order creation time` | Recorded order creation timestamp. It should precede the start, but many rows conflict with that order. |
 | `Transaction power/kwh` | Energy for the completed transaction; unavailable at start. CSV spelling uses lowercase `kwh`. |
 | `Electricity cost/Yuan` | Final electricity charge; unavailable at start. |
 | `Service charge/Yuan` | Final service charge; unavailable at start. |
@@ -71,7 +73,7 @@ so do not assume each equals abnormal count divided by session count.
 | `post_no_previous_completed_session` | Flag for no previous completed session at the post. |
 | `post_hours_since_previous_completed_abnormal` | Hours since last completed abnormal session at this post; blank when none exists. |
 | `post_no_previous_completed_abnormal` | Flag for no previous completed abnormal session at the post. |
-| `is_new_user` | Provided new-user indicator; check its exact operational meaning before deployment. |
+| `is_new_user` | 1 for the account's first session in the file (verified in notebook §4.3). It depends on the observation window. |
 | `user_previous_sessions_30D` | Completed sessions for this account in prior 30 days. |
 | `user_previous_abnormal_30D` | Completed abnormal sessions for this account in prior 30 days. |
 | `user_previous_abnormal_rate_30D` | Provided smoothed prior abnormal rate for this account and window. |
@@ -90,7 +92,7 @@ so do not assume each equals abnormal count divided by session count.
 ## How to use this guide
 
 Use the notebook for measurements and justification, this page for definitions,
-and [REQUIREMENTS.md](REQUIREMENTS.md) for what the assignment actually demands.
-An original field's presence in the CSV does not make it suitable for prediction.
-The prediction-time grouping and current preparation decisions are in the notebook.
+and the assignment PDF for what it demands.
+A field's presence in the CSV does not make it suitable for prediction.
+The notebook holds the prediction-time grouping and the current preparation decisions.
 Do not share raw user-level examples in reports or screenshots.

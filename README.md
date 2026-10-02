@@ -1,65 +1,46 @@
-# MINDD — EV charging project
+# MINDD: EV charging project
 
-Start with [docs/project.md](docs/project.md) for the objective and scope, then read
-[docs/REQUIREMENTS.md](docs/REQUIREMENTS.md) for the assignment and [docs/PLAN.md](docs/PLAN.md) for the work order.
-[docs/MEMORY.md](docs/MEMORY.md) records current progress, decisions, and open questions.
-[docs/AGENTS.md](docs/AGENTS.md) contains the shared working rules for people and AI assistants.
+Predict, at the start of an EV charging session, whether it will end abnormally (Project 1, MINDD 2026/27, MEI at ISEP).
 
-**Current stage: Task 1 EDA complete under a stated target assumption.** Read
-[main.ipynb](main.ipynb) in order for the evidence and [docs/TASK1_REPORT.md](docs/TASK1_REPORT.md)
-for the concise report draft. [docs/DATASET.md](docs/DATASET.md) explains the fields
-and target mapping. Instructor confirmation of that mapping remains open.
+Task 1 (data understanding, audit and preparation) is complete. The team still has to review it, and the instructor
+still has to confirm the target mapping.
+
+| Read this | For |
+| --- | --- |
+| [TP1_Task1_Data_Understanding_and_Preparation.ipynb](TP1_Task1_Data_Understanding_and_Preparation.ipynb) | All the evidence. §1 to §12 audit and explore the data, §13 holds the learned transformations and their ledger, §14 covers class imbalance, §15 the preliminary ablation and checks, §16 the saved artefacts and integrity checks, and §17 the synthesis and decision log |
+| [docs/TASK1_REPORT.md](docs/TASK1_REPORT.md) | The short report section to submit |
+| [docs/DATASET.md](docs/DATASET.md) | Field meanings and the derived target |
+| [docs/MEMORY.md](docs/MEMORY.md) / [docs/PLAN.md](docs/PLAN.md) | Progress, decisions, open questions, work order |
 
 ## Local setup
 
-The local `.venv` is ready. To use it, activate it and launch JupyterLab with the
-commands below, skipping environment creation and installation on this machine.
-
-For a teammate's first setup, use Python 3.12 and a separate `.venv` inside `Project/`:
+Use Python 3.12. Each teammate creates a separate `.venv` and does not share it:
 
 ```sh
 python3.12 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate            # Windows: .venv\Scripts\activate
 python -m pip install -r requirements.txt
 python -m jupyterlab
 ```
 
-On Windows, activate with `.venv\Scripts\activate` instead. Each teammate creates
-their own environment; do not copy or share `.venv`.
+Place `Charging_Data_educational.csv` next to the notebook. The file is about 179 MB, comes from the course channel,
+and is never committed. Restart the kernel and run all cells from top to bottom. A full run takes a few minutes because
+§14 and §15 fit about 40 small gradient-boosting models on training-window folds.
 
-Open `main.ipynb` and select the Python interpreter in `.venv`.
-In an IDE, choose `.venv/bin/python` (Windows: `.venv\Scripts\python.exe`).
-The notebook metadata now points to Python 3.12. The notebook has been run in order
-in this environment. Its outputs are aggregate only.
-
-## Files and data
+## Files
 
 | Path | Purpose |
 | --- | --- |
-| `TP1-MINDD2026_27-Task1.pdf` | Authoritative assignment; page references are in docs/REQUIREMENTS.md |
-| `Charging_Data_educational.csv` | Original supplied data; keep unchanged |
-| `main.ipynb` | Existing empty notebook; future analysis goes here |
-| `requirements.txt` | Six tested direct dependencies with exact versions; indirect dependencies are resolved by pip |
-| `data/` | Existing folder reserved for justified derived data, if needed |
-| `models/` | Existing folder reserved for later modelling; unused in Task 1 |
-| `docs/` | Requirements, dataset guide, plan, project overview, memory, team rules, and report |
+| `TP1-MINDD2026_27-Task1.pdf` | Assignment statement |
+| `TP1_Task1_Data_Understanding_and_Preparation.ipynb` | Task 1 notebook, the single source of evidence |
+| `requirements.txt` | Direct dependencies |
+| `prepared/figures/` | Figures the notebook saves and the report uses. Each run re-creates them |
+| `prepared/decision_log.csv`, `prepared/learned_operations_ledger.csv`, `prepared/feature_groups.json` | Decision log, ledger of learned operations, feature groups for Task 2 |
+| `prepared/task1_prepared.csv.gz` | Prepared dataset with split labels for Task 2. The notebook generates it, and it is not committed |
+| `docs/` | Report, dataset guide, plan, memory |
 
-The CSV is about 179 MB. Obtain the original through the team's agreed private
-course channel and place it beside the notebook; the sharing location is still to
-be agreed. Do not assume the original research dataset has the same schema or rows.
-Run the notebook from `Project/` and use relative paths.
+## Team workflow
 
-## Team handoff
-
-Before work, read docs/MEMORY.md and claim one docs/PLAN.md step with an owner and reviewer.
-Use one notebook editor at a time to avoid conflicting notebook changes; others can
-review evidence and draft report text. After work, update the step status and leave
-a short dated memory entry with the outcome, evidence location, and next action.
-
-Private repository: [AmirMasnavi/MINDD](https://github.com/AmirMasnavi/MINDD).
-The repository root corresponds to this local `Project/` folder. Teammates with
-access can clone it, then follow the local setup instructions from the cloned root.
-The dataset, local environment, IDE settings, and generated data/models are excluded.
-Empty `data/` and `models/` folders are not tracked; create them only when needed.
-Agree notebook ownership before editing and use focused branches and pull requests
-for team changes. Repository access for teammates still needs to be arranged.
+Only one person edits the notebook at a time. Work on a branch and merge through a pull request that another member
+reviews. After meaningful work, update `docs/PLAN.md` and add a short dated entry to `docs/MEMORY.md`.
+The repository must stay private because it contains course material, so check the GitHub visibility setting.

@@ -1,0 +1,12 @@
+learned operation,applies to,what is learned,fitted on,note
+Category codes (tree view),"post_id, location, district, tariff_period",category list,TRAIN,unknown category -> code -1 (treated as missing)
+One-hot encoding (linear view),"post_id, tariff_period",category list,TRAIN,unknown category -> all zeros
+Winsorisation,8 log-transformed heavy-tailed variables + user_active_sessions_at_start,0.1th / 99.9th percentiles,TRAIN,limits leverage of legitimate extremes (§9.4)
+Structural-NaN fill,4 'time since' variables,training maximum (after log/cap),TRAIN,'never happened' = far end of range; indicators kept (§8)
+Standardisation,all non-binary numeric variables (linear view),"mean, standard deviation",TRAIN,scale-sensitive models only (§9.4)
+Log transform rule,which variables get log1p,training skewness (§12.1),TRAIN,the transform itself is stateless
+Redundancy reduction,reduced linear set (19 numeric),"Spearman ρ, univariate AUC",TRAIN sample (§12.3),unregularised linear / distance models only
+Class-imbalance treatment,training rows,class weights or resampling,each TRAIN fold (§14),never applied to validation/test
+Feature-group selection,7 groups,ablation results,TRAIN folds (§15),final choice in the modelling task
+Dimensionality reduction (PCA),—,—,not adopted (§12.4),—
+Rare-category grouping,—,—,not needed (smallest post: see above),—
