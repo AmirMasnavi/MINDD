@@ -1,231 +1,169 @@
 # Project 1, Task 1: Data understanding, audit and preparation
 
-*MINDD 2026/27 · MEI · ISEP · Group report section.* All numbers and figures come from
-[`TP1_Task1_Data_Understanding_and_Preparation.ipynb`](../TP1_Task1_Data_Understanding_and_Preparation.ipynb)
-(seed 42). Section numbers (§) refer to that notebook.
+*MINDD 2026/27 · MEI · ISEP · Group report section.* The formatted version is `docs/TASK1_REPORT.pdf`, built from
+`docs/report/main.tex`. Keep both texts identical.
 
-## 1. Objective and data
+## 1. Introduction
 
-The goal is to predict whether an EV charging session will end abnormally at the moment it starts. Every preparation
-decision answers two questions. Would this information exist at that moment, and is it trustworthy?
+The goal is to predict, at the moment an EV charging session starts, whether it will end abnormally. Every
+preparation decision answers two questions: would this information exist at that moment, and is it trustworthy? The
+data are an educational adaptation of the China EV Charging Dataset (Zhang et al., 2025): 441,077 sessions and 47
+columns, from 31 Dec 2019 to 31 Dec 2021, at 92 charging posts in 13 stations and 3 districts of Jiaxing. The numbers
+come from the notebook [`TP1_Task1_Merged.ipynb`](../TP1_Task1_Merged.ipynb) (seed 42), and references of the form §x.y
+point to its sections. References of the form C-§x.y point to the extended notebook
+[`TP1_Task1_Data_Understanding_and_Preparation.ipynb`](../TP1_Task1_Data_Understanding_and_Preparation.ipynb), which
+holds the model-based diagnostics (feature-group ablation, class weights, cold-start scores) that move to Task 2.
 
-The data are an educational adaptation of the China EV Charging Dataset (Zhang et al., 2025). They hold 441,077 sessions and
-47 columns, from 31 Dec 2019 to 31 Dec 2021, at 92 charging posts in 13 stations and 3 districts of Jiaxing.
+### 1.1 Target definition
 
-## 2. Target definition
+The file has no `is_Abnormal` column, so we derive it from `end_cause` (15 categories). The dataset's pre-computed
+abnormal-count history columns were built from the true label, so we recomputed them under three candidate mappings
+(Table 1.1, §5.2 for mappings A and B, C-§4.2 for all three). Only mapping A reproduces them. We adopt it, pending the instructor's confirmation. The classes are
+about 4.4 : 1, so an "always normal" model reaches 81% accuracy, and accuracy is not an adequate metric.
 
-The file has no `is_Abnormal` column, so we derive it from `end_cause` (15 categories). We tested candidate mappings
-against the dataset's own pre-computed abnormal-count history columns, which were built from the true label (§4.2).
-
-| Candidate definition of "abnormal" | Rows where the recomputed count matches (6 windows) | Prevalence |
+| Definition of "abnormal" | Rows matching the supplied counts (6 windows) | Prevalence |
 | --- | --- | --- |
-| A. 13 fault causes (normal = "Charging ends normally" and "User stops charging") | ≥ 99.97% in every window | 18.58% |
+| A. 13 fault causes ("Charging ends normally" and "User stops charging" are normal) | ≥ 99.97% in every window | 18.58% |
 | B. Everything except "Charging ends normally" | 0.3–36% | 53.93% |
-| C. Charger faults only (vehicle-side BMS, communication and charging faults count as normal) | 2–70% | 12.11% |
+| C. Charger faults only (vehicle-side faults count as normal) | 2–70% | 12.11% |
 
-We adopt mapping A. It is an inference, and the instructor must confirm it. The ratio is about 4.4 : 1, so
-an "always normal" model reaches 81% accuracy. Accuracy is therefore not an adequate metric.
+## 2. Data audit and exploration
 
-## 3. Availability at prediction time (leakage)
+### 2.1 Availability at prediction time
 
-Seven post-hoc variables (energy, electricity cost, service charge, amount, actual payment, end time, payment time) and
-`end_cause` describe the result of the session, so we exclude them. Figure 1 shows why. On their own they reach univariate
-ROC-AUC 0.82–0.85, above any legitimate variable (best 0.77). In the §15.3 diagnostic, adding them to the model raises PR-AUC
-from 0.604 to 0.834. That is the size of the optimistic, non-deployable result a leaky preparation would report.
+Seven post-hoc variables (energy, electricity cost, service charge, amount, actual payment, end time, payment time)
+and `end_cause` describe the result of the session, so we exclude them. On their own they reach univariate ROC-AUC
+0.82–0.85, above any legitimate variable (best 0.77, Figure 2.1). Adding them to the model raises PR-AUC from 0.604 to
+0.834 (C-§15.3), which is the optimistic, non-deployable result a leaky preparation would report. We also exclude
+`Order creation time`: it is stamped after the start in 56% of sessions and adds nothing measurable (−0.003 PR-AUC).
 
-We also exclude `Order creation time`. It is stamped after the start in 56% of sessions, so its availability is doubtful,
-and it adds nothing measurable (−0.003 PR-AUC, §15.3).
+![Figure 2.1. Univariate ROC-AUC of each variable, coloured by availability at the start of the session](../prepared/figures/06_1_univariate_auc_by_availability.png)
 
-![Figure 1. Univariate ROC-AUC of each variable, coloured by availability at the start of the session](../prepared/figures/06_1_univariate_auc_by_availability.png)
+### 2.2 History attributes
 
-### History attributes: availability, privacy and cold start
+**Meaning.** Recomputing the history attributes from the timestamps reproduces the session counts in at least 99.96%
+of rows and the concurrency count in 99.97% (C-§4.3). Only sessions that ended before the current start are counted, so
+there is no look-ahead.
 
-**Meaning.** We did not take the supplied history attributes on trust. Recomputing them from the start and end timestamps
-reproduces the session counts in at least 99.96% of rows, the time since the previous session in 99.97% (user) and 99.999%
-(post), and `user_active_sessions_at_start` in 99.97% (§4.3). Only sessions that ended before the current start are counted,
-so the attributes contain no look-ahead. `is_new_user` means "first session of the account in the file" in 100% of rows.
+**Operational availability.** Post history needs a store that updates per-post counts when each session ends, and the
+platform already records end causes. User history also needs the account to be identified at start. Our validation
+and test values assume that this store is updated continuously.
 
-**Operational availability.** Post history needs a store that records each session's end cause when the session ends and
-updates per-post counts. The platform already records end causes, so this is realistic. User history also needs the account
-to be identified when the session starts, before any energy flows. Concurrency needs the live status of the account's other
-sessions. In our validation and test periods, history values include outcomes of earlier sessions from those same periods.
-This assumes the store is updated continuously in production.
+**Privacy.** User history is a behavioural profile tied to a pseudonymous identifier. Removing it costs 0.037 PR-AUC,
+against 0.195 for post history (C-§15.1), so the modelling task will compare models with and without it.
 
-**Privacy.** User history is a behavioural profile (how often an account charges and how often its sessions fail) linked to
-a persistent pseudonymous identifier. Data minimisation says to keep it only if it adds value beyond post-level information.
-In the preliminary ablation (§15.1), removing user history costs 0.037 PR-AUC, against 0.195 for post history. The modelling
-task will therefore compare models with and without user history. A post-history model is the privacy-preserving
-alternative. `user_id` itself is never a feature.
+**Generalisation and cold start.** History replaces identities, so it works for accounts unseen in training (40% of
+validation and 61% of test sessions). New accounts (about 13% of sessions) get the prior rate 0.2 and missing
+time-since values, and the model ranks them worse (C-§15.2). Post cold start cannot be tested, because every validation
+and test post appears in training.
 
-**Generalisation and cold start.** History attributes replace identities, so they also work for accounts never seen in
-training (40% of validation and 61% of test sessions). New accounts (about 13% of sessions) have no user history: their
-rates equal the prior 0.2 and their time-since values are missing, and the model ranks them worse (§15.2). Post cold start
-cannot be tested, because every validation and test post appears in training. A new post would also start at the prior,
-with station and district as the only post-level information.
+### 2.3 Data quality
 
-## 4. Data-quality audit
-
-We removed no record. We investigated each anomaly first (§3, §8, §9).
+We removed no record and investigated each anomaly before deciding (Table 2.1; §4, §6, §10).
 
 | Check | Finding | Decision |
 | --- | --- | --- |
-| Duplicates | none (full rows or user + post + start) | no action |
-| Formatting | trailing tab in two timestamp columns and in 18,370 `Location Information` values | stripped on load (stateless) |
-| Missing values | only in the four "time since previous…" columns, and each `NaN` matches its "no previous" flag in 100% of rows | structural ("never happened"), so not imputed with the mean or median. The pattern is informative (users without a previous fault: 14.4% vs 19.3% abnormal) |
-| Zero-energy sessions | 54,621, of which 45,563 abnormal; about 9k labelled normal | kept, because early faults and user cancellations deliver no energy and a filter on a post-hoc variable cannot be reproduced at start |
-| Durations | never reach 24 h (max 23.99 h) | apparent right-censoring. Duration is post-hoc, so this is a limitation only |
-| Payment timing | 87,202 payments recorded before the end | post-hoc; kept for audit, not used |
-| Weather | one value per district and calendar day | treated as a forecast, as the statement instructs. If it is an observed daily aggregate, it contains post-start information (limitation) |
-| Outliers | right-skewed counts and durations. The extremes are idle posts (39% abnormal on return), fleet accounts and rainstorm days. Isolation Forest flags informative sessions, not erroneous ones | all retained; log and capping only in the linear view (Section 8 of this report) |
-| Cardinality and rare categories | 92 posts in 13 stations and 3 districts, each post in exactly one station. The smallest post has 244 training sessions. The 13 fault causes range from 20,114 sessions down to 5 | no grouping. The rare fault causes do not matter for a binary target, only for reading the fault mix (Section 6) |
+| Duplicates | None (full rows or user + post + start) | No action |
+| Formatting | Trailing tab in 2 timestamp columns and 18,370 location values | Stripped on load |
+| Missing values | Only in the 4 "time since previous" columns; NaN equals the "no previous" flag in 100% of rows | Structural, not imputed with mean or median; informative (14.4% vs 19.3% abnormal) |
+| Zero energy | 54,621 sessions, 45,563 of them abnormal | Kept: early faults and cancellations deliver no energy |
+| Post-hoc timestamps | Durations stop at 23.99 h; 87,202 payments recorded before the end | Not used; censoring noted as a limitation |
+| Weather | One value per district and day | Treated as a forecast, as instructed (limitation) |
+| Outliers | Idle posts (39% abnormal on return), fleet accounts, rainstorm days; Isolation Forest flags informative sessions | All kept; log and capping in the linear view only |
+| Cardinality | 92 posts, the smallest with 244 training sessions; fault causes from 20,114 down to 5 sessions | No grouping needed for a binary target |
 
-## 5. What relates to abnormal termination
+### 2.4 What relates to abnormal termination
 
-*We measure relationships on the development window only (Apr 2020 to Jun 2021), never on validation or test.*
+We measure relationships on the development window only (Apr 2020 to Jun 2021). The post matters most among static
+variables: abnormal rates range from 4% to 61% across posts (Cramér's V 0.30, against 0.23 for station and 0.11 for
+district), and post-level rates correlate at Spearman ρ = 0.81 between 2020 and 2021. Calendar and weather effects are
+small (V ≤ 0.042). Recent failure history is the strongest signal: the seven post-history variables top the univariate
+ranking (AUC 0.71–0.77) because faults cluster in time at the same post (§9.4). The supplied rates are smoothed as
+(abnormal + 1) / (sessions + 5), so an entity without history gets 0.2. Sessions concentrate in a few accounts (the
+top 1% hold 34%), so `user_id` is not usable and user history replaces it.
 
-- **The post matters most among static variables.** Abnormal rates range from 4% to 61% across posts. Cramér's V (an effect
-  size for categorical association) is 0.30 for post, 0.23 for station and 0.11 for district.
-- **Post risk persists.** Post-level rates correlate at Spearman ρ = 0.81 between 2020 and 2021.
-- **Calendar effects are small** (V ≤ 0.042). The hourly rate ranges from 14.7% (07 h) to 20.5% (12 h). Weather effects are
-  also weak.
-- **Recent failure history is the strongest signal.** The pre-computed rates use additive smoothing:
-  rate = (abnormal + 1) / (sessions + 5), a prior of 0.2 with weight 5. The seven post-history variables top the univariate
-  ranking (AUC 0.71–0.77) because faults cluster in time at the same post (Figure 2).
-- **Sessions are concentrated in a few accounts.** The median account has 2 sessions, the top 1% of accounts hold 34% of sessions, and two
-  accounts look like fleets. A large share of validation and test sessions (40% and 61%) comes from accounts never seen in training, so `user_id`
-  is not a usable predictor. User history replaces it.
+### 2.5 Temporal stability
 
-![Figure 2. Abnormal rate by decile of the main historical attributes](../prepared/figures/07_4_history_decile_curves.png)
+The process is not stationary (Figure 2.2). Monthly volume falls to 1,391 sessions in Feb 2020, coinciding with the
+COVID-19 restrictions, and reaches 25–28k in autumn 2021. Prevalence ranges from 13.7% to 26.3% per month, and
+faulty-connection faults fall from 28% of abnormal sessions in 2020Q1 to about 6% from 2020Q3. 90–92 posts are active
+each month until posts 17–20 stop on 28 Sep 2021, and active accounts grow from about 2,000 to 5,600–7,500 per month.
+The history attributes are censored at the start of the file: 31% of Jan 2020 sessions are flagged as new users (about
+13% later), and their PSI is far above 0.25 in Q1-2020 and at most 0.10 from Q3-2020. A random split would mix these
+regimes and overstate performance, so evaluation is chronological.
 
-## 6. Temporal stability
+![Figure 2.2. Monthly volume, abnormal rate and history availability](../prepared/figures/05_1_monthly_volume_prevalence_history.png)
 
-The process is not stationary (Figures 3 and 4).
+## 3. Preparation and evaluation
 
-- **Volume swings widely.** It falls to 1,391 sessions in Feb 2020, which coincides with the COVID-19 restrictions, and dips
-  again in Feb 2021 around the Spring Festival. It reaches 25–28k sessions per month in autumn 2021. Both explanations come
-  from outside the data.
-- **Prevalence moves.** It ranges between 13.7% and 26.3% per month.
-- **The fault mix changes.** Faulty-connection faults fall from 28% of abnormal sessions in 2020Q1 to about 6% from 2020Q3.
-- **The site mix changes.** 90–92 posts are active each month until posts 17–20 (all of Technology Park) stop on
-  28 Sep 2021, leaving 86–88 in the test quarter. Station-level rates drift.
-- **User activity grows.** Active accounts per month rise from about 2,000 in Jan and Mar 2020 to 5,600–7,500 in the second half of 2021.
-- **History attributes are censored at the start of the file.** In Jan 2020, 31% of sessions are flagged as new users
-  (about 13% later). The PSI of the history features is far above 0.25 in Q1-2020 and at most 0.10 from Q3-2020. PSI (Population
-  Stability Index) measures how much a distribution shifts, and a value above 0.25 usually signals a large shift.
-
-![Figure 3. Monthly volume, abnormal rate and history availability](../prepared/figures/05_1_monthly_volume_prevalence_history.png)
-
-![Figure 4. Abnormal rate by station over time, and persistence of post-level rates between years](../prepared/figures/05_3_station_heatmap_and_post_persistence.png)
-
-A random split would therefore mix regimes and overstate performance. Evaluation must be chronological.
-
-## 7. Evaluation design
+### 3.1 Evaluation design
 
 | Period | Dates | Sessions | Abnormal |
 | --- | --- | --- | --- |
-| Burn-in (excluded) | 31 Dec 2019 to 31 Mar 2020 | 14,017 (3.2%) | 25.0% |
+| Burn-in (excluded) | 31 Dec 2019 to 31 Mar 2020 | 14,017 | 25.0% |
 | Train | 1 Apr 2020 to 30 Jun 2021 | 271,182 | 17.8% |
-| Purged | train starts that end after 1 Jul 2021 | 28 | n/a |
+| Purged | Train starts that end after 1 Jul 2021 | 28 | n/a |
 | Validation | Jul to Sep 2021 | 75,769 | 21.1% |
 | Test (used once) | Oct to Dec 2021 | 80,081 | 17.6% |
 
-- **Burn-in.** We exclude it because its history values are censored and its fault regime is obsolete. Including it changes
-  PR-AUC by +0.0009 (§15.4), so the exclusion is harmless.
-- **Purge.** Training rows must also *end* before the cutoff, because their label is unknown until then.
-- **Tuning.** We tune hyper-parameters with three expanding-window folds inside the training period.
-- **Metrics.** We will report PR-AUC with lift over the base rate, ROC-AUC, the Brier score for calibration, and precision and recall of the abnormal
-  class at a threshold chosen on validation.
+Table 3.1 shows the split. The burn-in is excluded because its history values are censored and its fault regime is
+obsolete; including it changes PR-AUC by only +0.0009 (C-§15.4). Training rows must also *end* before the cutoff, since
+their label is unknown until then (purge). Hyper-parameters will be tuned with three expanding-window folds inside the
+training period. We will report PR-AUC with lift over the base rate, ROC-AUC, the Brier score, and precision and
+recall at a threshold chosen on validation.
 
-## 8. Retained features and preparation
+### 3.2 Retained features and learned operations
 
-We retain 29 features in 7 groups:
+We retain 29 features in 7 groups: calendar (hour, day of week), tariff period, location (`post_id`, station,
+district), weather (4), post history (8), user history (10) and concurrency (1). We drop `electricity_price` (a
+function of the tariff), the six abnormal-count columns (exact functions of counts and rates; adding them back changes
+nothing, C-§15.4), the post "no history" flags (constant after the burn-in), `user_no_previous_completed_session`
+(φ ≈ 1 with `is_new_user`), `is_weekend` (V = 0.001) and `user_id`.
 
-| Group | Features |
-| --- | --- |
-| Calendar | hour, day of week |
-| Tariff | tariff period |
-| Location | `post_id`, station, district |
-| Weather | temperature, humidity, precipitation, rain flag |
-| Post history | 8 attributes |
-| User history | 10 attributes |
-| Concurrency | `user_active_sessions_at_start` |
+Every operation that learns from data is fitted on the training period only, inside scikit-learn pipelines (Table
+3.2, C-§13). Fitting on all periods would change the parameters; for example, the structural-NaN fill would move from
+394 to 511 days. `log1p` and the sine/cosine encoding of hour and weekday are stateless.
 
-Besides the leakage variables, we drop:
-- `electricity_price`: a function of the tariff.
-- The six abnormal-count columns: exact functions of the session counts and rates. Adding them back changes nothing (§15.4).
-- The post "no history" flags: constant after the burn-in.
-- `user_no_previous_completed_session`: equivalent to `is_new_user` (φ ≈ 1).
-- `is_weekend`: V = 0.001.
-- `user_id`.
-
-The operations that learn from data are all fitted on the training period only, inside scikit-learn pipelines (§13):
-
-| Learned operation | What is learned | View |
+| Operation | What is learned | Used by |
 | --- | --- | --- |
-| Category codes (`post_id`, station, district, tariff) / one-hot (`post_id`, tariff) | category list from training | tree / linear |
-| Winsorisation of heavy-tailed variables | training 0.1th / 99.9th percentiles | linear |
-| Structural-`NaN` fill ("never happened") | training maximum; indicators kept | linear (trees keep `NaN`) |
-| Standardisation | training mean / standard deviation | linear |
-| Reduced numeric set (19 variables, max VIF from 65 to 8.6) | correlations on a training sample | unregularised linear / distance models |
-| Class-imbalance treatment | class weights or resampling | training folds only (modelling task) |
-| Rare-category grouping, PCA | nothing | not needed / evaluated and not adopted |
+| Category codes / one-hot (`post_id`, station, district, tariff) | Category list | Tree / linear view |
+| Winsorisation of heavy-tailed variables | 0.1th and 99.9th percentiles | Linear view |
+| Structural-NaN fill ("never happened") | Maximum; indicators kept | Linear view (trees keep NaN) |
+| Standardisation | Mean and standard deviation | Linear view |
+| Reduced numeric set (19 variables, max VIF 65 to 8.6) | Correlations on a training sample | Unregularised linear models |
+| Class-imbalance treatment | Class weights or resampling | Training folds only |
+| Rare-category grouping, PCA | Nothing | Not needed / not adopted |
 
-`log1p` and the sine/cosine encoding of hour and weekday are stateless. Fitting the learned steps on all periods would change
-their parameters (for example, the structural-`NaN` fill moves from 394 to 511 days, §13). That change is the information
-leak that training-only fitting prevents.
+### 3.3 Preliminary diagnostics
 
-## 9. Preliminary diagnostics (training-window folds only)
+A fixed, untuned gradient-boosting model on the training-window folds reaches PR-AUC 0.604 (folds 0.569–0.640; lift
+3.56) and ROC-AUC 0.832. These runs check preparation decisions; they are not model selection. Removing post history
+drops PR-AUC to 0.409, removing user history costs 0.037, and the other groups, `post_id` included, change it by at
+most 0.007 (Figure 3.1). Class weights leave the ranking unchanged (0.602 vs 0.604) but push the mean prediction to
+0.34 against a prevalence of 0.17, so the prepared data are not resampled and SMOTE is not used. For new accounts,
+ROC-AUC is 0.714 (lift 2.38), against 0.845 (lift 3.80) for returning users.
 
-We used a fixed, untuned gradient-boosting model to check the preparation decisions. It reaches PR-AUC 0.604 (fold range
-0.569–0.640; lift 3.56) and ROC-AUC 0.832. These are not model-selection results. Figure 5 shows the change in PR-AUC
-when each feature group is removed.
+![Figure 3.1. Change in PR-AUC when each feature group is removed](../prepared/figures/15_1_group_ablation.png)
 
-![Figure 5. Change in PR-AUC when each feature group is removed](../prepared/figures/15_1_group_ablation.png)
+## 4. Synthesis
 
-- **Post history dominates.** Removing it drops PR-AUC to 0.409.
-- **User history adds a smaller share.** Removing it changes PR-AUC by −0.037.
-- **The other groups add nothing measurable once history is present** (|Δ| ≤ 0.007). This includes `post_id`, whose
-  persistent signal the post's own failure rates already capture.
-- **Class weights leave the ranking unchanged** (PR-AUC 0.602 vs 0.604) but distort probabilities (mean prediction 0.34 vs
-  prevalence 0.17). We therefore apply no resampling in the prepared data and do not adopt SMOTE.
-- **Cold-start users are harder.** For new accounts, ROC-AUC is 0.714 and lift 2.38, against 0.845 and 3.80 for returning users.
-
-## 10. Synthesis
-
-1. **Main characteristics and problems.**
-   - The target is not supplied and had to be derived and validated (18.6% abnormal).
-   - Eight outcome columns and one doubtful timestamp would leak the target.
-   - Missing values are structural only, and there are no invalid records.
-   - Volume, prevalence, fault mix and site mix all drift, and the history attributes are censored in Q1-2020.
-   - Risk concentrates by post and persists, but the strongest signal is recent post failure history.
-   - Users are concentrated in a few accounts, and most future accounts are new.
-2. **Evidence for the decisions.**
-   - History-count oracle for the target.
-   - AUC and PR-AUC inflation for the leakage exclusions.
-   - `NaN` matches the "no previous" flag in 100% of rows for the missing values.
-   - Investigation of outliers (idle posts, fleet accounts, Isolation Forest).
-   - PSI, monthly and quarterly analyses for the split. The burn-in check shows the exclusion is harmless.
-   - Exact identities for the redundant variables, confirmed by §15.4.
-   - Ledger of parameters fitted on training only.
-3. **Retained variables.** 29 features in 7 groups. Post history is essential and user history is useful. We keep the context
-   groups as candidates for the modelling task.
-4. **Unresolved limitations and assumptions.**
-   - The target mapping is inferred.
-   - Weather is assumed to be a forecast but is daily.
-   - Durations are censored at 24 h.
-   - The semantics of payment and order timing are unknown.
-   - External causes of the drift are hypotheses.
-   - Post cold start cannot be tested (every test post appears in training).
-   - History values in validation and test assume a store that is updated continuously in production.
-   - Fleet accounts dominate user counts.
-   - The diagnostics use one untuned model.
-5. **Implications for modelling.**
-   - Chronological split with purge; expanding-window cross-validation; test used once.
-   - PR-AUC with lift, ROC-AUC and calibration rather than accuracy.
-   - Imbalance handled through the threshold or in-fold weights.
-   - Tree ensembles (tree view) and a regularised logistic-regression baseline (linear view).
-   - Compare models with and without `post_id` and with and without user history (privacy), and report cold-start users
-     separately.
+1. **Main characteristics and problems.** The target had to be derived and validated (18.6% abnormal). Eight outcome
+   columns and one doubtful timestamp would leak it. Missing values are structural and no record is invalid. Volume,
+   prevalence, fault mix and site mix drift, and history is censored in Q1-2020. Risk concentrates by post, and recent
+   post failure history is the strongest signal.
+2. **Evidence for the decisions.** The history-count oracle (target), AUC and PR-AUC inflation (leakage), the 100%
+   match between NaN and its flag (missing values), the outlier investigation, PSI and monthly analyses (split), exact
+   identities confirmed in C-§15.4 (redundancy), and the ledger of training-only parameters.
+3. **Retained variables.** 29 features in 7 groups. Post history is essential and user history is useful; the context
+   groups remain candidates for the modelling task.
+4. **Limitations and assumptions.** The target mapping is inferred; weather is assumed to be a forecast but is daily;
+   durations are censored at 24 h; payment and order timing semantics are unknown; the causes of drift are hypotheses;
+   post cold start cannot be tested; history in validation and test assumes a continuously updated store; fleet
+   accounts dominate user counts; the diagnostics use one untuned model.
+5. **Implications for modelling.** Chronological split with purge, expanding-window cross-validation and a single use
+   of the test set; PR-AUC with lift, ROC-AUC and calibration instead of accuracy; imbalance handled by the threshold or
+   in-fold weights; tree ensembles and a regularised logistic-regression baseline; models compared with and without
+   `post_id` and user history, with cold-start users reported separately.
 
 ## Reference
 

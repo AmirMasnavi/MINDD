@@ -28,6 +28,22 @@ The notebook follows §0–§17 (see the README table). For each important resul
 interpretation, decision. The notebook holds the authoritative variable dictionary (§2.2) and decision log (§17, saved to
 `prepared/decision_log.csv`). `docs/DATASET.md` is a readable summary of the dictionary and must agree with it.
 
+## Task 1 review split (`TP1_Task1_Merged.ipynb`)
+
+Each of the three members reviews about a third of the merged notebook. Replace "Student n" with names.
+
+| Reviewer | Sections | Theme | Status |
+| --- | --- | --- | --- |
+| Student 1 | §0–§6 (intro, setup, load, variables, cleaning, target, missing values) | Understanding and cleaning | Pending |
+| Student 2 | §7–§10 (changes over time, leakage, start-time predictors, outliers) | Exploration | Pending |
+| Student 3 | §11–§15 (split and sampling, feature engineering and reduction, learned operations, saved files, synthesis) | Preparation and conclusions | Pending |
+
+Each reviewer first runs Restart & Run All (about 1 minute), then checks that (1) every number in "What we see" matches the
+output above it, (2) every decision follows from the evidence shown and names its slide topic, and (3) the text is clear
+and claims nothing the data does not show. Agree on the hand-offs together: the target assumption (§5) affects every
+abnormal share; the burn-in and split decided in §7.5 are applied in §11; the exclusions in §8 and §10 feed the feature
+list in §12.7; and each reviewer checks the synthesis (§15) bullets that cite their sections.
+
 ## Initial feature policy (proposed before the analysis; the outcome is in notebook §11.3)
 
 | Group | Initial treatment and questions |
