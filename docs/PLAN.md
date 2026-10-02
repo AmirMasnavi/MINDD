@@ -1,8 +1,8 @@
 # Work plan
 
 This is the team's proposed sequence.
-Task 1 has started. Owners and reviewers are still unassigned, so replace
-`TBD` when the team allocates work. The plan invents no deadlines.
+Task 1 is complete apart from team review, instructor confirmation of the target and submission (due 2026-10-04).
+Owners and reviewers are still unassigned, so replace `TBD` when the team allocates work.
 
 ## Task 1 sequence
 
@@ -22,23 +22,13 @@ Task 1 EDA uses the target assumption stated in DATASET.md. The team needs instr
 confirmation before making final modelling claims. Team review and
 submission logistics remain open.
 
-## Notebook outline to add when implementation starts
+## Notebook structure
 
-1. Objective, source, scope, assumptions, environment, and reproducibility settings.
-2. Data inventory and schema/meaning table.
-3. Target definition and prediction-time feature audit.
-4. Evaluation boundaries and data-access policy.
-5. Data-quality investigation and evidence.
-6. Exploratory and temporal analysis, including history and cold starts.
-7. Preparation decisions and final feature groups.
-8. Task 1 synthesis, limitations, and next steps.
+The notebook follows §0–§17 (see the README table). For each important result it uses the sequence question, evidence,
+interpretation, decision. The notebook holds the authoritative variable dictionary (§2.2) and decision log (§17, saved to
+`prepared/decision_log.csv`). `docs/DATASET.md` is a readable summary of the dictionary and must agree with it.
 
-For each important result, use the sequence question, evidence, interpretation, decision.
-Keep the field dictionary and the decision table in the notebook instead of maintaining
-duplicate standalone documents. Each decision row needs the variable or group, the issue,
-the evidence location, the action or retention, the rationale, and where any parameters are fitted.
-
-## Proposed feature policy (to validate, not an analysis result)
+## Initial feature policy (proposed before the analysis; the outcome is in notebook §11.3)
 
 | Group | Initial treatment and questions |
 | --- | --- |
@@ -89,10 +79,10 @@ as ordinary missing data without checking the associated flags and definitions.
 
 ## Submission check
 
-- [ ] Target definition is official and the feature audit enforces prediction-time availability.
-- [ ] Quality and temporal findings have evidence and modelling implications.
-- [ ] Every material preparation choice is justified; learned steps use training data only.
-- [ ] Retained groups, unresolved assumptions, and future evaluation implications are explicit.
-- [ ] Notebook runs top-to-bottom with the documented environment and relative paths.
-- [ ] Report explains decisions/results without copying code; teammate has reviewed both files.
+- [ ] Target definition is official (instructor confirmation pending). The feature audit enforces prediction-time availability (§6).
+- [x] Quality and temporal findings have evidence and modelling implications.
+- [x] Every material preparation choice is justified; learned steps use training data only.
+- [x] Retained groups, unresolved assumptions, and future evaluation implications are explicit.
+- [x] Notebook runs top-to-bottom with the documented environment and relative paths.
+- [ ] Report explains decisions/results without copying code (done); teammate has reviewed both files (pending).
 - [ ] Current deadline, file format, and submission channel are confirmed.

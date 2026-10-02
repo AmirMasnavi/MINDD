@@ -9,4 +9,4 @@ Redundancy reduction,reduced linear set (19 numeric),"Spearman ρ, univariate AU
 Class-imbalance treatment,training rows,class weights or resampling,each TRAIN fold (§14),never applied to validation/test
 Feature-group selection,7 groups,ablation results,TRAIN folds (§15),final choice in the modelling task
 Dimensionality reduction (PCA),—,—,not adopted (§12.4),—
-Rare-category grouping,—,—,not needed (smallest post: see above),—
+Rare-category grouping,—,—,not needed (smallest post has 244 training sessions),—

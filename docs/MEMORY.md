@@ -4,27 +4,25 @@ Last updated: 2026-10-02
 
 ## Current state
 
-- The user then authorised Task 1 EDA and asked for a teaching-style notebook
-  based on the supplied PL_Aula2.ipynb example. The example supplied the structure,
-  not its regression instructions.
-- The PDF was read in full (four pages), and the malformed sentence on p. 3 was also checked visually.
-- The Task 1 notebook contains the EDA, the derived target, the availability audit, the preparation decisions, the learned transformations
-  (fitted on TRAIN only) and the preliminary diagnostics. The only fitted models are untuned diagnostics on training-window folds (§14–§15). Validation and test are untouched.
-- The CSV has 441,077 rows and 47 original columns. It includes `end_cause` but no
-  `is_Abnormal`. DATASET.md defines all original fields and the derived target.
-- 2026-10-02: The single Task 1 notebook is `TP1_Task1_Data_Understanding_and_Preparation.ipynb`. It is now complete (§13–§17 added), re-ran top to bottom without errors, and passes all §16 integrity checks.
-- 2026-10-02: Deleted the old `main.ipynb` and the duplicate root `TASK1_REPORT.md`; `docs/TASK1_REPORT.md` is the only report. Fixed wrong column counts and stale package notes in the notebook markdown, added the target-mapping numbers (B and C) and a section on history availability, privacy and cold start to the report.
-- 2026-10-02: Pinned all direct dependencies in `requirements.txt` (adds scipy 1.18.1 and scikit-learn 1.9.1) and re-ran the notebook top to bottom in a clean Python 3.12.3 venv with exactly those versions. §1–§13 outputs are identical. The §14–§15 diagnostic metrics move in the third decimal (for example, the user-history ablation goes from −0.035 to −0.037 and the burn-in check from +0.0004 to +0.0009), and the notebook text and report were updated. No conclusion changed.
-- 2026-10-02: Rewrote `docs/TASK1_REPORT.md` to match the notebook (split, 29 features, ledger, diagnostics, synthesis, 5 figures).
-- `data/` and `models/` already existed and were empty.
-- Created a private GitHub repository at https://github.com/AmirMasnavi/MINDD using
-  the user's existing GitHub CLI login. The local `Project/` folder is the repository root,
-  and `origin` points to that repository. The dataset, the environment, and generated outputs
-  are excluded. Team access is not configured yet.
-- Created a local `.venv` with Python 3.12.0. All six direct dependency imports and
-  the dependency compatibility check passed, and the Python kernel was found inside
-  this environment. requirements.txt records the tested versions.
-- The PDF and CSV are unchanged. The notebook was intentionally updated and run.
+- The single Task 1 notebook is `TP1_Task1_Data_Understanding_and_Preparation.ipynb` (§0–§17). It contains the EDA,
+  the derived target, the availability audit, the preparation decisions, the learned transformations (fitted on TRAIN only)
+  and the preliminary diagnostics. The only fitted models are untuned diagnostics on training-window folds (§14–§15).
+  Validation and test are untouched.
+- The CSV has 441,077 rows and 47 original columns. It includes `end_cause` but no `is_Abnormal`. DATASET.md defines all
+  original fields and the derived target. `docs/TASK1_REPORT.md` is the only report.
+- The notebook runs top to bottom without errors in the local `.venv` (Python 3.12.3, versions pinned in
+  `requirements.txt`) and passes all §16 integrity checks.
+- The repository root is the local `MINDD/` folder. `origin` is the private GitHub repository
+  https://github.com/AmirMasnavi/MINDD. The dataset, the environment and generated outputs are excluded. Team access is
+  not configured yet.
+- The PDF and CSV are unchanged.
+- 2026-10-02: Reviewed all Task 1 files against PDF §4. Every Task 1 requirement has evidence in the notebook and in the
+  report. Fixed broken section references (§13.4, §5.3, discretization in §13), a wrong residual-mismatch range in §4.2
+  (0.003–0.021%), the month order in §5.1, the period behind the 57.2% order-lag figure (§6.2), the missing §12.1 heading
+  and the dangling "see above" in the learned-operations ledger. Added cardinality, post-activity and user-activity
+  evidence and a Figure 5 pointer to the report. An unslop pass (phrase, structure and silhouette scanners plus a manual read)
+  found no hard AI-writing patterns, and one overstated claim ("irreducible" label ambiguity, §4.4) was softened.
+  Re-ran the notebook.
 
 ## Decisions
 
@@ -40,7 +38,7 @@ Last updated: 2026-10-02
 | 2026-09-29 | For EDA, classify ordinary completion and user-requested stop as normal, and the 13 fault and failure causes as abnormal. This is an explicit team assumption, not a PDF definition. The derived abnormal share is 18.58%. Treating user stops as abnormal would give 53.93%. Record the sensitivity and get instructor confirmation before final modelling claims. |
 | 2026-09-29 | The audit found no full-row or user/post/start duplicates. All timestamps parse, and the four missing elapsed-history fields match the no-history flags exactly. Order creation follows the start in 248,588 rows and payment precedes the end in 87,202. Retain these records and investigate their semantics instead of deleting them. |
 | 2026-09-29 | EDA found 54,621 zero-energy sessions, 45,563 of them with the assumed abnormal label. Retain them because early faults may deliver no energy. A trailing tab affects one location label in 18,370 rows, and trimming whitespace preserves 13 categories. The median prior 30-day post abnormal rate is 0.122 for normal endings and 0.252 for abnormal endings. This motivates a later history ablation and does not imply causality. |
-| 2026-10-02 | Completed §13 (two preprocessing views fitted on TRAIN only, plus the ledger), §14 (class weights keep the ranking but distort probabilities, so no resampling and no SMOTE), §15 (group ablation: removing post history changes PR-AUC by −0.193 and removing user history by −0.035, while the other groups and `post_id` change it by about 0; cold-start users have ROC-AUC 0.716 against 0.846), §16 (artefacts and 8 integrity checks), and §17 (synthesis and decision log). |
+| 2026-10-02 | (Figures superseded by the pinned-environment re-run: post history −0.195, user history −0.037, cold-start ROC-AUC 0.714 vs 0.845.) Completed §13 (two preprocessing views fitted on TRAIN only, plus the ledger), §14 (class weights keep the ranking but distort probabilities, so no resampling and no SMOTE), §15 (group ablation: removing post history changes PR-AUC by −0.193 and removing user history by −0.035, while the other groups and `post_id` change it by about 0; cold-start users have ROC-AUC 0.716 against 0.846), §16 (artefacts and 8 integrity checks), and §17 (synthesis and decision log). |
 | 2026-10-02 | Replaced the unsupported claim that the burn-in exclusion is harmless with an actual check (§15.4: including it changes PR-AUC by +0.0004). The exclusion stays. |
 | 2026-10-02 | Added `scipy` and `scikit-learn` (used by the notebook) to `requirements.txt`, and added `prepared/*.csv.gz` to `.gitignore`. |
 

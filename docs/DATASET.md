@@ -42,10 +42,10 @@ history gets 0.2.
 | CSV field | Meaning and timing |
 | --- | --- |
 | `UserID` | Account identifier. Available for lookup, but sensitive and high-cardinality. |
-| `Charging Post ID` | Charging-post identifier. Available for lookup. |
+| `Charging Post ID` | Charging-post identifier (92 posts, each in exactly one station). Available for lookup. |
 | `Location Information` | Station location; known at start. |
 | `District Name` | District of the station; known at start. |
-| `Order creation time` | Recorded order creation timestamp. It should precede the start, but many rows conflict with that order. |
+| `Order creation time` | Recorded order creation timestamp. It should precede the start, but in 56% of rows it is stamped after the start (notebook §3.2, §6.2). Excluded from the main feature set. |
 | `Transaction power/kwh` | Energy for the completed transaction; unavailable at start. CSV spelling uses lowercase `kwh`. |
 | `Electricity cost/Yuan` | Final electricity charge; unavailable at start. |
 | `Service charge/Yuan` | Final service charge; unavailable at start. |

@@ -53,13 +53,13 @@ This assumes the store is updated continuously in production.
 
 **Privacy.** User history is a behavioural profile (how often an account charges and how often its sessions fail) linked to
 a persistent pseudonymous identifier. Data minimisation says to keep it only if it adds value beyond post-level information.
-In the preliminary ablation (§9), removing user history costs 0.037 PR-AUC, against 0.195 for post history. The modelling
+In the preliminary ablation (§15.1), removing user history costs 0.037 PR-AUC, against 0.195 for post history. The modelling
 task will therefore compare models with and without user history. A post-history model is the privacy-preserving
 alternative. `user_id` itself is never a feature.
 
 **Generalisation and cold start.** History attributes replace identities, so they also work for accounts never seen in
 training (40% of validation and 61% of test sessions). New accounts (about 13% of sessions) have no user history: their
-rates equal the prior 0.2 and their time-since values are missing, and the model ranks them worse (§9). Post cold start
+rates equal the prior 0.2 and their time-since values are missing, and the model ranks them worse (§15.2). Post cold start
 cannot be tested, because every validation and test post appears in training. A new post would also start at the prior,
 with station and district as the only post-level information.
 
@@ -76,7 +76,8 @@ We removed no record. We investigated each anomaly first (§3, §8, §9).
 | Durations | never reach 24 h (max 23.99 h) | apparent right-censoring. Duration is post-hoc, so this is a limitation only |
 | Payment timing | 87,202 payments recorded before the end | post-hoc; kept for audit, not used |
 | Weather | one value per district and calendar day | treated as a forecast, as the statement instructs. If it is an observed daily aggregate, it contains post-start information (limitation) |
-| Outliers | right-skewed counts and durations. The extremes are idle posts (39% abnormal on return), fleet accounts and rainstorm days. Isolation Forest flags informative sessions, not erroneous ones | all retained; log and capping only in the linear view (§8 of this report) |
+| Outliers | right-skewed counts and durations. The extremes are idle posts (39% abnormal on return), fleet accounts and rainstorm days. Isolation Forest flags informative sessions, not erroneous ones | all retained; log and capping only in the linear view (Section 8 of this report) |
+| Cardinality and rare categories | 92 posts in 13 stations and 3 districts, each post in exactly one station. The smallest post has 244 training sessions. The 13 fault causes range from 20,114 sessions down to 5 | no grouping. The rare fault causes do not matter for a binary target, only for reading the fault mix (Section 6) |
 
 ## 5. What relates to abnormal termination
 
@@ -105,7 +106,9 @@ The process is not stationary (Figures 3 and 4).
   from outside the data.
 - **Prevalence moves.** It ranges between 13.7% and 26.3% per month.
 - **The fault mix changes.** Faulty-connection faults fall from 28% of abnormal sessions in 2020Q1 to about 6% from 2020Q3.
-- **The site mix changes.** Technology Park stops in Sep 2021, and station-level rates drift.
+- **The site mix changes.** 90–92 posts are active each month until posts 17–20 (all of Technology Park) stop on
+  28 Sep 2021, leaving 86–88 in the test quarter. Station-level rates drift.
+- **User activity grows.** Active accounts per month rise from about 2,000 in Jan and Mar 2020 to 5,600–7,500 in the second half of 2021.
 - **History attributes are censored at the start of the file.** In Jan 2020, 31% of sessions are flagged as new users
   (about 13% later). The PSI of the history features is far above 0.25 in Q1-2020 and at most 0.10 from Q3-2020. PSI (Population
   Stability Index) measures how much a distribution shifts, and a value above 0.25 usually signals a large shift.
@@ -159,7 +162,7 @@ The operations that learn from data are all fitted on the training period only, 
 
 | Learned operation | What is learned | View |
 | --- | --- | --- |
-| Category codes / one-hot (`post_id`, tariff) | category list from training | tree / linear |
+| Category codes (`post_id`, station, district, tariff) / one-hot (`post_id`, tariff) | category list from training | tree / linear |
 | Winsorisation of heavy-tailed variables | training 0.1th / 99.9th percentiles | linear |
 | Structural-`NaN` fill ("never happened") | training maximum; indicators kept | linear (trees keep `NaN`) |
 | Standardisation | training mean / standard deviation | linear |
@@ -174,7 +177,8 @@ leak that training-only fitting prevents.
 ## 9. Preliminary diagnostics (training-window folds only)
 
 We used a fixed, untuned gradient-boosting model to check the preparation decisions. It reaches PR-AUC 0.604 (fold range
-0.569–0.640; lift 3.56) and ROC-AUC 0.832. These are not model-selection results.
+0.569–0.640; lift 3.56) and ROC-AUC 0.832. These are not model-selection results. Figure 5 shows the change in PR-AUC
+when each feature group is removed.
 
 ![Figure 5. Change in PR-AUC when each feature group is removed](../prepared/figures/15_1_group_ablation.png)
 
