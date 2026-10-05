@@ -1,6 +1,6 @@
-§,topic,decision,evidence
+section,topic,decision,evidence
 4,Text and dates,"Strip spaces/tabs, parse the four timestamps, use short column names.","TAB on 100% of order/payment times and on 18,370 location labels; all timestamps parse."
-5,Target (assumption),is_Abnormal = 1 when end_cause is one of the 13 fault/failure causes; 'Charging ends normally' and 'User stops charging' are normal. Awaiting instructor confirmation.,Our counts reproduce the dataset's own previous-abnormal columns in ~100% of rows (alternative B does not). Share 18.58% (53.93% if user stops were abnormal).
+5,Target,is_Abnormal = 1 when end_cause is one of the 13 fault/failure causes; 'Charging ends normally' and 'User stops charging' are normal.,Our counts reproduce the dataset's own previous-abnormal columns in ~100% of rows (alternative B does not). Share 18.58% (53.93% if user stops were abnormal).
 5,Label noise,"Keep the 9,058 zero-energy sessions labelled normal.",Plausible user cancellations; filtering on energy (post-session) cannot be repeated at prediction time.
 6,Missing values,"No deletion, no mean/median or model imputation. Trees: keep NaN + flags. Linear models: fill with the training maximum + keep the flags.",NaN equals the no-history flag in 100% of rows (structural); missingness is related to the outcome.
 7,Burn-in,Do not use sessions before 2020-04-01 for modelling.,History columns incomplete at file start (new users 31% vs ~13%); different failure mix in Q1-2020.
@@ -8,9 +8,9 @@
 8,Leakers,"Exclude energy, the four money columns, end_time, payment_time and end_cause from the predictors.","Only known after the session; univariate AUC 0.82-0.85, higher than any start-time variable."
 8,Order creation time,Exclude from the predictors.,"Stamped after the start in 57.2% of training sessions; weak, irregular signal (AUC 0.59)."
 10,Outliers,Keep all observations. Trees: no change. Linear models: log1p on skewed columns + standardisation.,"Extremes are valid: idle posts (~2x abnormal), fleet accounts, real storm days; Isolation Forest agrees."
-11,Split,"Train 2020-04-01..2021-06-30 (purged), validation 2021-Q3, test 2021-Q4 (used once).",Changes over time (§7); 28 training sessions ended after the cut-off and were purged.
+11,Split,"Train 2020-04-01..2021-06-30 (purged), validation 2021-Q3, test 2021-Q4 (used once).",Changes over time (Section 7); 28 training sessions ended after the cut-off and were purged.
 12,New variables,"Add hour, dow (circular) and rain_flag; no month/year/time index.",Calendar is the only start-time information in the timestamp; rain is zero-inflated.
-12,Removed columns,"Drop electricity_price, 6 abnormal counts, 2 post no-history flags, user_no_previous_completed_session; user_id not a feature.",Exact functions / no variability / ~identical indicator / key field (§12.2).
+12,Removed columns,"Drop electricity_price, 6 abnormal counts, 2 post no-history flags, user_no_previous_completed_session; user_id not a feature.",Exact functions / no variability / ~identical indicator / key field (Section 12.2).
 12,Redundancy,Trees and regularised linear models: all 29 features. Plain linear/distance models: reduced set (|ρ| < 0.90).,VIF > 10 only for long user windows; max VIF falls below 10 in the reduced set.
 12,PCA / discretisation,Not adopted.,PCA needs about half the components for 90% variance; top component has AUC ~0.51. Bins lose the ordering.
 13,Learned operations,"Fit encoders, NaN fill and scaler on TRAIN only, inside a Pipeline.",Fitting on all periods changes the learned values (table above).

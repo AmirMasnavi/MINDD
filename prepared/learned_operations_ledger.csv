@@ -1,12 +1,12 @@
 learned operation,applies to,what is learned,fitted on,note
 One-hot encoding,"post_id, tariff_period (linear view)",list of categories,TRAIN,unknown category -> all zeros
 Category codes,"post_id, location, district, tariff_period (tree view)",list of categories,TRAIN,unknown -> missing
-Structural NaN fill,4 'time since' columns (linear view),training maximum,TRAIN,flags kept (§6)
+Structural NaN fill,4 'time since' columns (linear view),training maximum,TRAIN,flags kept (Section 6)
 Standardisation (z-score),non-binary numeric columns (linear view),mean and standard deviation,TRAIN,only for scale-sensitive models
 Log transform rule,8 skewed columns,which columns: training skewness,TRAIN,the log itself learns nothing
 Reduced feature set,19 numeric columns,Spearman ρ and univariate AUC,TRAIN sample,plain linear / distance models only
 Class-imbalance treatment,training rows,class weights or resampling,each TRAIN fold (Task 2),never on validation/test
 Feature-group selection,7 groups,group ablation,TRAIN folds (Task 2),not done in Task 1
-Outlier thresholds / capping,—,—,not used,log transform instead (§10)
-PCA,—,—,not used,§12.6
+Outlier thresholds / capping,—,—,not used,log transform instead (Section 10)
+PCA,—,—,not used,Section 12.6
 Rare-category grouping,—,—,not needed,smallest post has hundreds of training sessions
