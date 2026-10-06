@@ -155,9 +155,10 @@ is only known after the session.
 
 Seven columns describe what happened during the session: energy, electricity cost, service charge, amount,
 actual payment, end time and payment time. \col{end_cause} is the outcome itself. Figure~\ref{fig:auc} shows why
-these columns are a problem. On its own, each of them separates normal and abnormal sessions with an \ac{ROC-AUC} of
-0.82--0.85, better than any variable known at the start (best 0.77). The reason is that abnormal sessions are
-short and deliver little energy, so these columns describe the result instead of predicting it, so all of them
+these columns are a problem. On its own, the energy, each money column and the duration separate normal and
+abnormal sessions with an \ac{ROC-AUC} of 0.82--0.85, better than any variable known at the start (best 0.77). The
+payment delay is weaker (0.61), but it is also only known after the session. The reason is that abnormal sessions
+are short and deliver little energy, so these columns describe the result instead of predicting it, so all of them
 were excluded.
 
 \begin{figure}[!htb]
@@ -234,9 +235,9 @@ returning users (20.2\% against 17.5\%).
 Figure~\ref{fig:monthly} shows that the data are not stable over the two years. Monthly volume drops to 1,391
 sessions in February 2020, probably because of COVID-19, and reaches 25--28k sessions per month in autumn 2021.
 The abnormal share falls from 26.3\% to 13.7\% and later rises again to 22.9\%. The type of fault also changes:
-connection faults add 7.1 percentage points to the abnormal share in Q1-2020, but only about 1 point from Q3-2020
+connection faults add 7.1 percentage points to the abnormal share in Q1-2020, but only 1--2 points from Q3-2020
 onwards. At the start of the file the history columns are still incomplete, which is why 31\% of the sessions in
-January 2020 come from ``new'' users, against 10--15\% later. Finally, posts 17--20 stop on 28 Sep 2021.
+January 2020 come from ``new'' users, against about 9--15\% later. Finally, posts 17--20 stop on 28 Sep 2021.
 Some things are stable, though. The abnormal share of each post is similar in 2020 and 2021 (Spearman 0.81),
 which explains why post history works. Because of all the changes above, a random split would mix different
 periods and give results that are too optimistic, so we split the data by time.
