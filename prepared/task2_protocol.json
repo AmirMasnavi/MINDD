@@ -1,0 +1,272 @@
+{
+  "problem": {
+    "unit_of_observation": "one charging session (identified by Start Time)",
+    "positive_class": "is_Abnormal = 1: end_cause is one of the 13 fault / failure causes",
+    "negative_class": "is_Abnormal = 0: 'Charging ends normally' or 'User stops charging'",
+    "normal_causes": [
+      "Charging ends normally",
+      "User stops charging"
+    ],
+    "prediction_moment": "Start Time of the session",
+    "purpose": "ranked risk alerts for preventive monitoring and maintenance prioritisation",
+    "target_assumption": "team mapping validated against the dataset's own history columns (Task 1 §5.2); instructor confirmation pending"
+  },
+  "predictors": {
+    "n_features": 29,
+    "groups": {
+      "calendar": [
+        "hour",
+        "dow"
+      ],
+      "tariff": [
+        "tariff_period"
+      ],
+      "location": [
+        "post_id",
+        "location",
+        "district"
+      ],
+      "weather": [
+        "temperature",
+        "humidity",
+        "precipitation",
+        "rain_flag"
+      ],
+      "post_history": [
+        "post_previous_sessions_1D",
+        "post_previous_sessions_7D",
+        "post_previous_sessions_30D",
+        "post_previous_abnormal_rate_1D",
+        "post_previous_abnormal_rate_7D",
+        "post_previous_abnormal_rate_30D",
+        "post_hours_since_previous_completed_session",
+        "post_hours_since_previous_completed_abnormal"
+      ],
+      "user_history": [
+        "is_new_user",
+        "user_previous_sessions_30D",
+        "user_previous_sessions_180D",
+        "user_previous_sessions_730D",
+        "user_previous_abnormal_rate_30D",
+        "user_previous_abnormal_rate_180D",
+        "user_previous_abnormal_rate_730D",
+        "user_days_since_previous_completed_session",
+        "user_days_since_previous_completed_abnormal",
+        "user_no_previous_completed_abnormal"
+      ],
+      "concurrency": [
+        "user_active_sessions_at_start"
+      ]
+    },
+    "categorical": [
+      "post_id",
+      "location",
+      "district",
+      "tariff_period"
+    ]
+  },
+  "excluded": [
+    {
+      "column": "UserID",
+      "category": "4 excluded for another reason",
+      "reason": "Key field: 56,115 different accounts, most with one or two sessions, and a large share of the validation sessions comes from accounts not seen in training. A model would memorise accounts, and it would identify people. The user's *history* is the legitimate substitute."
+    },
+    {
+      "column": "Order creation time",
+      "category": "4 excluded for another reason",
+      "reason": "Its availability at the prediction moment is not guaranteed: the order is stamped after the start in 57.2% of the training sessions, by up to hours. Its lag to the start also reflects how the start went."
+    },
+    {
+      "column": "Transaction power/kwh",
+      "category": "3 generated during/after the session",
+      "reason": "Energy delivered during the session."
+    },
+    {
+      "column": "Electricity cost/Yuan",
+      "category": "3 generated during/after the session",
+      "reason": "Cost of the energy delivered during the session."
+    },
+    {
+      "column": "Service charge/Yuan",
+      "category": "3 generated during/after the session",
+      "reason": "Fee computed on the finished transaction."
+    },
+    {
+      "column": "Transaction Amount/Yuan",
+      "category": "3 generated during/after the session",
+      "reason": "Sum of electricity cost and service charge, known only at the end."
+    },
+    {
+      "column": "Actual Payment/Yuan",
+      "category": "3 generated during/after the session",
+      "reason": "Amount paid after the session."
+    },
+    {
+      "column": "End Time",
+      "category": "3 generated during/after the session",
+      "reason": "Moment the session ended. It is only used to know *when a label becomes available* (the purge in Section 7), never as a predictor."
+    },
+    {
+      "column": "Payment time",
+      "category": "3 generated during/after the session",
+      "reason": "Recorded after the session (before the end in 20% of the rows, so it is not even a clean timestamp)."
+    },
+    {
+      "column": "end_cause",
+      "category": "2 target construction only",
+      "reason": "Reason why the session ended. It *is* the outcome, so it can only define the label."
+    },
+    {
+      "column": "electricity_price",
+      "category": "4 excluded for another reason",
+      "reason": "Deterministic function of `tariff_period` (3 price levels for 7 periods), so it adds nothing."
+    },
+    {
+      "column": "post_previous_abnormal_1D",
+      "category": "4 excluded for another reason",
+      "reason": "Exact function of the session count and the smoothed rate: abnormal = rate × (sessions + 5) − 1."
+    },
+    {
+      "column": "post_previous_abnormal_7D",
+      "category": "4 excluded for another reason",
+      "reason": "Exact function of the session count and the smoothed rate."
+    },
+    {
+      "column": "post_previous_abnormal_30D",
+      "category": "4 excluded for another reason",
+      "reason": "Exact function of the session count and the smoothed rate."
+    },
+    {
+      "column": "post_no_previous_completed_session",
+      "category": "4 excluded for another reason",
+      "reason": "Constant after the burn-in: it is 1 only for the first session of each post, in January 2020."
+    },
+    {
+      "column": "post_no_previous_completed_abnormal",
+      "category": "4 excluded for another reason",
+      "reason": "Constant after the burn-in (same reason)."
+    },
+    {
+      "column": "user_previous_abnormal_30D",
+      "category": "4 excluded for another reason",
+      "reason": "Exact function of the session count and the smoothed rate."
+    },
+    {
+      "column": "user_previous_abnormal_180D",
+      "category": "4 excluded for another reason",
+      "reason": "Exact function of the session count and the smoothed rate."
+    },
+    {
+      "column": "user_previous_abnormal_730D",
+      "category": "4 excluded for another reason",
+      "reason": "Exact function of the session count and the smoothed rate."
+    },
+    {
+      "column": "user_no_previous_completed_session",
+      "category": "4 excluded for another reason",
+      "reason": "Almost the same indicator as `is_new_user` (φ = 0.995, 0.1% of the rows differ)."
+    }
+  ],
+  "metrics": {
+    "primary": "PR-AUC (average precision)",
+    "complementary": [
+      "ROC-AUC",
+      "Brier score",
+      "log-loss"
+    ],
+    "operational": {
+      "alert_budgets": [
+        0.05,
+        0.1,
+        0.2
+      ],
+      "measures": [
+        "precision",
+        "recall",
+        "correct alerts per 1,000",
+        "false alerts per 1,000",
+        "missed per 1,000"
+      ]
+    },
+    "stability": [
+      "per-fold value",
+      "std across folds",
+      "worst fold",
+      "trend per fold",
+      "folds won against the baseline"
+    ],
+    "not_used": [
+      "accuracy",
+      "F1",
+      "balanced accuracy",
+      "kappa",
+      "MCC"
+    ]
+  },
+  "temporal": {
+    "burn_in_end": "2020-04-01",
+    "test_start": "2021-10-01",
+    "seed": 42,
+    "folds": [
+      {
+        "fold": 1,
+        "train_from": "2020-04-01",
+        "train_before": "2020-10-01",
+        "validate_from": "2020-10-01",
+        "validate_before": "2021-01-01",
+        "train_sessions": 111470,
+        "purged": 37,
+        "validation_sessions": 60364
+      },
+      {
+        "fold": 2,
+        "train_from": "2020-04-01",
+        "train_before": "2021-01-01",
+        "validate_from": "2021-01-01",
+        "validate_before": "2021-04-01",
+        "train_sessions": 171832,
+        "purged": 39,
+        "validation_sessions": 41797
+      },
+      {
+        "fold": 3,
+        "train_from": "2020-04-01",
+        "train_before": "2021-04-01",
+        "validate_from": "2021-04-01",
+        "validate_before": "2021-07-01",
+        "train_sessions": 213641,
+        "purged": 27,
+        "validation_sessions": 57542
+      },
+      {
+        "fold": 4,
+        "train_from": "2020-04-01",
+        "train_before": "2021-07-01",
+        "validate_from": "2021-07-01",
+        "validate_before": "2021-10-01",
+        "train_sessions": 271182,
+        "purged": 28,
+        "validation_sessions": 75769
+      }
+    ]
+  },
+  "aggregation": {
+    "ranking": "unweighted mean of per-fold PR-AUC",
+    "also_reported": [
+      "mean weighted by validation sessions",
+      "pooled"
+    ],
+    "stability": [
+      "std across folds",
+      "worst fold",
+      "trend per fold"
+    ],
+    "comparison": "paired per-fold differences and folds won; no p-values with four folds"
+  },
+  "baselines": {
+    "B0": "random scores / constant training prior / always normal",
+    "B1": "post_previous_abnormal_rate_7D (no fitting)"
+  },
+  "threshold_rule": "pooled out-of-fold predictions of the four folds; alert budget or cost-ratio cut-off after calibration check; stable across folds; frozen before test",
+  "test_protection": "test rows not loaded in Task 2; final model refitted on all development data with purge; one evaluation; no changes afterwards"
+}
