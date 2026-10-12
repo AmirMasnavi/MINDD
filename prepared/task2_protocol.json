@@ -9,7 +9,7 @@
     ],
     "prediction_moment": "Start Time of the session",
     "purpose": "ranked risk alerts for preventive monitoring and maintenance prioritisation",
-    "target_assumption": "team mapping validated against the dataset's own history columns (Task 1 §5.2); instructor confirmation pending"
+    "target_evidence": "our mapping reproduces the dataset's own previous-abnormal columns in about 100% of the rows (Task 1, Section 5.2)"
   },
   "predictors": {
     "n_features": 29,
@@ -69,7 +69,7 @@
     {
       "column": "UserID",
       "category": "4 excluded for another reason",
-      "reason": "Key field: 56,115 different accounts, most with one or two sessions, and a large share of the validation sessions comes from accounts not seen in training. A model would memorise accounts, and it would identify people. The user's *history* is the legitimate substitute."
+      "reason": "Key field: 56,115 different accounts, most with one or two sessions, and a large share of the validation sessions comes from accounts not seen in training. A model would memorise accounts, and it would identify people. The user's history is the legitimate substitute."
     },
     {
       "column": "Order creation time",
@@ -104,7 +104,7 @@
     {
       "column": "End Time",
       "category": "3 generated during/after the session",
-      "reason": "Moment the session ended. It is only used to know *when a label becomes available* (the purge in Section 7), never as a predictor."
+      "reason": "Moment the session ended. It is only used to know when a label becomes available (the purge in Section 7), never as a predictor."
     },
     {
       "column": "Payment time",
@@ -114,7 +114,7 @@
     {
       "column": "end_cause",
       "category": "2 target construction only",
-      "reason": "Reason why the session ended. It *is* the outcome, so it can only define the label."
+      "reason": "Reason why the session ended. It is the outcome, so it can only define the label."
     },
     {
       "column": "electricity_price",

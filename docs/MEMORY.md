@@ -1,10 +1,21 @@
 # Project memory
 
-Last updated: 2026-10-02
+Last updated: 2026-10-12
 
 ## Current state
 
-- The single Task 1 notebook is `TP1_Task1_Data_Understanding_and_Preparation.ipynb` (§0–§17). It contains the EDA,
+- Task 2 (prediction and evaluation setting) is complete in `Task2.ipynb` (Sections 1 to 10). It fits no model. It
+  writes the evaluation protocol to `prepared/task2_protocol.json`, the decision log to
+  `prepared/task2_decision_log.csv` and two figures to `prepared/figures_task2/`. The report for both tasks is
+  `docs/TASK2_REPORT.pdf`, built from `docs/report/main.tex`. Chapters 1 to 3 are Task 1, chapter 4 is Task 2 and chapter 5
+  is the final Synthesis, which is rewritten at each deliverable.
+- The protocol: 29 features in 7 groups from 27 of the 47 columns; primary metric PR-AUC read with the abnormal share;
+  ROC-AUC, Brier score and log-loss as complementary metrics; alerts per 1,000 sessions at budgets of 5%, 10% and 20%;
+  four expanding-window folds (validation quarters 2020-Q4 to 2021-Q3) with a purge; test from 2021-10-01 not loaded;
+  models ranked by the unweighted mean of the fold PR-AUC; baselines B0 (no skill) and B1 (7-day post failure rate,
+  mean PR-AUC 0.511 against 0.181).
+- The submitted Task 1 notebook is `Task1.ipynb`. The extended reference notebook is
+  `TP1_Task1_Data_Understanding_and_Preparation.ipynb` (§0–§17). It contains the EDA,
   the derived target, the availability audit, the preparation decisions, the learned transformations (fitted on TRAIN only)
   and the preliminary diagnostics. The only fitted models are untuned diagnostics on training-window folds (§14–§15).
   Validation and test are untouched.
@@ -41,25 +52,36 @@ Last updated: 2026-10-02
 | 2026-10-02 | (Figures superseded by the pinned-environment re-run: post history −0.195, user history −0.037, cold-start ROC-AUC 0.714 vs 0.845.) Completed §13 (two preprocessing views fitted on TRAIN only, plus the ledger), §14 (class weights keep the ranking but distort probabilities, so no resampling and no SMOTE), §15 (group ablation: removing post history changes PR-AUC by −0.193 and removing user history by −0.035, while the other groups and `post_id` change it by about 0; cold-start users have ROC-AUC 0.716 against 0.846), §16 (artefacts and 8 integrity checks), and §17 (synthesis and decision log). |
 | 2026-10-02 | Replaced the unsupported claim that the burn-in exclusion is harmless with an actual check (§15.4: including it changes PR-AUC by +0.0004). The exclusion stays. |
 | 2026-10-02 | Added `scipy` and `scikit-learn` (used by the notebook) to `requirements.txt`, and added `prepared/*.csv.gz` to `.gitignore`. |
+| 2026-10-05 | The target mapping is stated as the team's decision, supported by the dataset's own history columns (about 100% agreement). Reports and notebooks no longer say that it waits for the instructor. |
+| 2026-10-09 | First version of `Task2.ipynb` committed (`eb92ca6`): problem definition, classification of the 47 columns, metrics, four expanding-window folds, aggregation rule and baselines B0 and B1. |
+| 2026-10-12 | Rewrote the commentary of `Task2.ipynb` in the same voice as `Task1.ipynb` (no fixed labels, "Section x.y" for references) and kept every methodological decision. Re-ran it in the pinned `.venv`: all four result tables are identical to the first version. Three figures in the commentary were corrected against the output (user stops would give about 54% abnormal in the development data; 12% of the development sessions are from new users; the reading of the fold 4 precision-recall curve). |
+| 2026-10-12 | The 7-day window of baseline B1 comes from the Task 1 ranking, whose training period overlaps the validation quarters of folds 1 to 3. Recorded as a limitation in the notebook and the report; B1 fits nothing, so the effect should be small. |
+| 2026-10-12 | Added chapter 5 (Task 2) to the report and saved it as `docs/TASK2_REPORT.pdf`. The validation quarter of Task 1 is fold 4 of Task 2, and the report now says so. Sentences that promised model fitting "for Task 2" now say "the modelling task". |
+| 2026-10-12 | Ran the unslop skill (`theclaymethod/unslop` 2.3.0, rewrite flow, `crisp` preset) over the commentary of `Task1.ipynb` and `Task2.ipynb` and over the whole report. It confirmed and repaired 6 sentences: 3 in `Task2.ipynb` (cells 12, 28 and 37) and 3 in report Sections 5.2, 5.5 and 5.7. They were one "not a matter of taste" framing (in both files), two empty framing sentences, and "equals" / "exactly as the theory says" for B0 where the quoted numbers only come close (in both files). `Task1.ipynb` and report chapters 1 to 4 had no confirmed finding and were not edited. Protected with a reason: "the real capacity is unknown" (the only hard scanner hit, a literal use, in the metric table of the notebook and of the report) and "robust to outliers" in `Task1.ipynb`. Scanner figures before and after: hard phrase hits 0 / 1 / 1 for Task 1 / Task 2 / report, unchanged; opener unique ratio 0.421 / 0.391 / 0.488 before and 0.421 / 0.385 / 0.482 after; average sentence length 23.9 / 21.7 / 17.1 before and 23.9 / 21.8 / 17.1 after. The soft structure and silhouette flags remain, and the skill treats them as advisory. `Task2.ipynb` was re-run (result tables identical) and the report rebuilt (18 pages). |
+| 2026-10-12 | Restructured the report around one final chapter. The chapter "Synthesis of Task 1" was removed, the Task 2 chapter is now chapter 4, and chapter 5, "Synthesis", closes the report and is rewritten at each deliverable. It is built around the project question and has four paragraphs: what the data allow (the Task 1 items of the brief, with their numbers), where the answer stands (protocol fixed, B1 at a mean PR-AUC of 0.511 against 0.181), the assumptions and limits of both tasks in one place, and one sentence on the modelling task. The limitations paragraph left the "Evaluation protocol" section. The earlier entries of this date name the Task 2 chapter by its old number: Sections 5.x are now 4.x. Two layout changes in `main.tex`: the bibliography follows the Synthesis on the same page, and chapter headings use the `needspace` package so a heading and its contents entry stay on the same page (the contents listed the Synthesis one page early before this). The report is still 18 pages. |
 
 ## Open questions
 
-1. Instructor: confirm or correct the team's `is_Abnormal` mapping, especially whether user-requested stops are normal, and clarify how to handle unknown or missing causes.
+1. Closed on 2026-10-05: the `is_Abnormal` mapping is the team's decision (see Decisions). No confirmation is awaited.
 2. Instructor: clarify the incomplete preprocessing sentence at the bottom of PDF p. 3.
-3. Team: decide whether `post_id` stays in the main feature set or becomes a Task 2 comparison (§15.1 shows no gain).
+3. Team: decide whether `post_id` stays in the main feature set. It is an ablation comparison for the modelling task (§15.1 of the extended notebook shows no gain).
 4. Team and course: confirm the report format and length, the submission channel, the AI-use disclosure, the private data-sharing location, and the repository visibility (must be private). The Task 1 deadline is 2026-10-04.
+
+5. Team: `Task2.ipynb` cites "the slides" nine times for evaluation concepts (PR curve, holdout and K-fold, the golden rule, evaluating on the initial distribution, Wilcoxon, McNemar, model complexity). The author of the first version should confirm them against the evaluation deck.
+6. Modelling task: the cost ratio between a missed failure and a false alert, and the alert capacity, are unknown. The budgets of 5%, 10% and 20% are assumptions, and the final threshold needs a stated assumption.
 
 ## Source fingerprints (SHA-256)
 
 - CSV: `f6109dc066162bc770417c39294cdecc7519646c3cfa8c1d95671ea30f0e0a9b`
-- PDF: `a0edf5359b7394049ffdb13ea79eea22f707aaf959fb9c46545df0211a05ebda`
+- PDF (Task 1 brief): `a0edf5359b7394049ffdb13ea79eea22f707aaf959fb9c46545df0211a05ebda`
+- PDF (Task 1 and Task 2 brief): `e3a3e16aa97e96558dca298edf6492679d6a07c311ffb158a1a7ae7dccb350a1`
 - Original notebook: `3d0c78dc6abfa04f1330b3eff4bfa0ca54acd69902df0c4f4d6841e4242ee55f`
 
 ## Handoff
 
-Next steps: each member reviews one part of the notebook and report (§1–§6, §7–§12, §13–§17). Then confirm the target
-mapping with the instructor and clarify the time and payment semantics if possible.
-Proceed to later modelling only when it is requested separately.
+Next steps: the team reviews `Task2.ipynb` and chapters 4 and 5 of the report, and the author of the first notebook version
+confirms the slide citations. Then submit Task 2 (notebook and report).
+Start the modelling task only when its brief arrives. It must use `prepared/task2_protocol.json` unchanged.
 
 Keep future entries short: date, completed work, evidence location, decision
 and reason, remaining blocker, next action. Record actual outcomes, not intended work.

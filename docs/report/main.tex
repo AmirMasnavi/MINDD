@@ -16,6 +16,7 @@
 \usepackage{microtype}
 \usepackage{acronym}
 \usepackage{etoolbox}
+\usepackage{needspace}
 \patchcmd{\thebibliography}{\chapter*}{\section*}{}{}
 \usepackage[hidelinks]{hyperref}
 \makeatletter\g@addto@macro\UrlBreaks{\do\_}\makeatother
@@ -40,7 +41,7 @@
   \vspace*{2.5cm}
   {\LARGE Project 1 -- Abnormal EV Charging Sessions\par}
   \vspace{0.3cm}
-  {\Large Task 1: Data Understanding, Audit and Preparation\par}
+  {\Large Tasks 1 and 2: Data Preparation and Evaluation Setting\par}
   \vspace{0.6cm}
   {\large MSc in Informatics Engineering\\
   Data Mining (MINDD)\par}
@@ -76,6 +77,13 @@ not at random.
 We keep 29 features in 7 groups. The recent failure history of the charging post was the strongest signal we
 found.
 
+In the second task we fixed how a solution will be evaluated, before training any model. A prediction is a risk
+alert raised when the session starts. The abnormal class is the minority and a missed failure costs more than a
+false alert, so the primary metric is the area under the precision--recall curve (PR-AUC), always read together
+with the abnormal share of the period. Models will be compared on four expanding-window folds, one per quarter,
+and the last quarter of 2021 stays untouched as the final test. Two baselines give the reference: a no-skill
+baseline, and the 7-day failure rate of the post, which already reaches a PR-AUC of 0.51 against 0.18.
+
 \tableofcontents
 \listoffigures
 
@@ -83,6 +91,8 @@ found.
 \begin{acronym}[ROC-AUC]
   \acro{AUC}{Area Under the Curve}
   \acro{EV}{Electric Vehicle}
+  \acro{FN}{False Negative}
+  \acro{FP}{False Positive}
   \acro{IQR}{Interquartile Range}
   \acro{NaN}{Not a Number (missing value)}
   \acro{PCA}{Principal Component Analysis}
@@ -97,7 +107,7 @@ found.
 
 % Main chapters: one-line headings that follow each other without a page break
 \makeatletter
-\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{\par\bigskip}{}{}
+\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{\par\bigskip\needspace{6\baselineskip}}{}{}
 \renewcommand{\@makechapterhead}[1]{{\parindent\z@\raggedright\normalfont
   \LARGE\bfseries\thechapter\quad #1\par\nobreak\vskip 12\p@}}
 \makeatother
@@ -108,10 +118,10 @@ found.
 The project asks whether the information available when an \ac{EV} charging session starts can predict that the
 session will end abnormally. We work with an educational version of the China EV Charging Dataset
 \cite{zhang2025}: 441,077 sessions and 47 columns, from 31 Dec 2019 to 31 Dec 2021, at 92 charging posts in 13
-stations and 3 districts. All the numbers in this report come from our notebook
-\nolinkurl{Task1.ipynb} (seed 42).
+stations and 3 districts. All the numbers in this report come from our notebooks
+\nolinkurl{Task1.ipynb} and \nolinkurl{Task2.ipynb} (seed 42).
 
-We followed three rules during the whole task. First, a variable can only be a predictor if it is known when the
+We followed three rules during the whole project. First, a variable can only be a predictor if it is known when the
 session starts. Second, before fixing a problem in the data, we tried to understand it. Third, any value learned
 from the data (for example, the mean used for scaling) is learned from the training period only.
 
@@ -276,10 +286,12 @@ also removed (\emph{purged}) the 28 training sessions that end after the trainin
   \end{tabularx}
 \end{table}
 
-The split shows two things that matter for Task 2. First, 39.9\% of the validation sessions and 61.3\% of the
+The split shows two things that matter for the evaluation. First, 39.9\% of the validation sessions and 61.3\% of the
 test sessions come from accounts that never appear in training, so \col{user_id} cannot be a feature. Second,
-every post in validation and test was already seen in training, so we cannot test a brand-new post. For tuning,
-we will use expanding-window folds inside the training period instead of a random K-fold.
+every post in validation and test was already seen in training, so we cannot test a brand-new post. The training
+and validation periods together form the development data. Chapter~\ref{ch:eval} divides them into four
+expanding-window folds, and the validation quarter of Table~\ref{tab:split} is the fourth one, so we do not use a
+random K-fold.
 
 \section{Features}\label{sec:features}
 
@@ -341,40 +353,342 @@ days, which would leak information from the validation and test periods.
     Standardisation & Mean and standard deviation & Linear version \\
     Log-transform rule & Which columns are skewed & Linear version (8 columns) \\
     Reduced feature set & Spearman $\rho$ and \acs{AUC} (training sample) & Plain linear / distance models \\
-    Class-imbalance treatment & Class weights or resampling & Training folds only (Task 2) \\
+    Class-imbalance treatment & Class weights or resampling & Training folds only (modelling task) \\
     Outlier capping, \acs{PCA}, rare-category grouping & Nothing & Not used / not needed \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-The classes (about 1\,:\,4.4) are not balanced in the prepared data. If Task 2 uses class weights or
+The classes (about 1\,:\,4.4) are not balanced in the prepared data. If the modelling task uses class weights or
 resampling, they will be applied only inside the training folds, so validation and test keep their real
 distribution. We will be careful with \ac{SMOTE}, because interpolating between sessions can create values that
 cannot exist, such as half a flag or a mix of two posts.
 
 %-------------------------------------------------------------- 4
+\chapter{Prediction and Evaluation Setting}\label{ch:eval}
+
+In the second task we fixed what exactly is predicted and how a solution will be judged, before training any
+model. The notebook \nolinkurl{Task2.ipynb} fits no model. It builds the evaluation protocol and checks it with
+two simple baselines.
+
+\section{Prediction problem}\label{sec:problem}
+
+The unit of observation is one charging session, that is, one transaction of one account at one charging post.
+The positive class is an abnormal ending (\col{is_Abnormal}\,=\,1, one of the 13 fault causes). The negative
+class is a normal ending or a stop requested by the user, as defined in Section~\ref{sec:target}. In the
+development period (April 2020 to September 2021), 18.5\% of the 346,979 sessions are abnormal.
+
+The prediction is made once, at the start of the session, with only the information known at that moment. We
+designed it for preventive monitoring and maintenance prioritisation. The sessions that are starting, and through
+them the posts, are ranked by their risk of failure, so that an operator with limited capacity looks first at the
+riskiest ones. Predicting a session as abnormal is therefore a risk alert: this session, on this post, has an
+increased risk of ending in a failure. It is not a diagnosis and it does not say which fault will happen. The
+positive class also mixes 13 causes whose mix changes over time (Section~\ref{sec:temporal}), so a model could
+detect one type of failure well and miss another.
+
+\section{Variables available at the start}\label{sec:variables}
+
+We placed each of the 47 supplied columns in one of the four categories of the brief
+(Table~\ref{tab:classification}). The notebook builds this table in code and checks that every column appears
+exactly once.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Classification of the 47 supplied columns}
+  \label{tab:classification}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.0cm}rLL}
+    \toprule
+    Category & Columns & Which ones & Reason \\
+    \midrule
+    Eligible predictors & 27 & Start time, post, station, district, weather (3), tariff period, post history (8), user history (10), concurrency & Known when the session starts; they give the 29 features of Section~\ref{sec:features} \\
+    \addlinespace[2pt]
+    Target construction only & 1 & \col{end_cause} & It is the outcome itself \\
+    \addlinespace[2pt]
+    Generated during or after the session & 7 & Energy, electricity cost, service charge, amount, actual payment, end time, payment time & They only exist once the session has ended (Section~\ref{sec:leakage}) \\
+    \addlinespace[2pt]
+    Excluded for another reason & 12 & \col{UserID}; order creation time; \col{electricity_price}, six abnormal counts, two post ``no history'' flags and \col{user_no_previous_completed_session} & Identifier; uncertain timing; ten redundant columns (Table~\ref{tab:dropped}) \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+We exclude the seven after-session columns and \col{end_cause} because a model that used them could not run when
+the session starts. \col{UserID} is excluded because 35\% to 46\% of the validation sessions of each
+fold come from accounts that are not in the training window. A model would only memorise accounts, and it would
+identify people. The user history is the legitimate substitute.
+
+The eligible set depends on assumptions that the data cannot prove. Weather is taken as a forecast, as the brief
+says. The history columns are taken as supplied. In production they keep updating, so in a validation period they
+already contain the outcomes of earlier sessions of that period that had finished. User history needs the platform
+to identify the account at the start, otherwise the user group is missing (the cold-start case). Finally,
+\col{post_id} is also an identifier, but the post is known at the start and is the most informative location
+level, so it stays, and the later ablation will show whether it adds value.
+
+\section{Consequences of the two errors}\label{sec:errors}
+
+A \ac{FP} flags a normal session as risky, and a \ac{FN} lets an abnormal session pass unnoticed. What they cost
+depends on the action that follows the alert. With automated monitoring, a false alert is one more line on a
+dashboard, while a missed failure means that the next sessions on that post are not watched. With an inspection or
+a maintenance visit, a false alert wastes technician time, while a missed failure leaves a faulty post in service.
+Failures cluster by post (Figure~\ref{fig:history}), so one missed failure is usually followed by more. Warning the
+driver is the most delicate action, because false warnings make drivers stop trusting the alerts, so we left it
+out of the main use.
+
+For a single event, we consider the false negative the more expensive error, because the action after an alert is
+cheap compared with a failure that continues unseen. However, the number of false alerts is limited by the
+capacity of the operators, and a very long list of alerts becomes useless. The application therefore needs a good
+ranking, with the real failures near the top, and a fixed number of alerts that the team can handle.
+
+We do not know the cost ratio $c = \text{cost(FN)}/\text{cost(FP)}$. With calibrated probabilities the best
+cut-off would be $t^{*} = 1/(1+c)$, which gives 0.50 for $c=1$, 0.33 for $c=2$ and 0.17 for $c=5$. For $c$ above
+4.4 the cut-off is below the abnormal share and almost every session would be flagged. Fixing a cut-off now would
+be arbitrary. Instead, we chose metrics that judge the ranking and the quality of the probabilities, and we report
+the operational results for fixed alert budgets (5\%, 10\% and 20\% of the sessions flagged). The cut-off will be
+chosen later, from the cost ratio and the capacity.
+
+\section{Evaluation metrics}\label{sec:metrics}
+
+Table~\ref{tab:metrics} lists the metrics, which we chose before optimising any model.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Evaluation metrics, their role and their limitation in this problem}
+  \label{tab:metrics}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{3.4cm}LL}
+    \toprule
+    Metric (role) & Why we use it & Limitation here \\
+    \midrule
+    \acs{PR-AUC} (primary) & The abnormal class is the minority and both errors matter. It measures how precise the alerts stay as more failures are caught, and it ignores true negatives & Its no-skill value is the abnormal share, which changes between periods, so we read it next to that share and as a lift \\
+    \addlinespace[2pt]
+    \acs{ROC-AUC} (complementary) & The chance that an abnormal session is ranked above a normal one. It does not depend on the abnormal share, so it can be compared across periods & Can look optimistic with imbalanced classes and says little about the top of the ranking \\
+    \addlinespace[2pt]
+    Brier score and log-loss (complementary) & They measure the quality of the probabilities, which a cost-based cut-off needs & Only for models that output probabilities; both depend on the abnormal share \\
+    \addlinespace[2pt]
+    Precision, recall and correct, false and missed alerts per 1,000 sessions, at an alert budget (operational) & The budget is the practical limit and is the same for every model and period, and the counts turn the errors into workload & The budgets are assumptions, because the real capacity is unknown; the counts depend on the abnormal share of the period \\
+    \addlinespace[2pt]
+    Value per fold, standard deviation, worst fold, trend, folds won (stability) & A model should not be judged by its average only & Four folds give only a rough idea of the variability \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+We do not use accuracy. Always predicting ``normal'' is right in 79--84\% of the sessions of each fold and catches
+no failure. F1 and similar metrics need a cut-off that is not chosen yet, and F1 gives the same weight to both
+errors, so they can only be reported once the final cut-off exists.
+
+\section{Temporal evaluation}\label{sec:folds}
+
+The sessions cannot be divided at random, because volume, abnormal share and fault mix change over time
+(Section~\ref{sec:temporal}) and a model is always used on future sessions. Training sessions must come before
+the sessions that evaluate them. We keep the burn-in and the test period of Section~\ref{sec:split} and divide the
+development period into four expanding-window folds (Table~\ref{tab:folds} and Figure~\ref{fig:folds}). Each fold
+trains on the sessions that started and ended before its validation quarter. The fourth fold is exactly the
+training and validation periods of Table~\ref{tab:split}.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{The four expanding-window folds (training always starts on 1 Apr 2020)}
+  \label{tab:folds}
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}cllrrrrr}
+    \toprule
+         & Training    & Validation & Training &        & Validation & Abnormal & Unseen   \\
+    Fold & until       & quarter    & sessions & Purged & sessions   & share    & accounts \\
+    \midrule
+    1 & 30 Sep 2020 & Oct to Dec 2020 & 111,470 & 37 & 60,364 & 16.8\% & 35.3\% \\
+    2 & 31 Dec 2020 & Jan to Mar 2021 & 171,832 & 39 & 41,797 & 15.8\% & 36.3\% \\
+    3 & 31 Mar 2021 & Apr to Jun 2021 & 213,641 & 27 & 57,542 & 18.2\% & 46.0\% \\
+    4 & 30 Jun 2021 & Jul to Sep 2021 & 271,182 & 28 & 75,769 & 21.1\% & 39.9\% \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.72\textwidth]{07_2_temporal_folds.png}
+  \caption{Expanding-window folds, burn-in and final test period}
+  \label{fig:folds}
+\end{figure}
+
+The boundaries are calendar quarters, fixed before looking at any model result. A quarter is about one season. It
+is large enough for a stable estimate (every validation quarter has at least 6,600 abnormal sessions) and short
+enough to show changes over time. Four folds are a compromise: an earlier fold would train on less than six months
+of data, and monthly folds would give 12 small and noisy estimates. The window is expanding because the model that
+would be deployed is trained on all the past.
+
+The folds are not equal. The validation quarters have between 41,797 and 75,769 sessions, and the training window
+grows from 6 to 15 months, so the first folds train on less data and do not include a full winter. We expect their
+scores to be a little pessimistic. The label of a session is only known when it ends, so the 27 to 39 training
+sessions per fold that were still running at the boundary are purged.
+
+Every operation that learns from the data (Table~\ref{tab:ledger}) is fitted again inside each training fold,
+together with the model, and applied unchanged to the validation quarter. Class weights or resampling, if used,
+change the training rows only. Even a simple statistic differs between folds: the class prior goes from 17.7\% to
+18.9\%, and no fold has the 18.5\% of the whole development period. The difference is small here, but it would be
+larger for steps that use the target.
+
+To protect the test period, the Task 2 notebook counts its 80,081 sessions and removes them right after reading
+the file. Model, hyperparameters and cut-off will be chosen with the four folds only. The
+cut-off will be chosen on the out-of-fold predictions of the four folds together and then frozen. The final model
+will be refitted on the whole development period and scored once on the test.
+
+\section{Aggregation across folds}\label{sec:aggregation}
+
+We rank the models by the unweighted mean of the \ac{PR-AUC} of the four folds. We want a model that works in a
+future period, so each period counts once. Next to it we report the mean weighted by the number of validation
+sessions, which reflects the operational volume, and the pooled value over all out-of-fold predictions, which is
+needed to choose the cut-off but is dominated by the large folds. Stability is described by the value in each
+fold, the standard deviation, the worst fold and the trend. An improving trend is partly expected, because later
+folds train on more months, while a falling trend would be a sign of drift.
+
+The abnormal share differs between folds, so the scores of two folds cannot be compared directly, but the
+difference between two models on the same fold can. We therefore compare models fold by fold, with the paired
+differences and the number of folds won. With four folds, the smallest possible $p$-value of an exact Wilcoxon
+test is 0.125, even when a model wins in every fold, so we do not claim statistical significance for these
+comparisons. When two models are within about one standard deviation of each other, we will prefer the simpler and
+more stable one.
+
+\section{Baselines}\label{sec:baselines}
+
+We defined two baselines before training any model and evaluated them with the same folds and metrics
+(Table~\ref{tab:baselines}). B0 is the no-skill baseline: random scores for the ranking metrics and the training
+prior as a constant probability. B1 uses one supplied column as its score, the smoothed abnormal rate of the post
+in the previous 7 days, and fits nothing. This column was the strongest single signal in Task~1
+(Section~\ref{sec:relations}).
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Baselines on the four validation quarters}
+  \label{tab:baselines}
+  \begin{tabularx}{\textwidth}{Lrrrrrrr}
+    \toprule
+    & Abnormal & \multicolumn{2}{c}{\acs{PR-AUC}} & B1 & B1 & \multicolumn{2}{c}{Brier score} \\
+    Fold & share & B0 & B1 & lift & \acs{ROC-AUC} & B0 & B1 \\
+    \midrule
+    1 & 16.8\% & 0.172 & 0.499 & 2.96 & 0.764 & 0.140 & 0.113 \\
+    2 & 15.8\% & 0.162 & 0.456 & 2.88 & 0.749 & 0.134 & 0.111 \\
+    3 & 18.2\% & 0.181 & 0.547 & 3.00 & 0.789 & 0.149 & 0.115 \\
+    4 & 21.1\% & 0.210 & 0.540 & 2.56 & 0.788 & 0.168 & 0.132 \\
+    \midrule
+    Unweighted mean & -- & 0.181 & 0.511 & 2.85 & 0.772 & -- & -- \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+B0 behaves as expected. Its \acs{PR-AUC} is close to the abnormal share of each fold, so its lift is about 1, and
+its \acs{ROC-AUC} is about 0.50. This means that ``no skill'' is not one number: it moves from 0.16 to 0.21 with the abnormal
+share. Fold 4 shows why this matters. Its \acs{PR-AUC} is almost the same as in fold 3 (0.540 against 0.547), but
+its lift is clearly lower (2.56 against 3.00), because the no-skill level rose to 21\%. For this reason we never
+read a \acs{PR-AUC} without the abnormal share of its period.
+
+B1 is already a strong reference. Its mean \acs{PR-AUC} is 0.511 (weighted 0.516, pooled 0.524), with a standard
+deviation of 0.042 across folds. Its worst fold is fold 2 (0.456), the quiet first quarter of 2021. It beats B0
+in the four folds, by 0.33 on average, and as a probability it has a lower Brier score than the constant prior in
+every fold. Figure~\ref{fig:baselines} shows its curves. In folds 1 to 3 the precision stays above 0.8 up to a
+recall of about 0.2. Fold 4 is less precise at the top of the ranking, but it has the highest curve beyond a
+recall of about 0.4.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.88\textwidth]{09_baselines.png}
+  \caption[Baseline B1: precision--recall curves and PR-AUC per fold]{Baseline B1: (a) precision--recall curves per fold, with the no-skill level dashed; (b) \acs{PR-AUC} per fold, with the lift over no skill}
+  \label{fig:baselines}
+\end{figure}
+
+Table~\ref{tab:operational} translates these results into alerts. With a budget of 5\% of the sessions, 74\% of
+the B1 alerts are real failures (68--79\% depending on the fold), but only 21\% of the failures are caught. With a
+budget of 20\%, half of the failures are caught and there are more false alerts than correct ones. B0 gives the
+chance level: its precision is the abnormal share (about 18\%) and its recall is the budget. A model is worth its complexity
+only if it catches more failures than B1 at the same budget, without making the probabilities worse.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Operational results of baseline B1 (mean of the four folds; alerts per 1,000 sessions)}
+  \label{tab:operational}
+  \begin{tabular*}{0.9\textwidth}{@{\extracolsep{\fill}}lrrrrr}
+    \toprule
+    Alert budget & Precision & Recall & Correct alerts & False alerts & Missed failures \\
+    \midrule
+    5\%  & 0.738 & 0.207 & 36.9 & 13.1  & 143.2 \\
+    10\% & 0.594 & 0.330 & 59.4 & 40.6  & 120.7 \\
+    20\% & 0.451 & 0.499 & 90.2 & 109.8 & 89.9 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+\section{Evaluation protocol}\label{sec:protocol}
+
+Table~\ref{tab:protocol} summarises the protocol. The notebook also saves it as
+\nolinkurl{prepared/task2_protocol.json}, so the modelling task reads the same features, folds and metrics.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Evaluation protocol, fixed before hyperparameter optimisation and model selection}
+  \label{tab:protocol}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.1cm}L}
+    \toprule
+    Element & Decision \\
+    \midrule
+    Admissible predictors & 29 features in 7 groups, built from 27 original columns \\
+    \addlinespace[2pt]
+    Excluded variables & \col{end_cause} (target only); 7 columns generated during or after the session; \col{UserID} (identifier); order creation time (uncertain timing); 10 redundant columns \\
+    \addlinespace[2pt]
+    Primary metric & \acs{PR-AUC}, read with the abnormal share of the fold and as a lift \\
+    Complementary metrics & \acs{ROC-AUC}, Brier score and log-loss \\
+    \addlinespace[2pt]
+    Operational measures & Precision, recall and correct, false and missed alerts per 1,000 sessions, at alert budgets of 5\%, 10\% and 20\% \\
+    \addlinespace[2pt]
+    Baselines & B0 no skill and B1, the 7-day failure rate of the post \\
+    \addlinespace[2pt]
+    Temporal strategy & Burn-in before 1 Apr 2020; four expanding-window folds with a purge (validation quarters from Q4-2020 to Q3-2021); test from 1 Oct 2021 untouched \\
+    \addlinespace[2pt]
+    Preprocessing & Fitted inside each training fold and applied unchanged to its validation quarter \\
+    \addlinespace[2pt]
+    Aggregation and comparison & Models ranked by the unweighted mean of the fold \acs{PR-AUC}; weighted mean and pooled value also reported; standard deviation, worst fold and trend for stability; paired comparison fold by fold \\
+    \addlinespace[2pt]
+    Threshold and final test & Cut-off chosen on the pooled out-of-fold predictions and then frozen; one evaluation on the test \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+%-------------------------------------------------------------- 5
 \chapter{Synthesis}\label{ch:synthesis}
 
-The most important thing we learned is that the outcome is easy to ``predict'' with the wrong columns. Energy,
-cost and duration separate the classes better than anything known at the start, but only because they describe
-the result. Once these columns are removed, the best signal is the recent failure history of each post. Location
-and user history add some information, while calendar and weather add little. Our second main finding is that
-the data change over time, in volume, in abnormal share and in the type of fault. The records were in good
-condition, so no row was removed or imputed, and we keep 29 features in 7 groups (19 numeric features for plain
-linear models).
+The project asks to what extent the information available when a charging session starts can predict that it
+ends abnormally. The file has no target column, so we built it from the end cause, and the dataset's own history
+columns reproduce our definition almost exactly (Table~\ref{tab:target}). The columns that separate the classes best (energy,
+cost and duration, with an \acs{AUC} of 0.82--0.85) describe the result of the session, so they cannot be
+predictors. The best variable known at the start reaches 0.77. It is the recent failure history of the post: the
+abnormal share goes from about 4\% in the lowest decile of the 7-day rate to about 60\% in the highest. User
+history comes second (0.69--0.70), and calendar and weather add little. The records needed no repair. We found no
+duplicates or invalid values, the missing values only mean that there was no earlier session or failure, and the
+extreme values are real situations, so no row was removed or imputed. We keep 29 features in 7 groups, and 19
+numeric ones for plain linear models.
 
-Some questions remain open. We do not know whether the daily weather values were a forecast or were measured
-during the day; in the second case they would contain information from after the start. Durations stop at
-24\,h, and we could not explain the timing of the order and payment fields. Our explanations for the changes over
-time, such as COVID-19, are hypotheses. We also cannot test a new post, and user history is a behaviour profile,
-which raises a privacy question.
+The data change over the two years. The abnormal share moves between 13.7\% and 26.3\%, and connection faults,
+which added 7.1 points in the first quarter of 2020, add only 1--2 points from the third quarter on. For this
+reason the sessions are split by time, the first three months are left out as a burn-in, and every score is read
+against the abnormal share of its own period (Chapter~\ref{ch:eval}). Under this protocol, the 7-day failure rate
+of the post, used alone and without fitting anything, reaches a mean \acs{PR-AUC} of 0.511 on the four validation
+quarters, against 0.181 for a baseline with no skill. With alerts on 5\% of the sessions, 74\% of the alerts are
+real failures, but only 21\% of the failures are caught. So the information available at the start carries a signal,
+and a model has to show that it catches more failures than this rule with the same number of alerts.
 
-For Task 2, we will evaluate the models on the time split, use the test period only once and report precision,
-recall and \ac{PR-AUC} against the base rate of each period. We plan to start with tree ensembles and a regularised
-logistic regression, and to run the feature-group ablation with and without \col{post_id} and user history.
+We treat the weather as a forecast, as the brief says. It has one value per district and day, and if it was
+measured during the day it contains information from after the start. Durations stop at 24\,h, and we could not
+explain the timing of the order and payment fields. COVID-19 as the reason for the drop in volume in February
+2020 is our hypothesis. Every post of the validation and test periods was already seen in training, so we cannot
+test a new post, and user history is a behaviour profile of an account, which raises a privacy question. For the
+evaluation, the cost ratio between a missed failure and a false alert and the alert capacity are unknown, so the
+alert budgets are assumptions and the final cut-off will need one too. The four folds are used for selection, so
+their scores are slightly optimistic, and the test gives the unbiased estimate. The 7-day window of baseline B1
+was taken from the Task~1 ranking, whose training period overlaps the validation quarters of folds 1 to 3. B1
+fits nothing, so we expect this effect to be small. Finally, the target merges 13 fault causes whose mix changes
+over time, so a good average could hide a type of failure that the model never detects.
+
+In the modelling task we plan to start with tree ensembles and a regularised logistic regression, compared on the
+four folds, and to use the feature-group ablation to check whether \col{post_id} and user history are worth
+keeping.
 
 %-------------------------------------------------------------- references
-\clearpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
 \begin{thebibliography}{9}
