@@ -1,0 +1,211 @@
+{
+  "protocol": "prepared/task2_protocol.json (folds, metrics, alert budgets); test period not loaded",
+  "tolerance": 0.005,
+  "ablation": {
+    "S1 context + weather": {
+      "features": 9,
+      "PR-AUC mean": 0.2891588524586719
+    },
+    "S2 + tariff": {
+      "features": 10,
+      "PR-AUC mean": 0.2890291553679275
+    },
+    "S3 + post history": {
+      "features": 18,
+      "PR-AUC mean": 0.5932050888967586
+    },
+    "S4 + user history": {
+      "features": 29,
+      "PR-AUC mean": 0.6192881186162241
+    },
+    "S4 without post_id": {
+      "features": 28,
+      "PR-AUC mean": 0.6249539264395255
+    },
+    "S4 without post_id and tariff (selected)": {
+      "features": 27,
+      "PR-AUC mean": 0.625922658092239
+    },
+    "selected without user history": {
+      "features": 16,
+      "PR-AUC mean": 0.6005815565065329
+    }
+  },
+  "selected_features": [
+    "hour",
+    "dow",
+    "location",
+    "district",
+    "temperature",
+    "humidity",
+    "precipitation",
+    "rain_flag",
+    "post_previous_sessions_1D",
+    "post_previous_sessions_7D",
+    "post_previous_sessions_30D",
+    "post_previous_abnormal_rate_1D",
+    "post_previous_abnormal_rate_7D",
+    "post_previous_abnormal_rate_30D",
+    "post_hours_since_previous_completed_session",
+    "post_hours_since_previous_completed_abnormal",
+    "is_new_user",
+    "user_previous_sessions_30D",
+    "user_previous_sessions_180D",
+    "user_previous_sessions_730D",
+    "user_previous_abnormal_rate_30D",
+    "user_previous_abnormal_rate_180D",
+    "user_previous_abnormal_rate_730D",
+    "user_days_since_previous_completed_session",
+    "user_days_since_previous_completed_abnormal",
+    "user_no_previous_completed_abnormal",
+    "user_active_sessions_at_start"
+  ],
+  "features_without_user_history": [
+    "hour",
+    "dow",
+    "location",
+    "district",
+    "temperature",
+    "humidity",
+    "precipitation",
+    "rain_flag",
+    "post_previous_sessions_1D",
+    "post_previous_sessions_7D",
+    "post_previous_sessions_30D",
+    "post_previous_abnormal_rate_1D",
+    "post_previous_abnormal_rate_7D",
+    "post_previous_abnormal_rate_30D",
+    "post_hours_since_previous_completed_session",
+    "post_hours_since_previous_completed_abnormal"
+  ],
+  "selected_configurations": {
+    "Logistic regression": "LR C=0.01",
+    "Naive Bayes": "NB",
+    "Decision tree": "DT depth=8",
+    "Random forest": "RF leaf=50",
+    "Gradient boosting": "HGB depth=6, lr=0.1, 200 it",
+    "Stacking": "Stacking (LR + NB + DT)"
+  },
+  "comparison": [
+    {
+      "model": "Gradient boosting (HGB depth=6, lr=0.1, 200 it)",
+      "PR-AUC mean": 0.625922658092239,
+      "weighted": 0.6320323839744189,
+      "std": 0.03855765289591126,
+      "worst fold": 0.5737870024006797,
+      "trend": 0.01943585360835565,
+      "lift": 3.4992501100318925,
+      "ROC-AUC": 0.8357981260126599,
+      "Brier": 0.10197710081563682,
+      "log-loss": 0.33718203166692434,
+      "gain over B1": 0.11535828422773249,
+      "folds won vs B1": "4 of 4",
+      "seconds per fold": 2.6029027104377747
+    },
+    {
+      "model": "Random forest (RF leaf=50)",
+      "PR-AUC mean": 0.6224479874195888,
+      "weighted": 0.6291541187722332,
+      "std": 0.04193643317933818,
+      "worst fold": 0.5666336558289312,
+      "trend": 0.02191481300654946,
+      "lift": 3.477824936572431,
+      "ROC-AUC": 0.8347186116929183,
+      "Brier": 0.10247988830263265,
+      "log-loss": 0.33912136682809824,
+      "gain over B1": 0.11188361355508229,
+      "folds won vs B1": "4 of 4",
+      "seconds per fold": 14.13299149274826
+    },
+    {
+      "model": "Stacking (LR + NB + DT)",
+      "PR-AUC mean": 0.6104030200136115,
+      "weighted": 0.6169278696305766,
+      "std": 0.04156409682874642,
+      "worst fold": 0.5553386805783288,
+      "trend": 0.021899504912517232,
+      "lift": 3.4104610737111036,
+      "ROC-AUC": 0.83065364904515,
+      "Brier": 0.1038544185652982,
+      "log-loss": 0.34315146829408977,
+      "gain over B1": 0.09983864614910494,
+      "folds won vs B1": "4 of 4",
+      "seconds per fold": 6.0878212451934814
+    },
+    {
+      "model": "Decision tree (DT depth=8)",
+      "PR-AUC mean": 0.5973967818361708,
+      "weighted": 0.60376199215025,
+      "std": 0.04122598835878715,
+      "worst fold": 0.5440271638093402,
+      "trend": 0.02260695398206014,
+      "lift": 3.337457735199507,
+      "ROC-AUC": 0.8243773480868953,
+      "Brier": 0.10460705356883912,
+      "log-loss": 0.347121264999342,
+      "gain over B1": 0.08683240797166437,
+      "folds won vs B1": "4 of 4",
+      "seconds per fold": 1.396696925163269
+    },
+    {
+      "model": "Logistic regression (LR C=0.01)",
+      "PR-AUC mean": 0.5924463578874786,
+      "weighted": 0.5992205887006194,
+      "std": 0.04210519766263234,
+      "worst fold": 0.5343809398819511,
+      "trend": 0.020124931849469292,
+      "lift": 3.30963355871324,
+      "ROC-AUC": 0.8245680058185157,
+      "Brier": 0.10606970892022206,
+      "log-loss": 0.3497969730404722,
+      "gain over B1": 0.08188198402297196,
+      "folds won vs B1": "4 of 4",
+      "seconds per fold": 0.8273285031318665
+    },
+    {
+      "model": "Naive Bayes (NB)",
+      "PR-AUC mean": 0.5329896128224119,
+      "weighted": 0.5395696663880393,
+      "std": 0.03857333462548523,
+      "worst fold": 0.47838506925429997,
+      "trend": 0.013494980552679043,
+      "lift": 2.97814288379299,
+      "ROC-AUC": 0.8146972247456998,
+      "Brier": 0.1576401526023305,
+      "log-loss": 0.727587465973533,
+      "gain over B1": 0.022425238957905325,
+      "folds won vs B1": "3 of 4",
+      "seconds per fold": 0.3639891743659973
+    },
+    {
+      "model": "B1 post failure rate (7 days)",
+      "PR-AUC mean": 0.5105643738645065,
+      "weighted": 0.5163627439429122,
+      "std": 0.0419184516475134,
+      "worst fold": 0.45621743849497187,
+      "trend": 0.021406219164919464,
+      "lift": 2.850777660028111,
+      "ROC-AUC": 0.7723343951940529,
+      "Brier": 0.11757841519250692,
+      "log-loss": 0.3847208833874428,
+      "gain over B1": 0.0,
+      "folds won vs B1": "0 of 4",
+      "seconds per fold": NaN
+    },
+    {
+      "model": "B0 no skill",
+      "PR-AUC mean": 0.18119598600822998,
+      "weighted": 0.18464802051112394,
+      "std": 0.02102284305634701,
+      "worst fold": 0.16151433544773408,
+      "trend": 0.013601629732853565,
+      "lift": 1.0075125333211379,
+      "ROC-AUC": 0.5035657637620703,
+      "Brier": 0.1477610880801255,
+      "log-loss": 0.4718977625979011,
+      "gain over B1": -0.3293683878562765,
+      "folds won vs B1": "0 of 4",
+      "seconds per fold": NaN
+    }
+  ]
+}
