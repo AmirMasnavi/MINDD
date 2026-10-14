@@ -41,7 +41,7 @@
   \vspace*{2.5cm}
   {\LARGE Project 1 -- Abnormal EV Charging Sessions\par}
   \vspace{0.3cm}
-  {\Large Tasks 1 and 2: Data Preparation and Evaluation Setting\par}
+  {\Large Tasks 1 to 3: Data Preparation, Evaluation Setting and Models\par}
   \vspace{0.6cm}
   {\large MSc in Informatics Engineering\\
   Data Mining (MINDD)\par}
@@ -84,6 +84,12 @@ with the abnormal share of the period. Models will be compared on four expanding
 and the last quarter of 2021 stays untouched as the final test. Two baselines give the reference: a no-skill
 baseline, and the 7-day failure rate of the post, which already reaches a PR-AUC of 0.51 against 0.18.
 
+In the third task we compared feature groups and trained individual and ensemble models. The recent failure history
+of the charging post carries almost all of the signal, the user history adds a little and only for returning users,
+and the tariff adds nothing beyond the hour. The best model, gradient boosting on 27 features, reaches a PR-AUC of
+0.63, above the 7-day failure rate in every validation quarter. With alerts on 5\% of the sessions, 88\% of its
+alerts are real failures, but it still misses about three quarters of them.
+
 \tableofcontents
 \listoffigures
 
@@ -99,6 +105,7 @@ baseline, and the 7-day failure rate of the post, which already reaches a PR-AUC
   \acro{PR-AUC}{Area under the Precision--Recall curve}
   \acro{ROC-AUC}{Area under the Receiver Operating Characteristic curve}
   \acro{SMOTE}{Synthetic Minority Over-sampling Technique}
+  \acro{SVM}{Support Vector Machine}
   \acro{VIF}{Variance Inflation Factor}
 \end{acronym}
 
@@ -116,14 +123,15 @@ baseline, and the 7-day failure rate of the post, which already reaches a PR-AUC
 \chapter{Introduction}\label{ch:intro}
 
 The project asks whether the information available when an \ac{EV} charging session starts can predict that the
-session will end abnormally. We work with an educational version of the China EV Charging Dataset
+session will end abnormally~\cite{brief}. We work with an educational version of the China EV Charging Dataset
 \cite{zhang2025}: 441,077 sessions and 47 columns, from 31 Dec 2019 to 31 Dec 2021, at 92 charging posts in 13
 stations and 3 districts. All the numbers in this report come from our notebooks
-\nolinkurl{Task1.ipynb} and \nolinkurl{Task2.ipynb} (seed 42).
+\nolinkurl{Task1.ipynb}, \nolinkurl{Task2.ipynb} and \nolinkurl{Task3.ipynb} (seed 42).
 
 We followed three rules during the whole project. First, a variable can only be a predictor if it is known when the
 session starts. Second, before fixing a problem in the data, we tried to understand it. Third, any value learned
-from the data (for example, the mean used for scaling) is learned from the training period only.
+from the data (for example, the mean used for scaling) is learned from the training period only, which is how the
+data-preparation slides prevent leakage~\cite{mindd03}.
 
 \section{Target definition}\label{sec:target}
 
@@ -152,7 +160,7 @@ alternative does not (Table~\ref{tab:target}). This means the dataset was built 
 \end{table}
 
 With this definition there is about 1 abnormal session for every 4.4 normal ones. A model that always predicts
-``normal'' would already be 81\% accurate, so accuracy alone is not a good metric here. We also noticed two
+``normal'' would already be 81\% accurate, so accuracy alone is not a good metric here~\cite{mindd04}. We also noticed two
 details. The supplied rates are smoothed as (abnormal\,+\,1)\,/\,(sessions\,+\,5), so a post or user with no
 history always gets the rate 0.2. In addition, 9,058 normal sessions (2.5\%) delivered no energy, mostly users
 who stopped after about one minute. We kept them as normal, because removing them would require the energy, which
@@ -168,8 +176,8 @@ actual payment, end time and payment time. \col{end_cause} is the outcome itself
 these columns are a problem. On its own, the energy, each money column and the duration separate normal and
 abnormal sessions with an \ac{ROC-AUC} of 0.82--0.85, better than any variable known at the start (best 0.77). The
 payment delay is weaker (0.61), but it is also only known after the session. The reason is that abnormal sessions
-are short and deliver little energy, so these columns describe the result instead of predicting it, so all of them
-were excluded.
+are short and deliver little energy, so these columns describe the result instead of predicting it. They are the
+``information leakers'' that the data-preparation slides warn about~\cite{mindd03}, so all of them were excluded.
 
 \begin{figure}[!htb]
   \centering
@@ -181,13 +189,13 @@ were excluded.
 The order creation time was a harder case. It is stamped after the start in 56\% of the sessions (57.2\% in the
 training period, sometimes 16\,h later), so we cannot be sure it exists when we make the prediction. Its link to
 the outcome is also weak (\acs{AUC} 0.59), so we excluded it too. Weather has only one value per district and day.
-Following the brief, we treat it as a forecast that is known at the start.
+Following the brief~\cite{brief}, we treat it as a forecast that is known at the start.
 
 \section{Data quality}\label{sec:quality}
 
 Table~\ref{tab:quality} lists the checks we made. In general, the records are in good condition. The missing
 values appear only when there was no earlier session or failure, so they are not really unknown. For the
-outliers, we first used the \ac{IQR} rule and then looked at the extreme cases one by one. They turned out to be real
+outliers, we first used the \ac{IQR} rule~\cite{mindd03} and then looked at the extreme cases one by one. They turned out to be real
 situations, so we did not remove any row.
 
 \begin{table}[!htb]
@@ -250,7 +258,8 @@ onwards. At the start of the file the history columns are still incomplete, whic
 January 2020 come from ``new'' users, against about 9--15\% later. Finally, posts 17--20 stop on 28 Sep 2021.
 Some things are stable, though. The abnormal share of each post is similar in 2020 and 2021 (Spearman 0.81),
 which explains why post history works. Because of all the changes above, a random split would mix different
-periods and give results that are too optimistic, so we split the data by time.
+periods and give results that are too optimistic, so we split the data by time, as is usual for data that are
+ordered in time~\cite{fpp3}.
 
 \begin{figure}[!htb]
   \centering
@@ -267,7 +276,8 @@ periods and give results that are too optimistic, so we split the data by time.
 We did not use the sessions before 1 April 2020 (the \emph{burn-in}), because their history columns are
 incomplete and their fault mix no longer exists. The remaining data were split by start date into training,
 validation and test periods (Table~\ref{tab:split}). The label of a session is only known when it ends, so we
-also removed (\emph{purged}) the 28 training sessions that end after the training cut-off.
+also removed (\emph{purged}) the 28 training sessions that end after the training cut-off. Otherwise their labels,
+which only exist after the cut-off, would leak into training~\cite{mindd03}.
 
 \begin{table}[!htb]
   \centering\small
@@ -317,26 +327,26 @@ station and district), weather (temperature, humidity, precipitation and a new \
 \end{table}
 
 Some features are strongly related to each other. Only the user-history windows have a \ac{VIF} above 10 (up to
-65.4), because the 180-day and 730-day windows contain almost the same sessions. Tree models and regularised
+65.4)~\cite{mindd03}, because the 180-day and 730-day windows contain almost the same sessions. Tree models and regularised
 linear models can deal with this, so they get all the features. For plain linear or distance-based models we
 built a smaller set. We went through the features from the best to the worst univariate \acs{AUC} and kept a feature
 only if its $|\rho|$ with the features already kept was below 0.90. This leaves 19 of the 23 numeric features and
 brings the maximum \acs{VIF} down to 8.6.
 
-\ac{PCA} was also tested. It needs 11 of the 23 components to keep 90\% of the variance, and the first component hardly
+\ac{PCA}~\cite{mindd03} was also tested. It needs 11 of the 23 components to keep 90\% of the variance, and the first component hardly
 separates the classes (\acs{AUC} 0.51). Since it compresses little and would mix post and user information, we did not
-use it. Discretisation was only used to explore the data (deciles and weather bands), not as a model input.
+use it. Discretisation~\cite{mindd03} was only used to explore the data (deciles and weather bands), not as a model input.
 
 \section{Learned operations and class imbalance}\label{sec:prep}
 
 Different models need different preparation, so we prepared two versions of the data. The tree version keeps the
 raw values, the \acs{NaN} and the category codes. The linear version applies \texttt{log1p} to 8 skewed columns, fills
 the structural \acs{NaN} with the training maximum (we read ``never happened'' as ``a very long time ago'') and keeps
-the flags. It then standardises the numeric columns, encodes hour and weekday with sine and cosine, and one-hot
-encodes \col{post_id} and the tariff period. The result has 126 columns and no \acs{NaN}.
+the flags. It then standardises the numeric columns, encodes hour and weekday with sine and cosine (the cyclical
+encoding recommended for circular variables), and one-hot encodes \col{post_id} and the tariff period~\cite{mindd03}. The result has 126 columns and no \acs{NaN}.
 
-All operations that learn something are fitted on the training period only, inside a scikit-learn pipeline
-(Table~\ref{tab:ledger}). We checked what would happen if we fitted them on all periods instead, and the learned
+All operations that learn something are fitted on the training period only, inside a scikit-learn
+pipeline~\cite{sklearn,pedregosa2011} (Table~\ref{tab:ledger}). We checked what would happen if we fitted them on all periods instead, and the learned
 values change. For example, the fill value for ``days since the user's last failure'' would move from 543 to 702
 days, which would leak information from the validation and test periods.
 
@@ -353,16 +363,17 @@ days, which would leak information from the validation and test periods.
     Standardisation & Mean and standard deviation & Linear version \\
     Log-transform rule & Which columns are skewed & Linear version (8 columns) \\
     Reduced feature set & Spearman $\rho$ and \acs{AUC} (training sample) & Plain linear / distance models \\
-    Class-imbalance treatment & Class weights or resampling & Training folds only (modelling task) \\
+    Class-imbalance treatment & Class weights or resampling & Not used: the models learn the natural prior (Chapter~\ref{ch:models}) \\
     Outlier capping, \acs{PCA}, rare-category grouping & Nothing & Not used / not needed \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-The classes (about 1\,:\,4.4) are not balanced in the prepared data. If the modelling task uses class weights or
-resampling, they will be applied only inside the training folds, so validation and test keep their real
-distribution. We will be careful with \ac{SMOTE}, because interpolating between sessions can create values that
-cannot exist, such as half a flag or a mix of two posts.
+The classes (about 1\,:\,4.4) are not balanced in the prepared data. Any class weights or resampling would be
+applied only inside the training folds, so that validation and test keep their real distribution. The models of
+Chapter~\ref{ch:models} use neither and are judged with ranking and probability metrics. We avoided
+\ac{SMOTE}~\cite{mindd03}, because interpolating between sessions can create values that cannot exist, such as half a flag or a mix of two
+posts.
 
 %-------------------------------------------------------------- 4
 \chapter{Prediction and Evaluation Setting}\label{ch:eval}
@@ -388,7 +399,7 @@ detect one type of failure well and miss another.
 
 \section{Variables available at the start}\label{sec:variables}
 
-We placed each of the 47 supplied columns in one of the four categories of the brief
+We placed each of the 47 supplied columns in one of the four categories of the brief~\cite{brief}
 (Table~\ref{tab:classification}). The notebook builds this table in code and checks that every column appears
 exactly once.
 
@@ -421,11 +432,11 @@ says. The history columns are taken as supplied. In production they keep updatin
 already contain the outcomes of earlier sessions of that period that had finished. User history needs the platform
 to identify the account at the start, otherwise the user group is missing (the cold-start case). Finally,
 \col{post_id} is also an identifier, but the post is known at the start and is the most informative location
-level, so it stays, and the later ablation will show whether it adds value.
+level, so it stays here. The ablation of Section~\ref{sec:ablation} shows that it adds nothing once the post history is known.
 
 \section{Consequences of the two errors}\label{sec:errors}
 
-A \ac{FP} flags a normal session as risky, and a \ac{FN} lets an abnormal session pass unnoticed. What they cost
+A \ac{FP} flags a normal session as risky, and a \ac{FN} lets an abnormal session pass unnoticed~\cite{mindd04}. What they cost
 depends on the action that follows the alert. With automated monitoring, a false alert is one more line on a
 dashboard, while a missed failure means that the next sessions on that post are not watched. With an inspection or
 a maintenance visit, a false alert wastes technician time, while a missed failure leaves a faulty post in service.
@@ -443,7 +454,8 @@ cut-off would be $t^{*} = 1/(1+c)$, which gives 0.50 for $c=1$, 0.33 for $c=2$ a
 4.4 the cut-off is below the abnormal share and almost every session would be flagged. Fixing a cut-off now would
 be arbitrary. Instead, we chose metrics that judge the ranking and the quality of the probabilities, and we report
 the operational results for fixed alert budgets (5\%, 10\% and 20\% of the sessions flagged). The cut-off will be
-chosen later, from the cost ratio and the capacity.
+chosen later, from the cost ratio and the capacity, as in the threshold exercise of the evaluation
+lab~\cite{mindd_lab_eval}.
 
 \section{Evaluation metrics}\label{sec:metrics}
 
@@ -457,11 +469,11 @@ Table~\ref{tab:metrics} lists the metrics, which we chose before optimising any 
     \toprule
     Metric (role) & Why we use it & Limitation here \\
     \midrule
-    \acs{PR-AUC} (primary) & The abnormal class is the minority and both errors matter. It measures how precise the alerts stay as more failures are caught, and it ignores true negatives & Its no-skill value is the abnormal share, which changes between periods, so we read it next to that share and as a lift \\
+    \acs{PR-AUC} (primary) & The abnormal class is the minority and both errors matter. It measures how precise the alerts stay as more failures are caught, and it ignores true negatives~\cite{mindd04,saito2015} & Its no-skill value is the abnormal share, which changes between periods, so we read it next to that share and as a lift \\
     \addlinespace[2pt]
-    \acs{ROC-AUC} (complementary) & The chance that an abnormal session is ranked above a normal one. It does not depend on the abnormal share, so it can be compared across periods & Can look optimistic with imbalanced classes and says little about the top of the ranking \\
+    \acs{ROC-AUC} (complementary) & The chance that an abnormal session is ranked above a normal one. It does not depend on the abnormal share, so it can be compared across periods & Can look optimistic with imbalanced classes~\cite{saito2015} and says little about the top of the ranking \\
     \addlinespace[2pt]
-    Brier score and log-loss (complementary) & They measure the quality of the probabilities, which a cost-based cut-off needs & Only for models that output probabilities; both depend on the abnormal share \\
+    Brier score and log-loss (complementary) & They measure the quality of the probabilities~\cite{brier1950,sklearn}, which a cost-based cut-off needs & Only for models that output probabilities; both depend on the abnormal share \\
     \addlinespace[2pt]
     Precision, recall and correct, false and missed alerts per 1,000 sessions, at an alert budget (operational) & The budget is the practical limit and is the same for every model and period, and the counts turn the errors into workload & The budgets are assumptions, because the real capacity is unknown; the counts depend on the abnormal share of the period \\
     \addlinespace[2pt]
@@ -470,15 +482,16 @@ Table~\ref{tab:metrics} lists the metrics, which we chose before optimising any 
   \end{tabularx}
 \end{table}
 
-We do not use accuracy. Always predicting ``normal'' is right in 79--84\% of the sessions of each fold and catches
-no failure. F1 and similar metrics need a cut-off that is not chosen yet, and F1 gives the same weight to both
+We do not use accuracy, which gives the same importance to both classes~\cite{mindd04}. Always predicting
+``normal'' is right in 79--84\% of the sessions of each fold and catches no failure. F1 and similar metrics need a cut-off that is not chosen yet, and F1 gives the same weight to both
 errors, so they can only be reported once the final cut-off exists.
 
 \section{Temporal evaluation}\label{sec:folds}
 
 The sessions cannot be divided at random, because volume, abnormal share and fault mix change over time
 (Section~\ref{sec:temporal}) and a model is always used on future sessions. Training sessions must come before
-the sessions that evaluate them. We keep the burn-in and the test period of Section~\ref{sec:split} and divide the
+the sessions that evaluate them, as in the time-series cross-validation of forecasting
+practice~\cite{fpp3}. We keep the burn-in and the test period of Section~\ref{sec:split} and divide the
 development period into four expanding-window folds (Table~\ref{tab:folds} and Figure~\ref{fig:folds}). Each fold
 trains on the sessions that started and ended before its validation quarter. The fourth fold is exactly the
 training and validation periods of Table~\ref{tab:split}.
@@ -525,9 +538,11 @@ change the training rows only. Even a simple statistic differs between folds: th
 18.9\%, and no fold has the 18.5\% of the whole development period. The difference is small here, but it would be
 larger for steps that use the target.
 
-To protect the test period, the Task 2 notebook counts its 80,081 sessions and removes them right after reading
+To protect the test period, we follow the golden rule of the evaluation slides: data used to evaluate a model
+cannot be used during its development~\cite{mindd04}. The Task 2 notebook counts its 80,081 sessions and removes them right after reading
 the file. Model, hyperparameters and cut-off will be chosen with the four folds only. The
-cut-off will be chosen on the out-of-fold predictions of the four folds together and then frozen. The final model
+cut-off will be chosen on the out-of-fold predictions of the four folds together and then frozen, as in the
+evaluation lab of the course~\cite{mindd_lab_eval}. The final model
 will be refitted on the whole development period and scored once on the test.
 
 \section{Aggregation across folds}\label{sec:aggregation}
@@ -541,8 +556,8 @@ folds train on more months, while a falling trend would be a sign of drift.
 
 The abnormal share differs between folds, so the scores of two folds cannot be compared directly, but the
 difference between two models on the same fold can. We therefore compare models fold by fold, with the paired
-differences and the number of folds won. With four folds, the smallest possible $p$-value of an exact Wilcoxon
-test is 0.125, even when a model wins in every fold, so we do not claim statistical significance for these
+differences and the number of folds won. The evaluation slides compare models with a Wilcoxon test on the
+folds~\cite{mindd04}, but with four folds the smallest possible $p$-value of an exact Wilcoxon test is 0.125, even when a model wins in every fold, so we do not claim statistical significance for these
 comparisons. When two models are within about one standard deviation of each other, we will prefer the simpler and
 more stable one.
 
@@ -617,7 +632,7 @@ only if it catches more failures than B1 at the same budget, without making the 
 \section{Evaluation protocol}\label{sec:protocol}
 
 Table~\ref{tab:protocol} summarises the protocol. The notebook also saves it as
-\nolinkurl{prepared/task2_protocol.json}, so the modelling task reads the same features, folds and metrics.
+\nolinkurl{prepared/task2_protocol.json}, so the models of Chapter~\ref{ch:models} use the same features, folds and metrics.
 
 \begin{table}[!htb]
   \centering\small
@@ -650,6 +665,260 @@ Table~\ref{tab:protocol} summarises the protocol. The notebook also saves it as
 \end{table}
 
 %-------------------------------------------------------------- 5
+\chapter{Individual and Ensemble Models}\label{ch:models}
+
+In the third task we trained the first models~\cite{brief}. Every experiment follows the protocol of Chapter~\ref{ch:eval}:
+the same four folds, metrics and baselines, with every learned operation fitted inside the training window of each
+fold. The rows of the test period are dropped right after the file is read, before the target is built, and no
+cut-off is chosen yet.
+
+\section{Feature-group ablation}\label{sec:ablation}
+
+We compared the four nested feature sets of the brief with one fixed reference model: gradient boosting with depth
+6, learning rate 0.1, 200 iterations and at least 100 sessions per leaf, which we did not tune. With the same
+untuned model for every set, the differences come from the information and not from tuning, and the model handles
+categories, missing values and interactions without extra preparation~\cite{sklearn}. We judge each step by its paired
+difference in \acs{PR-AUC}, fold by fold, and call two results tied when they differ by less than 0.005. A
+bootstrap of each validation quarter (100 resamples of the sessions, the resampling of the evaluation slides~\cite{mindd04}) gives
+a standard error of 0.004 to 0.006 for the \acs{PR-AUC} of one fold, so this tolerance is about one standard error.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption[Feature-group ablation with the reference model]{Feature-group ablation with the reference model (mean of the four folds; the selected set is S4 without \col{post_id} and the tariff; folds: folds with a gain)}
+  \label{tab:ablation}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr}
+    \toprule
+    & & & & & \multicolumn{2}{c}{Gain over previous set} \\
+    Feature set & Features & \acs{PR-AUC} & Lift & \acs{ROC-AUC} & \acs{PR-AUC} & Folds \\
+    \midrule
+    S1 context and weather & 9  & 0.289 & 1.60 & 0.660 & -- & -- \\
+    S2 + tariff            & 10 & 0.289 & 1.60 & 0.659 & $-0.0001$ & 3 of 4 \\
+    S3 + post history      & 18 & 0.593 & 3.31 & 0.810 & $+0.304$ & 4 of 4 \\
+    S4 + user history      & 29 & 0.619 & 3.46 & 0.835 & $+0.026$ & 4 of 4 \\
+    \midrule
+    Selected set         & 27 & 0.626 & 3.50 & 0.836 & -- & -- \\
+    Selected, no user history & 16 & 0.601 & 3.35 & 0.812 & -- & -- \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{03_2_ablation.png}
+  \caption[Feature-group ablation by fold]{Feature-group ablation: (a) \acs{PR-AUC} of the four sets by fold, with
+  baseline B1 dashed; (b) paired gain of each added group by fold, with the tolerance band}
+  \label{fig:ablation}
+\end{figure}
+
+Table~\ref{tab:ablation} and Figure~\ref{fig:ablation} answer the questions of the brief. The tariff gives no
+information beyond the time of day. Adding it changes the mean \acs{PR-AUC} by $-0.0001$, and its fold differences
+($-0.0038$ to $+0.0024$) stay inside the noise. The tariff period is a deterministic function of the start hour,
+so a model that already has the hour can rebuild it. The charging-post history is by far the largest contribution.
+It raises the mean \acs{PR-AUC} from 0.289 to 0.593 and the gain is large in every quarter ($+0.256$ to $+0.375$).
+With it, the model is above B1 in every fold, by $+0.073$ to $+0.095$, so it does more than repeat the 7-day
+failure rate. The user history adds a smaller benefit, $+0.026$, which is positive in every fold but falls from
+$+0.037$ in fold 1 to $+0.014$ in fold 4. It only helps returning users. About 13\% of the validation sessions come
+from new accounts, whose history is empty. For them S3 and S4 are tied (0.524 and 0.526), and for returning users S4
+gains $+0.027$ (0.617 to 0.644). The ordering of the sets is the same in every fold, but the size of the gains is
+not: the post-history gain varies by 0.12 between quarters and the user-history gain shrinks, so the effect is
+consistent in direction and not in size.
+
+We then removed two variables from S4. Without \col{post_id} the mean \acs{PR-AUC} rises by $+0.0057$, in all four
+folds. Once the recent failures of the post are known its identity adds nothing, and it would let the model
+memorise devices whose levels change over time. Removing the tariff as well changes the result by $+0.0010$, which
+is inside the tolerance, so it goes too. The selected set has 27 features and a mean \acs{PR-AUC} of 0.626.
+Without the 11 user variables the result falls by 0.025 in every fold, to 0.601, so by our rule the user history
+stays. We add no new feature. The start-time columns were chosen in Task~1, the post history alone carries most of
+the signal, and a new history feature would need its own check that every session it counts had ended before the
+start.
+
+Some groups raise operational or ethical concerns, the kind of risk that the introductory slides list for data
+mining~\cite{mindd01}. The post history needs a live record of finished sessions,
+which always lags, because a label only exists when a session ends, up to 24\,h later. If alerts lead to
+maintenance, the failures fall and the history changes, so the model also reflects the maintenance policy. Station
+and district carry no personal data, but the abnormal share goes from about 8\% to 38\% between stations, so the
+alerts would concentrate on a few stations and should be monitored per station. The user history is a behaviour
+profile tied to a persistent account, which conflicts with data minimisation and purpose limitation~\cite{gdpr}. A driver who
+met a faulty post gets a higher risk, so the user could be blamed for a failure of the infrastructure. We keep it
+because it improves the ranking, but only for an internal ranking of sessions and never for a decision about a
+driver. The set without user history (0.601) is the fallback.
+
+\section{Individual models}\label{sec:individual}
+
+The brief lists five modelling principles and asks for at least three~\cite{brief}. We chose a linear, a probabilistic
+and a tree-based classifier from the families of the predictive-models slides~\cite{mindd05}
+(Table~\ref{tab:individual}). The 27
+features mix two categories, two circular calendar variables, weather, skewed counts and times, bounded rates and
+four variables with structural missing values. About 18.5\% of the sessions are abnormal. In Task~1 we decided not
+to resample, so every model learns the natural class prior.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Individual classifiers: why they fit this problem and what they assume}
+  \label{tab:individual}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{2.6cm}LL>{\raggedright\arraybackslash}p{2.5cm}}
+    \toprule
+    Classifier & Why it fits & Assumption and risk & Interpretability and cost \\
+    \midrule
+    Logistic regression (linear, L2 penalty) & The failure rate rises smoothly with the recent failure rate of the post, which a linear log-odds can follow; it outputs probabilities & Linear in the inputs, so skewed variables are logged and scaled; correlated windows make single coefficients unstable, which the penalty controls & One coefficient per input; seconds \\
+    \addlinespace[2pt]
+    Naive Bayes (categorical, Laplace estimate) & Few parameters, a posterior probability and a different inductive bias; it handles mixed types once numbers are discretised & Inputs independent given the class, which the overlapping 1-, 7- and 30-day windows break, so we expect overconfident probabilities & One likelihood table per input; seconds \\
+    \addlinespace[2pt]
+    Decision tree (CART) & Successive thresholds on rates and gaps, and their interactions, match the shapes seen in Task~1; no scaling needed & Unstable, since small changes in the data give another tree, and it overfits, so depth and leaf size are tuned & Readable rules; seconds \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+We left out two principles. k-nearest neighbours keeps every training session and needs a distance on inputs of
+the same scale, which is hard with counts, rates and categories together, and each of the 42,000 to 76,000
+validation sessions of a fold would be compared with up to 271,000 training sessions. A kernel \acs{SVM} needs a
+time between quadratic and cubic in the number of training sessions and returns a distance from the hyperplane
+rather than a probability~\cite{mindd04,mindd05}. Both would need a subsample, which would throw away the history that carries the signal.
+
+Each model gets the preparation that the slides recommend for it~\cite{mindd05}. The logistic regression uses the linear version
+of Task~1: training maximum for the structural \acs{NaN}, \texttt{log1p} for the skewed columns, standardisation,
+one-hot station and district, and sine and cosine of hour and weekday, the cyclical encoding of the
+data-preparation slides~\cite{mindd03}. Naive Bayes uses the numeric columns without strong correlations, cut into 10
+equal-frequency bins learned on all the training rows~\cite{mindd03,sklearn}. The trees use the category codes of Task~1. The slides
+advise against imposing an arbitrary order on unordered categories, and we keep the codes for a reason: after
+\col{post_id} is dropped only 13 stations and 3 districts remain, and a tree can isolate any single code with two
+splits, so the order blocks no partition that it needs. Gradient boosting reads the same codes as categories, so for
+it no order is imposed at all.
+
+The first version of our notebook also capped the logged columns and the number of active sessions at the 0.1\%
+and 99.9\% training quantiles, which contradicts the Task~1 decision not to cap outliers. We tested both. With the
+caps the mean \acs{PR-AUC} of the logistic regression changes by $-0.0001$ (0.5925 against 0.5924), and no fold moves
+by more than 0.0002. With 111,000 to 271,000 training sessions per fold, the extreme 0.1\% are only a few hundred
+sessions, and after the log transform they do not move the coefficients. We kept the Task~1 preparation.
+
+We tuned only the setting that controls the complexity of each model and kept the simplest configuration within
+the tolerance of the best one. For the logistic regression, $C=0.01$ and $C=1$ give the same \acs{PR-AUC} in every
+fold (0.593), so the data dominate the penalty and we kept the stronger one. For the tree, depths 4 and 6 underfit
+(0.540 and 0.582), and depths 8 and 12 are tied (0.597 and 0.599), with a worse log-loss at depth 12 (0.354
+against 0.347), so we kept depth 8. Naive Bayes has nothing to tune. It ranks sessions reasonably (\acs{ROC-AUC}
+0.815) but its \acs{PR-AUC} is only 0.533, and its probabilities are worse than the constant prior (Brier score 0.158
+against 0.148, log-loss 0.728 against 0.472). This is the overconfidence that the independence assumption~\cite{mindd05} predicts,
+because the overlapping windows count the same failures several times. The tree and the logistic regression reach
+almost the same result (0.597 and 0.593), both 0.08 to 0.09 above B1, although one is linear and the other is
+not. The features, more than the algorithm, set the level.
+
+\section{Ensemble models}\label{sec:ensembles}
+
+We chose one ensemble for each of three ideas: lowering the variance of a model (bagging), lowering its bias
+(boosting) and combining models with different inductive biases (stacking). The predictive-models slides do not
+cover ensembles~\cite{mindd05}, so we explain each one with ideas that they do cover.
+
+\begin{itemize}
+  \item The random forest~\cite{breiman2001} averages 200 trees, each fitted on a bootstrap sample~\cite{mindd04} and
+  with a random subset of features at each split. A single tree is unstable~\cite{mindd05}, and averaging trees fitted on different samples cancels much of that
+  noise while keeping the low bias of a deep tree.
+  \item Gradient boosting~\cite{friedman2001,sklearn} adds shallow trees one after another, each fitted to the remaining errors of the previous
+  ones. A shallow tree is too small to follow the data, and the sequence lowers that bias step by step. We fixed
+  the number of iterations, because its internal early stopping splits the training rows at random and would let
+  later sessions decide when to stop for earlier ones.
+  \item The stacking~\cite{wolpert1992} combines the logistic regression, Naive Bayes and the tree with a logistic regression on their
+  predictions. The three make different errors, and the meta-model learns how much to trust each. We did not use
+  voting, because it gives every model the same weight, which is a poor choice when one constituent is much weaker.
+\end{itemize}
+
+The random forest keeps the smaller leaf size (50 sessions, 0.622 against 0.616 with 200, better in all four folds).
+Gradient boosting keeps depth 6 with learning rate 0.1 and 200 iterations (0.626). Depth 3 is lower (0.620), and
+the slower setting with 300 iterations is tied with it.
+
+The brief warns that the predictions that train the meta-model of a stacking must not leak~\cite{brief}, and that a random
+inner cross-validation lets later sessions shape the predictions for earlier ones. We built them in time order
+(Figure~\ref{fig:stacking}). The training window of each fold is cut into quarters. For every quarter after the
+first, the base models are fitted on the sessions that started and ended before it and predict it. The meta-model
+learns from these predictions, the base models are refitted on the whole window, and the meta-model combines their
+predictions for the validation quarter. Sessions whose label is not yet known at the start of the validation
+quarter are removed, as in the purge of Task~2, and assertions in the code check every inner fit. The meta-model
+gives Naive Bayes no weight (0.03 in fold 1, 0.00 in fold 4), the logistic regression 0.56 to 0.66 and the tree 0.31
+to 0.47, a weight that grows as the tree improves with more data.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=0.9\textwidth]{05_3_stacking_design.png}
+  \caption[Stacking without leakage]{Stacking without leakage: the out-of-fold predictions that train the
+  meta-model are built in time order inside the training window (outer fold 4)}
+  \label{fig:stacking}
+\end{figure}
+
+All three ensembles improve on their constituents in every fold. The random forest is $+0.025$ above the tree and
+gradient boosting $+0.029$, which shows that the instability and the bias of a single tree both cost something.
+The stacking is above the logistic regression by $+0.018$, the tree by $+0.013$ and Naive Bayes by $+0.077$, but its
+gain over the best constituent is the smallest of the three, and in practice it mixes the linear model and the
+tree. Gradient boosting and the random forest are tied ($+0.0035$ for boosting, ahead in three folds).
+
+\section{Comparison and alerts}\label{sec:comparison}
+
+Table~\ref{tab:comparison} ranks all models with the rules of Section~\ref{sec:aggregation}, and
+Figure~\ref{fig:comparison} shows them fold by fold.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{All models and baselines on the four validation quarters}
+  \label{tab:comparison}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrrr}
+    \toprule
+    & \multicolumn{4}{c}{\acs{PR-AUC}} & & & Folds \\
+    Model & Mean & Weighted & Std & Worst fold & \acs{ROC-AUC} & Brier & won vs B1 \\
+    \midrule
+    Gradient boosting   & 0.626 & 0.632 & 0.039 & 0.574 & 0.836 & 0.102 & 4 of 4 \\
+    Random forest       & 0.622 & 0.629 & 0.042 & 0.567 & 0.835 & 0.102 & 4 of 4 \\
+    Stacking            & 0.610 & 0.617 & 0.042 & 0.555 & 0.831 & 0.104 & 4 of 4 \\
+    Decision tree       & 0.597 & 0.604 & 0.041 & 0.544 & 0.824 & 0.105 & 4 of 4 \\
+    Logistic regression & 0.593 & 0.599 & 0.042 & 0.534 & 0.825 & 0.106 & 4 of 4 \\
+    Naive Bayes         & 0.533 & 0.540 & 0.039 & 0.478 & 0.815 & 0.158 & 3 of 4 \\
+    \midrule
+    B1 post failure rate & 0.511 & 0.516 & 0.042 & 0.456 & 0.772 & 0.118 & -- \\
+    B0 no skill          & 0.181 & 0.185 & 0.021 & 0.162 & 0.504 & 0.148 & -- \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{06_1_model_comparison.png}
+  \caption[All models by fold]{All models and baselines: (a) \acs{PR-AUC} by fold; (b) mean \acs{PR-AUC} with the
+  standard deviation across folds}
+  \label{fig:comparison}
+\end{figure}
+
+Gradient boosting (0.626) and the random forest (0.622) are tied at the top. We prefer gradient boosting, because it
+is ahead in three folds and much cheaper to refit when the failure pattern changes. It beats B1 in every fold, by
+$+0.102$ to $+0.122$ ($+0.115$ on average), with a lift of 3.50 against 2.85. The standard deviation across folds is
+about the same for every model, B1 included, and fold 2 is the worst for all of them: the quarters differ in
+difficulty for all models alike. The weighted means are only 0.004 to 0.007 above the unweighted ones, so the
+largest fold does not decide the ranking.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Operational results of gradient boosting and B1 (mean of the four folds; per 1,000 sessions)}
+  \label{tab:alerts}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrr}
+    \toprule
+    Budget & Model & Precision & Recall & Correct alerts & False alerts & Missed failures \\
+    \midrule
+    5\%  & Gradient boosting & 0.880 & 0.246 & 44.0  & 6.0  & 136.1 \\
+         & B1                & 0.738 & 0.207 & 36.9  & 13.1 & 143.2 \\
+    10\% & Gradient boosting & 0.721 & 0.402 & 72.1  & 27.9 & 107.9 \\
+         & B1                & 0.594 & 0.330 & 59.4  & 40.6 & 120.7 \\
+    20\% & Gradient boosting & 0.528 & 0.587 & 105.7 & 94.3 & 74.4 \\
+         & B1                & 0.451 & 0.499 & 90.2  & 109.8 & 89.9 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+Table~\ref{tab:alerts} shows what this means for an operator. With alerts on 5\% of the sessions, 88\% of the
+alerts of gradient boosting are real failures, against 74\% for B1. Per 1,000 sessions, it gives 7 fewer false
+alerts and catches 7 more failures. The gain is mostly in precision at small budgets ($+14$ points at 5\%, $+8$ at
+20\%). Even so, the model misses most failures when only 5\% of the sessions can be reviewed (136 of about 180 per
+1,000), probably because a failure with no recent failures at the same post cannot be anticipated from the history
+of the post.
+
+%-------------------------------------------------------------- 6
 \chapter{Synthesis}\label{ch:synthesis}
 
 The project asks to what extent the information available when a charging session starts can predict that it
@@ -660,41 +929,79 @@ predictors. The best variable known at the start reaches 0.77. It is the recent 
 abnormal share goes from about 4\% in the lowest decile of the 7-day rate to about 60\% in the highest. User
 history comes second (0.69--0.70), and calendar and weather add little. The records needed no repair. We found no
 duplicates or invalid values, the missing values only mean that there was no earlier session or failure, and the
-extreme values are real situations, so no row was removed or imputed. We keep 29 features in 7 groups, and 19
-numeric ones for plain linear models.
+extreme values are real situations, so no row was removed or imputed. The data change over the two years: the
+abnormal share moves between 13.7\% and 26.3\%, and connection faults, which added 7.1 points in the first quarter
+of 2020, add only 1--2 points from the third quarter on. For this reason the sessions are split by time, the first
+three months are left out as a burn-in, and every score is read against the abnormal share of its own period.
 
-The data change over the two years. The abnormal share moves between 13.7\% and 26.3\%, and connection faults,
-which added 7.1 points in the first quarter of 2020, add only 1--2 points from the third quarter on. For this
-reason the sessions are split by time, the first three months are left out as a burn-in, and every score is read
-against the abnormal share of its own period (Chapter~\ref{ch:eval}). Under this protocol, the 7-day failure rate
-of the post, used alone and without fitting anything, reaches a mean \acs{PR-AUC} of 0.511 on the four validation
-quarters, against 0.181 for a baseline with no skill. With alerts on 5\% of the sessions, 74\% of the alerts are
-real failures, but only 21\% of the failures are caught. So the information available at the start carries a signal,
-and a model has to show that it catches more failures than this rule with the same number of alerts.
+Under this protocol, the 7-day failure rate of the post, used alone and without fitting anything, reaches a mean
+\acs{PR-AUC} of 0.511 on the four validation quarters, against 0.181 for no skill. In the models of
+Chapter~\ref{ch:models}, almost all of the signal comes from
+the recent history of the post, which lifts the \acs{PR-AUC} from 0.289 with context and weather to 0.593. User
+history adds 0.026, only for returning users, and the tariff adds nothing beyond the hour. The best model, gradient
+boosting on 27 features, reaches 0.626, above B1 in all four folds by 0.115 on average, and a logistic regression
+already reaches 0.593, so the features set most of the level. With alerts on 5\% of the sessions, 88\% of its alerts
+are real failures, against 74\% for B1, but it still catches only a quarter of the failures. So the information
+available at the start supports a useful ranking of risky sessions, mostly for failures that repeat at the same
+post, and it cannot anticipate a failure on a post with no recent failures.
 
-We treat the weather as a forecast, as the brief says. It has one value per district and day, and if it was
-measured during the day it contains information from after the start. Durations stop at 24\,h, and we could not
-explain the timing of the order and payment fields. COVID-19 as the reason for the drop in volume in February
-2020 is our hypothesis. Every post of the validation and test periods was already seen in training, so we cannot
-test a new post, and user history is a behaviour profile of an account, which raises a privacy question. For the
-evaluation, the cost ratio between a missed failure and a false alert and the alert capacity are unknown, so the
-alert budgets are assumptions and the final cut-off will need one too. The four folds are used for selection, so
-their scores are slightly optimistic, and the test gives the unbiased estimate. The 7-day window of baseline B1
-was taken from the Task~1 ranking, whose training period overlaps the validation quarters of folds 1 to 3. B1
-fits nothing, so we expect this effect to be small. Finally, the target merges 13 fault causes whose mix changes
-over time, so a good average could hide a type of failure that the model never detects.
+We treat the weather as a forecast, as the brief says, although
+it has one value per district and day. Durations stop at 24\,h, and we could not explain the timing of the order and
+payment fields. Every post of the validation period was already seen in training, so a new post is not tested. User
+history is a behaviour profile of an account, which raises a privacy question~\cite{gdpr}, so we would use it only to rank
+sessions internally, and the model without it (0.601) remains an option. The feature set and the hyperparameters
+were chosen on the same four folds that we report, so these scores are slightly optimistic, and the ablation holds
+for one model family. The tolerance of 0.005 is a practical rule based on the bootstrap noise, not a test, and four
+folds give no p-values. The probabilities of the best models are not yet checked for calibration, Naive Bayes is
+clearly miscalibrated, and the cost ratio between a missed failure and a false alert is unknown, so the alert
+budgets are assumptions. The 7-day window of B1 was taken from the Task~1 ranking, whose training period overlaps
+folds 1 to 3, an effect we expect to be small because B1 fits nothing. Finally, the target merges 13 fault causes
+whose mix changes over time, so a good average could hide a type of failure that the model never detects.
 
-In the modelling task we plan to start with tree ensembles and a regularised logistic regression, compared on the
-four folds, and to use the feature-group ablation to check whether \col{post_id} and user history are worth
-keeping.
+The next task chooses the cut-off from the out-of-fold predictions~\cite{mindd_lab_eval} after a calibration check, and scores the chosen
+model once on the test period.
 
 %-------------------------------------------------------------- references
+\clearpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
-\begin{thebibliography}{9}
-  \bibitem{zhang2025} Zhang, Y., Xu, T., Chen, T., et al. (2025). A high-resolution electric vehicle
+\begin{thebibliography}{99}
+\bibitem{brief} Departamento de Engenharia Informática, ISEP (2026). \emph{Mineração de Dados, First Project:
+  Classification of Abnormal Electric-Vehicle Charging Sessions} (Tasks 1 to 3). Assignment statement, 2026/2027,
+  1st semester.
+\bibitem{zhang2025} Zhang, Y., Xu, T., Chen, T., et al. (2025). A high-resolution electric vehicle
   charging transaction dataset with multidimensional features in China. \emph{Scientific Data}, 12, 643.
   \url{https://doi.org/10.1038/s41597-025-04982-1}
+\bibitem{mindd03} Rodrigues, F. (2026). \emph{Data Preparation}. Lecture slides, Mineração de Dados, DEI/ISEP,
+  2026/2027.
+\bibitem{mindd04} Rodrigues, F. (2026). \emph{Evaluation of Machine Learning Models}. Lecture slides, Mineração
+  de Dados, DEI/ISEP, 2026/2027.
+\bibitem{fpp3} Hyndman, R.\,J., Athanasopoulos, G. (2021). \emph{Forecasting: Principles and Practice}, 3rd ed.,
+  Section 5.10, Time series cross-validation. OTexts, Melbourne. \url{https://otexts.com/fpp3/tscv.html}
+\bibitem{sklearn} scikit-learn developers (2026). \emph{scikit-learn User Guide}, version 1.9.1.
+  \url{https://scikit-learn.org/1.9/user_guide.html}
+\bibitem{pedregosa2011} Pedregosa, F., Varoquaux, G., Gramfort, A., et al. (2011). Scikit-learn: Machine learning
+  in Python. \emph{Journal of Machine Learning Research}, 12, 2825--2830.
+\bibitem{mindd_lab_eval} Mineração de Dados teaching team (2026). \emph{Sampling and evaluation}
+  (\texttt{sampling\_evaluation.ipynb}). Laboratory notebook, DEI/ISEP, 2026/2027.
+\bibitem{saito2015} Saito, T., Rehmsmeier, M. (2015). The precision-recall plot is more informative than the ROC
+  plot when evaluating binary classifiers on imbalanced datasets. \emph{PLoS ONE}, 10(3), e0118432.
+  \url{https://doi.org/10.1371/journal.pone.0118432}
+\bibitem{brier1950} Brier, G.\,W. (1950). Verification of forecasts expressed in terms of probability.
+  \emph{Monthly Weather Review}, 78(1), 1--3.
+\bibitem{mindd01} Rodrigues, F. (2026). \emph{Introduction to Data Science}. Lecture slides, Mineração de Dados,
+  DEI/ISEP, 2026/2027.
+\bibitem{gdpr} European Parliament and Council of the European Union (2016). Regulation (EU) 2016/679 of 27 April
+  2016 (General Data Protection Regulation). \emph{Official Journal of the European Union}, L 119, 4.5.2016,
+  1--88. \url{https://eur-lex.europa.eu/eli/reg/2016/679/oj}
+\bibitem{mindd05} Rodrigues, F. (2026). \emph{Foundational Models for Supervised Classification}. Lecture slides,
+  Mineração de Dados, DEI/ISEP, 2026/2027.
+\bibitem{breiman2001} Breiman, L. (2001). Random forests. \emph{Machine Learning}, 45(1), 5--32.
+  \url{https://doi.org/10.1023/A:1010933404324}
+\bibitem{friedman2001} Friedman, J.\,H. (2001). Greedy function approximation: a gradient boosting machine.
+  \emph{The Annals of Statistics}, 29(5), 1189--1232. \url{https://doi.org/10.1214/aos/1013203451}
+\bibitem{wolpert1992} Wolpert, D.\,H. (1992). Stacked generalization. \emph{Neural Networks}, 5(2), 241--259.
+  \url{https://doi.org/10.1016/S0893-6080(05)80023-1}
 \end{thebibliography}
 
 \end{document}
