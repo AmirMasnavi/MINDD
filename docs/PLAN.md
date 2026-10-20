@@ -1,8 +1,7 @@
 # Work plan
 
 This is the team's proposed sequence.
-Tasks 1 (submitted on 2026-10-04), 2 and 3 are complete. The next task chooses the cut-off after a calibration check
-and scores the chosen model once on the test period.
+Task 1 (submitted on 2026-10-04), Task 2 and Task 3 are complete. The focused Task 3 review changes await user approval before a commit. The next modelling step is calibration, operating-rule selection and one final test evaluation.
 Owners and reviewers are still unassigned, so replace `TBD` when the team allocates work.
 
 ## Task 1 sequence
@@ -40,23 +39,15 @@ Task 2 defines the prediction and evaluation setting. It fits no model. The tabl
 | Synthesis (the Task 1 items of the brief, and where the project question stands after Task 2) | report chapter 5, the final chapter, rewritten at each deliverable | Complete |
 | Notebook and report section for the submission | `Task2.ipynb`, `docs/TASK2_REPORT.pdf` | Complete on 2026-10-12. Teammate review pending |
 
-## Task 3 sequence
+## Task 3 review (2026-10-20)
 
-Task 3 runs the feature-group ablation and fits individual and ensemble models under the Task 2 protocol. The table
-follows the brief (`TP1-MINDD2026_27-Task1+Task2+Task3.pdf`, pages 6 and 7).
-
-| Brief item | Where it is answered | Status |
-| --- | --- | --- |
-| Four nested feature sets (context and weather; plus tariff; plus post history; plus user history) | `Task3.ipynb` Sections 3.1 to 3.2; report Section 5.1 | Complete |
-| Tariff beyond time of day, post-history contribution, user-history benefit, consistency across periods | `Task3.ipynb` Sections 3.2 to 3.5 (paired differences by fold, bootstrap noise, cold start); report Section 5.1 | Complete. Tariff adds nothing, post history +0.304, user history +0.026 for returning users only |
-| Operational or ethical concerns of each feature group | `Task3.ipynb` Section 3.6; report Section 5.1 | Complete |
-| Additional leakage-safe features | `Task3.ipynb` Section 3.1 (decision: none added) | Complete |
-| At least three individual classifiers of different principles, justified | `Task3.ipynb` Sections 4.1 to 4.4 (logistic regression, Naive Bayes, decision tree; k-NN and SVM left out with reasons; caps checked against Task 1); report Section 5.2 | Complete |
-| At least three ensembles of different principles, and why each could improve | `Task3.ipynb` Sections 5.1, 5.2 and 5.4 (random forest, gradient boosting, stacking); report Section 5.3 | Complete |
-| Stacking predictions generated without leakage | `Task3.ipynb` Section 5.3 (inner quarters in time order, with assertions); report Section 5.3 | Complete |
-| Comparison of all models with the baselines | `Task3.ipynb` Sections 6.1 and 6.2; report Section 5.4 | Complete. Gradient boosting 0.626 against B1 0.511, in all four folds |
-| Synthesis | report chapter 6, the final chapter, rewritten for this deliverable | Complete |
-| Notebook and report section for the submission | `Task3.ipynb`, `docs/TASK3_REPORT.pdf` | Complete on 2026-10-14. Teammate review pending |
+- Implemented: explicit `early_stopping=False` for both boosting factories, all selected inputs for Naive Bayes,
+  appropriate category codes, and a fixed log-transform list. No additional models or figures were added.
+- Verified: clean execution of all 25 code cells, fold/result consistency, unchanged B0/B1/LR/tree metrics,
+  temporal assertions, full specified boosting iterations, and finite predictions for unseen categories.
+- Refreshed: Task 3 results, decision log, existing figures, notebook explanations and matching report.
+- Pending: user review and approval before committing. The final test remains reserved; calibration and threshold
+  selection belong to the next step under the existing Task 2 protocol.
 
 ## Notebook structure
 
@@ -154,14 +145,18 @@ as ordinary missing data without checking the associated flags and definitions.
 - Plan how to handle unseen categories, and report cold-start behaviour for unseen users
   or posts where sample sizes permit. Fix random seeds for stochastic steps when implemented.
 
-## Later project stages (after Task 3; provisional until the next brief arrives)
+## Later project stages (after Task 2; provisional until the next brief arrives)
 
 1. Reconcile the next brief with this plan before adding scope.
-2. Done in Task 3: classifiers and ensembles on the four folds of Task 2, the feature-group ablation, and the
-   hyperparameters (`prepared/task3_results.json`).
-3. Check the calibration of the chosen model and choose the decision threshold without test feedback. The threshold is
-   chosen on the pooled out-of-fold predictions, from the alert budget or the cost ratio, and then frozen.
-4. Evaluate the chosen approach once on the held-out test, investigate limitations and subgroup and time behaviour,
+2. Fit a small justified set of classifiers on the four folds of Task 2, with all preprocessing fitted inside each
+   training fold, and compare them with baselines B0 and B1 fold by fold. The folds, features and metrics come from
+   `prepared/task2_protocol.json` and are not changed.
+3. Choose hyperparameters and the decision threshold without test feedback. The threshold is chosen on the pooled
+   out-of-fold predictions, from the alert budget or the cost ratio, and then frozen.
+4. Run the feature-group ablation on the same folds: start context alone, context plus post history, context plus
+   user history, and context plus both, with and without `post_id`. Keep splits, metric definitions and tuning effort
+   the same so the ablation can be interpreted.
+5. Evaluate the chosen approach once on the held-out test, investigate limitations and subgroup and time behaviour,
    and finish the report with privacy, generalisation, cold-start, operational assumptions and reproducibility details.
 
 ## Submission check
@@ -175,5 +170,3 @@ as ordinary missing data without checking the associated flags and definitions.
 - [ ] Current deadline, file format, and submission channel are confirmed.
 - [x] Task 2: every brief item has a notebook section and a report section (table above), and the report numbers match the notebook output.
 - [ ] Task 2: the author of the first notebook version has reviewed the rewritten commentary and confirmed the slide citations.
-- [x] Task 3: every brief item has a notebook section and a report section (table above), and the report numbers match the notebook output.
-- [ ] Task 3: the author of the first notebook version has reviewed the reworked notebook and report chapter 5.
