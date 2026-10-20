@@ -84,11 +84,11 @@ with the abnormal share of the period. Models will be compared on four expanding
 and the last quarter of 2021 stays untouched as the final test. Two baselines give the reference: a no-skill
 baseline, and the 7-day failure rate of the post, which already reaches a PR-AUC of 0.51 against 0.18.
 
-In the third task we compared feature groups and trained individual and ensemble models. The recent failure history
-of the charging post carries almost all of the signal, the user history adds a little and only for returning users,
-and the tariff adds nothing beyond the hour. The best model, gradient boosting on 27 features, reaches a PR-AUC of
-0.63, above the 7-day failure rate in every validation quarter. With alerts on 5\% of the sessions, 88\% of its
-alerts are real failures, but it still misses about three quarters of them.
+In the third task we compared feature groups and trained individual and ensemble models. Charging-post history
+provides the largest improvement. User history adds a smaller benefit, mainly for returning users, while the tariff
+adds no measurable improvement beyond the hour. Gradient boosting on 27 features reaches a PR-AUC of 0.63, above
+the 7-day failure rate in every validation quarter. With alerts on 5\% of the sessions, 88\% of its alerts are real
+failures, but it still misses about three quarters of them.
 
 \tableofcontents
 \listoffigures
@@ -668,7 +668,7 @@ Table~\ref{tab:protocol} summarises the protocol. The notebook also saves it as
 \chapter{Individual and Ensemble Models}\label{ch:models}
 
 In the third task we trained the first models~\cite{brief}. Every experiment follows the protocol of Chapter~\ref{ch:eval}:
-the same four folds, metrics and baselines, with every learned operation fitted inside the training window of each
+the same four folds, metrics and baselines, with preprocessing fitted inside the training window of each
 fold. The rows of the test period are dropped right after the file is read, before the target is built, and no
 cut-off is chosen yet.
 
@@ -678,9 +678,11 @@ We compared the four nested feature sets of the brief with one fixed reference m
 6, learning rate 0.1, 200 iterations and at least 100 sessions per leaf, which we did not tune. With the same
 untuned model for every set, the differences come from the information and not from tuning, and the model handles
 categories, missing values and interactions without extra preparation~\cite{sklearn}. We judge each step by its paired
-difference in \acs{PR-AUC}, fold by fold, and call two results tied when they differ by less than 0.005. A
+difference in \acs{PR-AUC}, fold by fold, and treat differences below 0.005 as practically negligible. A
 bootstrap of each validation quarter (100 resamples of the sessions, the resampling of the evaluation slides~\cite{mindd04}) gives
-a standard error of 0.004 to 0.006 for the \acs{PR-AUC} of one fold, so this tolerance is about one standard error.
+a standard error of 0.004 to 0.006 for one model's \acs{PR-AUC}. This gives a rough scale for the tolerance, not a
+test of a paired difference. Sessions share posts, users and periods, so the independent-session resampling can
+understate uncertainty.
 
 \begin{table}[!htb]
   \centering\small
@@ -691,13 +693,13 @@ a standard error of 0.004 to 0.006 for the \acs{PR-AUC} of one fold, so this tol
     & & & & & \multicolumn{2}{c}{Gain over previous set} \\
     Feature set & Features & \acs{PR-AUC} & Lift & \acs{ROC-AUC} & \acs{PR-AUC} & Folds \\
     \midrule
-    S1 context and weather & 9  & 0.289 & 1.60 & 0.660 & -- & -- \\
-    S2 + tariff            & 10 & 0.289 & 1.60 & 0.659 & $-0.0001$ & 3 of 4 \\
-    S3 + post history      & 18 & 0.593 & 3.31 & 0.810 & $+0.304$ & 4 of 4 \\
-    S4 + user history      & 29 & 0.619 & 3.46 & 0.835 & $+0.026$ & 4 of 4 \\
+    S1 context and weather & 9  & 0.290 & 1.60 & 0.660 & -- & -- \\
+    S2 + tariff            & 10 & 0.290 & 1.60 & 0.659 & $+0.0006$ & 3 of 4 \\
+    S3 + post history      & 18 & 0.584 & 3.26 & 0.805 & $+0.294$ & 4 of 4 \\
+    S4 + user history      & 29 & 0.615 & 3.44 & 0.832 & $+0.031$ & 4 of 4 \\
     \midrule
     Selected set         & 27 & 0.626 & 3.50 & 0.836 & -- & -- \\
-    Selected, no user history & 16 & 0.601 & 3.35 & 0.812 & -- & -- \\
+    Selected, no user history & 16 & 0.599 & 3.34 & 0.811 & -- & -- \\
     \bottomrule
   \end{tabular*}
 \end{table}
@@ -711,37 +713,43 @@ a standard error of 0.004 to 0.006 for the \acs{PR-AUC} of one fold, so this tol
 \end{figure}
 
 Table~\ref{tab:ablation} and Figure~\ref{fig:ablation} answer the questions of the brief. The tariff gives no
-information beyond the time of day. Adding it changes the mean \acs{PR-AUC} by $-0.0001$, and its fold differences
-($-0.0038$ to $+0.0024$) stay inside the noise. The tariff period is a deterministic function of the start hour,
-so a model that already has the hour can rebuild it. The charging-post history is by far the largest contribution.
-It raises the mean \acs{PR-AUC} from 0.289 to 0.593 and the gain is large in every quarter ($+0.256$ to $+0.375$).
-With it, the model is above B1 in every fold, by $+0.073$ to $+0.095$, so it does more than repeat the 7-day
-failure rate. The user history adds a smaller benefit, $+0.026$, which is positive in every fold but falls from
-$+0.037$ in fold 1 to $+0.014$ in fold 4. It only helps returning users. About 13\% of the validation sessions come
-from new accounts, whose history is empty. For them S3 and S4 are tied (0.524 and 0.526), and for returning users S4
-gains $+0.027$ (0.617 to 0.644). The ordering of the sets is the same in every fold, but the size of the gains is
-not: the post-history gain varies by 0.12 between quarters and the user-history gain shrinks, so the effect is
-consistent in direction and not in size.
+measurable improvement beyond the time of day in these experiments. Adding it changes the mean \acs{PR-AUC} by
+$+0.0006$, and its fold differences ($-0.0033$ to $+0.0038$) stay inside the practical tolerance. The tariff period
+is a deterministic function of the start hour, so a model that already has the hour can rebuild it. Charging-post
+history provides by far the largest improvement. It raises the mean \acs{PR-AUC} from 0.290 to 0.584, with a large
+gain in every quarter ($+0.249$ to $+0.360$). With it, the model is above B1 in every fold, by $+0.061$ to
+$+0.090$, so it does more than repeat the 7-day failure rate. User history adds a smaller benefit, $+0.031$, which
+is positive in every fold but falls from $+0.044$ in fold 1 to $+0.018$ in fold 4. The ordering of the sets is the
+same in every fold, but the size of the gains varies: the post-history gain differs by 0.11 between quarters and
+the user-history gain shrinks.
 
-We then removed two variables from S4. Without \col{post_id} the mean \acs{PR-AUC} rises by $+0.0057$, in all four
-folds. Once the recent failures of the post are known its identity adds nothing, and it would let the model
-memorise devices whose levels change over time. Removing the tariff as well changes the result by $+0.0010$, which
-is inside the tolerance, so it goes too. The selected set has 27 features and a mean \acs{PR-AUC} of 0.626.
-Without the 11 user variables the result falls by 0.025 in every fold, to 0.601, so by our rule the user history
-stays. We add no new feature. The start-time columns were chosen in Task~1, the post history alone carries most of
-the signal, and a new history feature would need its own check that every session it counts had ended before the
-start.
+The benefit of user history is much larger for returning users: pooled \acs{PR-AUC} rises from 0.609 to 0.640
+($+0.032$). About 13\% of the validation sessions come from new accounts. For them the change is smaller and
+mixed: \acs{PR-AUC} rises from 0.513 to 0.519 ($+0.0057$), just above our practical tolerance, while
+\acs{ROC-AUC} falls from 0.730 to 0.727. A new account has no completed history, but its indicators and concurrency
+variables can still carry information, and fitting a model with another feature group changes predictions for all
+sessions. These results do not establish that user history cannot help a new account.
+
+We then removed two variables from S4. Without \col{post_id} the mean \acs{PR-AUC} rises by $+0.0107$, in all
+four folds. In these folds its identity adds no predictive benefit once the history is known. Removing it also
+reduces the opportunity to memorise devices whose failure patterns change over time. Removing the tariff as well
+changes the result by $+0.0003$, inside the tolerance, so it goes too. The selected set has 27 features and a mean
+\acs{PR-AUC} of 0.626. Without the 11 user variables the mean result falls by 0.027 to 0.599, with a loss in every
+fold ($-0.017$ to $-0.037$), so by our rule user history stays. We add no new feature. The start-time columns were
+chosen in Task~1, post history provides the largest measured improvement, and a new history feature would need its
+own check that every session it counts had ended before the start.
 
 Some groups raise operational or ethical concerns, the kind of risk that the introductory slides list for data
 mining~\cite{mindd01}. The post history needs a live record of finished sessions,
 which always lags, because a label only exists when a session ends, up to 24\,h later. If alerts lead to
-maintenance, the failures fall and the history changes, so the model also reflects the maintenance policy. Station
-and district carry no personal data, but the abnormal share goes from about 8\% to 38\% between stations, so the
-alerts would concentrate on a few stations and should be monitored per station. The user history is a behaviour
-profile tied to a persistent account, which conflicts with data minimisation and purpose limitation~\cite{gdpr}. A driver who
-met a faulty post gets a higher risk, so the user could be blamed for a failure of the infrastructure. We keep it
+maintenance, failures may fall and the history may change, so the model can also reflect the maintenance policy.
+Station and district identify infrastructure rather than an account, although linkage with other records can still
+raise privacy concerns. The abnormal share goes from about 8\% to 38\% between stations, so the distribution of
+alerts should be monitored per station. User history is a behaviour profile tied to a persistent account. Its use
+therefore needs a clear purpose and data-minimisation safeguards~\cite{gdpr}. A driver who used a faulty post could
+receive a higher score, so the user could be blamed for a failure of the infrastructure. We keep it
 because it improves the ranking, but only for an internal ranking of sessions and never for a decision about a
-driver. The set without user history (0.601) is the fallback.
+driver. The set without user history (0.599) is the fallback.
 
 \section{Individual models}\label{sec:individual}
 
@@ -776,10 +784,14 @@ time between quadratic and cubic in the number of training sessions and returns 
 rather than a probability~\cite{mindd04,mindd05}. Both would need a subsample, which would throw away the history that carries the signal.
 
 Each model gets the preparation that the slides recommend for it~\cite{mindd05}. The logistic regression uses the linear version
-of Task~1: training maximum for the structural \acs{NaN}, \texttt{log1p} for the skewed columns, standardisation,
+of Task~1: training maximum for the structural \acs{NaN}, \texttt{log1p} for a fixed list of non-negative
+counts, gaps and precipitation, standardisation,
 one-hot station and district, and sine and cosine of hour and weekday, the cyclical encoding of the
-data-preparation slides~\cite{mindd03}. Naive Bayes uses the numeric columns without strong correlations, cut into 10
-equal-frequency bins learned on all the training rows~\cite{mindd03,sklearn}. The trees use the category codes of Task~1. The slides
+data-preparation slides~\cite{mindd03}. The log-transform list is fixed from the meaning of the variables, rather
+than selected again using later periods. Naive Bayes keeps all eligible numeric inputs and cuts continuous ones into
+10 equal-frequency bins learned on each training fold~\cite{mindd03,sklearn}. Its category encoder reserves code
+zero for unseen categories, and Laplace smoothing uses $\alpha=1$. We do not reuse the target-based reduced
+feature list learned in Task~1. The trees use the category codes of Task~1. The slides
 advise against imposing an arbitrary order on unordered categories, and we keep the codes for a reason: after
 \col{post_id} is dropped only 13 stations and 3 districts remain, and a tree can isolate any single code with two
 splits, so the order blocks no partition that it needs. Gradient boosting reads the same codes as categories, so for
@@ -789,18 +801,18 @@ The first version of our notebook also capped the logged columns and the number 
 and 99.9\% training quantiles, which contradicts the Task~1 decision not to cap outliers. We tested both. With the
 caps the mean \acs{PR-AUC} of the logistic regression changes by $-0.0001$ (0.5925 against 0.5924), and no fold moves
 by more than 0.0002. With 111,000 to 271,000 training sessions per fold, the extreme 0.1\% are only a few hundred
-sessions, and after the log transform they do not move the coefficients. We kept the Task~1 preparation.
+sessions. Their effect on predictive performance is negligible in this comparison. We kept the Task~1 preparation.
 
 We tuned only the setting that controls the complexity of each model and kept the simplest configuration within
-the tolerance of the best one. For the logistic regression, $C=0.01$ and $C=1$ give the same \acs{PR-AUC} in every
-fold (0.593), so the data dominate the penalty and we kept the stronger one. For the tree, depths 4 and 6 underfit
+the tolerance of the best one. For logistic regression, $C=0.01$ and $C=1$ give similar mean \acs{PR-AUC}
+(0.5925 and 0.5923), with small differences in every fold, so we kept the stronger penalty. For the tree, depths 4 and 6 underfit
 (0.540 and 0.582), and depths 8 and 12 are tied (0.597 and 0.599), with a worse log-loss at depth 12 (0.354
-against 0.347), so we kept depth 8. Naive Bayes has nothing to tune. It ranks sessions reasonably (\acs{ROC-AUC}
-0.815) but its \acs{PR-AUC} is only 0.533, and its probabilities are worse than the constant prior (Brier score 0.158
-against 0.148, log-loss 0.728 against 0.472). This is the overconfidence that the independence assumption~\cite{mindd05} predicts,
-because the overlapping windows count the same failures several times. The tree and the logistic regression reach
+against 0.347), so we kept depth 8. For Naive Bayes we keep 10 bins and Laplace smoothing fixed. It ranks sessions reasonably (\acs{ROC-AUC}
+0.814) but its \acs{PR-AUC} is only 0.525, and its probabilities are worse than the constant prior (Brier score 0.172
+against 0.148, log-loss 0.839 against 0.472). This is consistent with overconfidence when the conditional-independence assumption~\cite{mindd05} fails:
+the overlapping windows describe some of the same failures. The tree and the logistic regression reach
 almost the same result (0.597 and 0.593), both 0.08 to 0.09 above B1, although one is linear and the other is
-not. The features, more than the algorithm, set the level.
+not. This suggests that the available information strongly limits both models.
 
 \section{Ensemble models}\label{sec:ensembles}
 
@@ -813,16 +825,15 @@ cover ensembles~\cite{mindd05}, so we explain each one with ideas that they do c
   with a random subset of features at each split. A single tree is unstable~\cite{mindd05}, and averaging trees fitted on different samples cancels much of that
   noise while keeping the low bias of a deep tree.
   \item Gradient boosting~\cite{friedman2001,sklearn} adds shallow trees one after another, each fitted to the remaining errors of the previous
-  ones. A shallow tree is too small to follow the data, and the sequence lowers that bias step by step. We fixed
-  the number of iterations, because its internal early stopping splits the training rows at random and would let
-  later sessions decide when to stop for earlier ones.
+  ones. A shallow tree can underfit, and the sequence can lower that bias step by step. We explicitly disable
+  internal early stopping and compare fixed iteration counts, so that no random internal validation split is used.
   \item The stacking~\cite{wolpert1992} combines the logistic regression, Naive Bayes and the tree with a logistic regression on their
   predictions. The three make different errors, and the meta-model learns how much to trust each. We did not use
-  voting, because it gives every model the same weight, which is a poor choice when one constituent is much weaker.
+  equal-weight voting, because one constituent is much weaker; stacking can learn a different contribution for each.
 \end{itemize}
 
 The random forest keeps the smaller leaf size (50 sessions, 0.622 against 0.616 with 200, better in all four folds).
-Gradient boosting keeps depth 6 with learning rate 0.1 and 200 iterations (0.626). Depth 3 is lower (0.620), and
+Gradient boosting keeps depth 6 with learning rate 0.1 and 200 iterations (0.626). Depth 3 is lower (0.621), and
 the slower setting with 300 iterations is tied with it.
 
 The brief warns that the predictions that train the meta-model of a stacking must not leak~\cite{brief}, and that a random
@@ -831,9 +842,13 @@ inner cross-validation lets later sessions shape the predictions for earlier one
 first, the base models are fitted on the sessions that started and ended before it and predict it. The meta-model
 learns from these predictions, the base models are refitted on the whole window, and the meta-model combines their
 predictions for the validation quarter. Sessions whose label is not yet known at the start of the validation
-quarter are removed, as in the purge of Task~2, and assertions in the code check every inner fit. The meta-model
-gives Naive Bayes no weight (0.03 in fold 1, 0.00 in fold 4), the logistic regression 0.56 to 0.66 and the tree 0.31
-to 0.47, a weight that grows as the tree improves with more data.
+quarter are removed, as in the purge of Task~2, and assertions in the code check the timing of every inner fit.
+The feature set and base-model configurations were selected using the development folds; these checks concern
+how the meta-training predictions are constructed, not an independent estimate of the full selection procedure.
+The coefficient on the Naive Bayes logit moves from 0.023 in fold 1 to $-0.001$ in fold 4, while logistic
+regression has coefficients from 0.56 to 0.66 and the tree from 0.31 to 0.47. These are coefficients on correlated
+logit scores, not percentages of a weighted average. Their pattern suggests little additional contribution from
+Naive Bayes once the other two predictions are known.
 
 \begin{figure}[!htb]
   \centering
@@ -844,10 +859,12 @@ to 0.47, a weight that grows as the tree improves with more data.
 \end{figure}
 
 All three ensembles improve on their constituents in every fold. The random forest is $+0.025$ above the tree and
-gradient boosting $+0.029$, which shows that the instability and the bias of a single tree both cost something.
-The stacking is above the logistic regression by $+0.018$, the tree by $+0.013$ and Naive Bayes by $+0.077$, but its
+gradient boosting $+0.028$, consistent with the benefits of averaging and sequential correction. Their tree settings also differ from the
+single CART model, so this comparison does not isolate variance and bias separately.
+The stacking is above the logistic regression by $+0.018$, the tree by $+0.013$ and Naive Bayes by $+0.085$, but its
 gain over the best constituent is the smallest of the three, and in practice it mixes the linear model and the
-tree. Gradient boosting and the random forest are tied ($+0.0035$ for boosting, ahead in three folds).
+tree. Gradient boosting and the random forest are within the practical tolerance ($+0.0034$ for boosting,
+ahead in three folds).
 
 \section{Comparison and alerts}\label{sec:comparison}
 
@@ -864,12 +881,12 @@ Figure~\ref{fig:comparison} shows them fold by fold.
     & \multicolumn{4}{c}{\acs{PR-AUC}} & & & Folds \\
     Model & Mean & Weighted & Std & Worst fold & \acs{ROC-AUC} & Brier & won vs B1 \\
     \midrule
-    Gradient boosting   & 0.626 & 0.632 & 0.039 & 0.574 & 0.836 & 0.102 & 4 of 4 \\
+    Gradient boosting   & 0.626 & 0.632 & 0.038 & 0.575 & 0.836 & 0.102 & 4 of 4 \\
     Random forest       & 0.622 & 0.629 & 0.042 & 0.567 & 0.835 & 0.102 & 4 of 4 \\
-    Stacking            & 0.610 & 0.617 & 0.042 & 0.555 & 0.831 & 0.104 & 4 of 4 \\
+    Stacking            & 0.610 & 0.617 & 0.041 & 0.556 & 0.831 & 0.104 & 4 of 4 \\
     Decision tree       & 0.597 & 0.604 & 0.041 & 0.544 & 0.824 & 0.105 & 4 of 4 \\
     Logistic regression & 0.593 & 0.599 & 0.042 & 0.534 & 0.825 & 0.106 & 4 of 4 \\
-    Naive Bayes         & 0.533 & 0.540 & 0.039 & 0.478 & 0.815 & 0.158 & 3 of 4 \\
+    Naive Bayes         & 0.525 & 0.531 & 0.037 & 0.472 & 0.814 & 0.172 & 3 of 4 \\
     \midrule
     B1 post failure rate & 0.511 & 0.516 & 0.042 & 0.456 & 0.772 & 0.118 & -- \\
     B0 no skill          & 0.181 & 0.185 & 0.021 & 0.162 & 0.504 & 0.148 & -- \\
@@ -885,11 +902,12 @@ Figure~\ref{fig:comparison} shows them fold by fold.
   \label{fig:comparison}
 \end{figure}
 
-Gradient boosting (0.626) and the random forest (0.622) are tied at the top. We prefer gradient boosting, because it
+Gradient boosting (0.626) and the random forest (0.622) lead the ranking and differ by less than our practical tolerance. We prefer gradient boosting, because it
 is ahead in three folds and much cheaper to refit when the failure pattern changes. It beats B1 in every fold, by
-$+0.102$ to $+0.122$ ($+0.115$ on average), with a lift of 3.50 against 2.85. The standard deviation across folds is
+$+0.103$ to $+0.120$ ($+0.115$ on average), with a lift of 3.50 against 2.85. The standard deviation across folds is
 about the same for every model, B1 included, and fold 2 is the worst for all of them: the quarters differ in
-difficulty for all models alike. The weighted means are only 0.004 to 0.007 above the unweighted ones, so the
+difficulty for all models alike. This shared pattern does not show whether prevalence, predictor changes or
+training-window size explains the improvement over time. The weighted means are only 0.004 to 0.007 above the unweighted ones, so the
 largest fold does not decide the ranking.
 
 \begin{table}[!htb]
@@ -903,9 +921,9 @@ largest fold does not decide the ranking.
     \midrule
     5\%  & Gradient boosting & 0.880 & 0.246 & 44.0  & 6.0  & 136.1 \\
          & B1                & 0.738 & 0.207 & 36.9  & 13.1 & 143.2 \\
-    10\% & Gradient boosting & 0.721 & 0.402 & 72.1  & 27.9 & 107.9 \\
+    10\% & Gradient boosting & 0.724 & 0.404 & 72.4  & 27.6 & 107.7 \\
          & B1                & 0.594 & 0.330 & 59.4  & 40.6 & 120.7 \\
-    20\% & Gradient boosting & 0.528 & 0.587 & 105.7 & 94.3 & 74.4 \\
+    20\% & Gradient boosting & 0.528 & 0.586 & 105.5 & 94.5 & 74.5 \\
          & B1                & 0.451 & 0.499 & 90.2  & 109.8 & 89.9 \\
     \bottomrule
   \end{tabular*}
@@ -915,8 +933,8 @@ Table~\ref{tab:alerts} shows what this means for an operator. With alerts on 5\%
 alerts of gradient boosting are real failures, against 74\% for B1. Per 1,000 sessions, it gives 7 fewer false
 alerts and catches 7 more failures. The gain is mostly in precision at small budgets ($+14$ points at 5\%, $+8$ at
 20\%). Even so, the model misses most failures when only 5\% of the sessions can be reviewed (136 of about 180 per
-1,000), probably because a failure with no recent failures at the same post cannot be anticipated from the history
-of the post.
+1,000). The dominance of post history suggests that failures without a recent history may be harder to identify,
+but this comparison does not directly test that explanation.
 
 %-------------------------------------------------------------- 6
 \chapter{Synthesis}\label{ch:synthesis}
@@ -936,27 +954,23 @@ three months are left out as a burn-in, and every score is read against the abno
 
 Under this protocol, the 7-day failure rate of the post, used alone and without fitting anything, reaches a mean
 \acs{PR-AUC} of 0.511 on the four validation quarters, against 0.181 for no skill. In the models of
-Chapter~\ref{ch:models}, almost all of the signal comes from
-the recent history of the post, which lifts the \acs{PR-AUC} from 0.289 with context and weather to 0.593. User
-history adds 0.026, only for returning users, and the tariff adds nothing beyond the hour. The best model, gradient
-boosting on 27 features, reaches 0.626, above B1 in all four folds by 0.115 on average, and a logistic regression
-already reaches 0.593, so the features set most of the level. With alerts on 5\% of the sessions, 88\% of its alerts
+Chapter~\ref{ch:models}, recent post history provides the largest measured contribution: it lifts the \acs{PR-AUC} from 0.290 with context, weather and tariff to 0.584.
+User history adds 0.031, with a much larger benefit for returning users and mixed changes for new users. The tariff
+adds no measurable improvement beyond the hour. The best model, gradient boosting on 27 features, reaches 0.626, above B1 in all four folds by 0.115 on average, and a logistic regression
+already reaches 0.593, suggesting that the available information limits what these models can achieve. With alerts on 5\% of the sessions, 88\% of its alerts
 are real failures, against 74\% for B1, but it still catches only a quarter of the failures. So the information
-available at the start supports a useful ranking of risky sessions, mostly for failures that repeat at the same
-post, and it cannot anticipate a failure on a post with no recent failures.
+available at the start supports a useful ranking of risky sessions, with post history providing most of the
+measured improvement. Performance on failures without recent post failures remains to be checked.
 
-We treat the weather as a forecast, as the brief says, although
-it has one value per district and day. Durations stop at 24\,h, and we could not explain the timing of the order and
-payment fields. Every post of the validation period was already seen in training, so a new post is not tested. User
-history is a behaviour profile of an account, which raises a privacy question~\cite{gdpr}, so we would use it only to rank
-sessions internally, and the model without it (0.601) remains an option. The feature set and the hyperparameters
-were chosen on the same four folds that we report, so these scores are slightly optimistic, and the ablation holds
-for one model family. The tolerance of 0.005 is a practical rule based on the bootstrap noise, not a test, and four
-folds give no p-values. The probabilities of the best models are not yet checked for calibration, Naive Bayes is
-clearly miscalibrated, and the cost ratio between a missed failure and a false alert is unknown, so the alert
-budgets are assumptions. The 7-day window of B1 was taken from the Task~1 ranking, whose training period overlaps
-folds 1 to 3, an effect we expect to be small because B1 fits nothing. Finally, the target merges 13 fault causes
-whose mix changes over time, so a good average could hide a type of failure that the model never detects.
+Weather is assumed to be a start-time forecast despite its daily resolution. Durations stop at 24\,h, and the
+order and payment timestamps remain unexplained. Every validation post was seen in training, so new-post performance
+is untested. User history raises privacy concerns~\cite{gdpr}; it should only support internal session rankings,
+with the user-free model (0.599) available as an alternative. Feature sets and hyperparameters were chosen on the
+reported folds, so the scores are optimistic, and the ablation covers one model family. The 0.005 tolerance is a
+practical rule; session resampling ignores dependence, and four folds are insufficient for reliable significance
+claims. Calibration and error costs remain unchecked, so alert budgets are assumptions. B1's 7-day window came
+from Task~1's ranking, whose training period overlaps folds 1 to 3; we expect a small effect because B1 fits
+nothing. Finally, combining 13 fault causes can hide failure types that the model never detects.
 
 The next task chooses the cut-off from the out-of-fold predictions~\cite{mindd_lab_eval} after a calibration check, and scores the chosen
 model once on the test period.
