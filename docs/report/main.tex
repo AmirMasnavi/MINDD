@@ -17,6 +17,7 @@
 \usepackage{acronym}
 \usepackage{etoolbox}
 \usepackage{needspace}
+\usepackage{wrapfig}
 \patchcmd{\thebibliography}{\chapter*}{\section*}{}{}
 \usepackage[hidelinks]{hyperref}
 \makeatletter\g@addto@macro\UrlBreaks{\do\_}\makeatother
@@ -90,6 +91,14 @@ adds no measurable improvement beyond the hour. Gradient boosting on 27 features
 the 7-day failure rate in every validation quarter. With alerts on 5\% of the sessions, 88\% of its alerts are real
 failures, but it still misses about three quarters of them.
 
+In the fourth task we tuned gradient boosting, the random forest and the decision tree on the same folds. No
+tuned setting beat the Task 3 configuration by more than our tolerance, so gradient boosting stays the final
+model. We fixed its cut-off so that 10\% of the sessions raise an alert, and only then scored the last quarter of
+2021, which no earlier step had used. There it reaches a PR-AUC of 0.53, against 0.38 for the 7-day failure rate
+and 0.18 for no skill. Both scores are lower than on the validation quarters, which suggests that recent post
+failures predicted the next failure less well in that quarter.
+
+\addtocontents{toc}{\protect\enlargethispage{2\baselineskip}}% keeps the contents on one page
 \tableofcontents
 \listoffigures
 
@@ -126,7 +135,8 @@ The project asks whether the information available when an \ac{EV} charging sess
 session will end abnormally~\cite{brief}. We work with an educational version of the China EV Charging Dataset
 \cite{zhang2025}: 441,077 sessions and 47 columns, from 31 Dec 2019 to 31 Dec 2021, at 92 charging posts in 13
 stations and 3 districts. All the numbers in this report come from our notebooks
-\nolinkurl{Task1.ipynb}, \nolinkurl{Task2.ipynb} and \nolinkurl{Task3.ipynb} (seed 42).
+\nolinkurl{Task1.ipynb}, \nolinkurl{Task2.ipynb}, \nolinkurl{Task3.ipynb} and \nolinkurl{Task4.ipynb}
+(seed 42).
 
 We followed three rules during the whole project. First, a variable can only be a predictor if it is known when the
 session starts. Second, before fixing a problem in the data, we tried to understand it. Third, any value learned
@@ -937,6 +947,240 @@ alerts and catches 7 more failures. The gain is mostly in precision at small bud
 but this comparison does not directly test that explanation.
 
 %-------------------------------------------------------------- 6
+\chapter{Optimisation, Threshold and Final Evaluation}\label{ch:optim}
+
+In the fourth task we tuned the most promising models, chose the final model and its cut-off, and only then scored
+the test period~\cite{brief}. Every choice up to Section~\ref{sec:optim-test} uses the four development folds of
+Chapter~\ref{ch:eval}. The model, the 27 features and the cut-off were written to file before the test rows were
+read, and the test period was scored once, with nothing changed afterwards.
+
+\section{Models chosen and search}\label{sec:optim-search}
+
+We optimised gradient boosting, the random forest and the decision tree. They are the two best ensembles and the
+best individual model of Table~\ref{tab:comparison}, and they cover three principles: boosting, bagging with random
+feature subsets, and a single tree. Gradient boosting and the forest were only 0.003 apart, inside our tolerance,
+so both needed a search before we named the final model. The tree's two complexity controls, depth and minimum leaf
+size, are the settings the predictive-models slides say to choose on validation data~\cite{mindd05}. We left out
+stacking, which is 0.015 behind and would need three base models and a meta-model tuned in the inner loop; logistic
+regression, whose two penalties already gave the same \acs{PR-AUC} in every fold; and Naive Bayes, whose only
+setting does not touch the independence assumption behind its gap.
+
+Each model was searched on an explicit grid (Table~\ref{tab:optim-grid}). Every configuration was fitted on the
+training window of each fold and scored on the quarter that follows, so the search respects time order and never
+sees the test period. The objective is the unweighted mean \acs{PR-AUC} of the four folds. We used the selection
+rule of Task 3: among the configurations within 0.005 of the best mean, keep the simplest. When the choice sat on
+the edge of a range, we widened that range once. Grid search is not in the slides; we used it because it states
+the search space and the procedure exactly, which the brief asks us to report, and with at most 41 configurations
+per model a random search would not cover the space better~\cite{sklearn}.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption[Search spaces and selected configurations]{Search spaces and selected configurations (values marked * were added by the edge rule; 39, 13 and 41 configurations were tried, 36 minutes in total)}
+  \label{tab:optim-grid}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llllll}
+    \toprule
+    Model & Hyperparameter & Values tried & Search choice & Task 3 \\
+    \midrule
+    Gradient boosting & maximum depth             & 3*, 4, 6, 8                 & 4       & 6 \\
+                      & learning rate             & 0.05, 0.1                   & 0.1     & 0.1 \\
+                      & iterations                & 100*, 200, 400              & 100     & 200 \\
+                      & minimum sessions per leaf & 50, 100, 200, 400*          & 200     & 100 \\
+    \midrule
+    Random forest     & minimum sessions per leaf & 10, 20, 50, 100, 200*       & 100     & 50 \\
+                      & features per split        & 5 ($\sqrt{27}$), 9, 13      & 9       & 5 \\
+    \midrule
+    Decision tree     & maximum depth             & 6, 8, 10, 12, 16            & 8       & 8 \\
+                      & minimum sessions per leaf & 50, 100, 200, 400, 800*     & 400     & 100 \\
+                      & split criterion           & Gini, entropy               & entropy & Gini \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+For boosting and the forest the results are flat. Of the 39 boosting configurations, 31 lie within 0.005 of the
+best (0.627), and 11 of the 13 forest configurations lie within 0.0031 of theirs. A smaller learning rate or more
+features per split help slightly, but by less than the tolerance. The tree is the only model where the grid
+matters. Depth 6 underfits (about 0.585), and from depth 8 on the leaf size decides: with leaves of 400 sessions,
+depths 10 to 16 reach 0.603 to 0.604, while with leaves of 50 a depth-16 tree falls to 0.582 and its worst fold to 0.521,
+the overfitting that the minimum leaf size is meant to prevent~\cite{mindd05}. The boosting choice stayed on the
+smallest number of iterations after one widening; every configuration near it is inside the tolerance.
+
+\section{Optimised against initial, and the final model}\label{sec:optim-verdict}
+
+We adopted a search choice only if it beat the Task 3 configuration by more than 0.005 on average
+(meaningful) and in at least 3 of the 4 folds (stable). Table~\ref{tab:optim-verdict} shows that no model passes.
+The boosting choice is simpler and slightly worse, winning one fold. The forest choice wins all four folds, so it is
+stable, but its gain of $+0.001$ is far below the tolerance. The tree gains $+0.002$ in three folds, but its worst fold
+drops by 0.003. The best tree of the grid is 0.006 above the Task 3 tree, but it needs depth 16 and is still
+0.022 below gradient boosting. The search therefore confirms the Task 3 configurations, which already sat on the plateau.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Optimised against initial configurations (mean \acs{PR-AUC} over the four folds; final model in bold)}
+  \label{tab:optim-verdict}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrl}
+    \toprule
+    Model & Task 3 & Search choice & Gain & Folds won & Best in grid & Kept \\
+    \midrule
+    \textbf{Gradient boosting} & \textbf{0.626} & 0.623 & $-0.002$ & 1 of 4 & 0.627 & Task 3 \\
+    Random forest              & 0.622 & 0.623 & $+0.001$ & 4 of 4 & 0.626 & Task 3 \\
+    Decision tree              & 0.597 & 0.599 & $+0.002$ & 3 of 4 & 0.604 & Task 3 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+The final model is gradient boosting with its Task 3 configuration: depth 6, learning rate 0.1, 200 iterations
+and at least 100 sessions per leaf~\cite{friedman2001}. Its mean \acs{PR-AUC} of 0.626 is 0.003 above the random
+forest, inside the tolerance, so we applied the tie-break set before the search: the better worst fold (0.575 against
+0.567). Boosting is also about four times faster to fit (3.1 against 12.0 seconds per fold).
+
+\section{Decision threshold}\label{sec:optim-threshold}
+
+A score becomes an alert only once a cut-off is fixed. Of the criteria in the brief, we used the operational
+alert-rate constraint of the protocol: the cut-off flags 10\% of the sessions, so an operator inspects about 100
+sessions in every 1,000. We have no data on the cost of a missed failure against an unnecessary inspection, so a
+cost function would need an invented ratio, and the protocol does not select with F1 because it weights
+precision and recall equally without an operational reason. A minimum recall would leave the workload open. An
+alert budget is the one quantity an operator can set directly, and 10\% is the middle of the three budgets of the
+protocol~\cite{mindd_lab_eval}.
+
+The cut-off was computed on the pooled out-of-fold predictions: each of the 235,472 validation sessions was scored
+by the final configuration fitted on its own fold's training window. The 90th percentile of these scores is 0.490.
+Applied to each fold, it flags 7.7\% to 12.2\% of the sessions, following the abnormal share of the quarter, while
+precision stays between 0.713 and 0.751. A fixed cut-off keeps the quality of an alert stable, and the number of
+alerts rises and falls with the failure level.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption[The default and the selected cut-off]{The default cut-off of 0.50 and the selected cut-off of 0.490 on the pooled development predictions and on the test period (counts per 1,000 sessions)}
+  \label{tab:optim-cutoff}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrr}
+    \toprule
+    & \multicolumn{2}{c}{Development (out-of-fold)} & \multicolumn{2}{c}{Test period} \\
+    Measure & 0.50 & 0.490 & 0.50 & 0.490 \\
+    \midrule
+    Alert rate      & 9.7\% & 10.0\% & 7.1\% & 7.4\% \\
+    Precision       & 0.747 & 0.740 & 0.686 & 0.677 \\
+    Recall          & 0.395 & 0.403 & 0.278 & 0.286 \\
+    F1              & 0.517 & 0.522 & 0.395 & 0.402 \\
+    Correct alerts  & 72.7  & 74.0  & 48.8  & 50.3 \\
+    False alerts    & 24.6  & 26.0  & 22.4  & 24.0 \\
+    Missed failures & 111.1 & 109.8 & 127.1 & 125.6 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{task4_06_threshold.png}
+  \caption[Effect of the cut-off]{Effect of the cut-off on the pooled out-of-fold predictions: (a) precision, recall and F1; (b) share of sessions flagged, with the three alert budgets}
+  \label{fig:optim-threshold}
+\end{figure}
+
+Table~\ref{tab:optim-cutoff} compares the two cut-offs. On development they are almost the same: the selected
+cut-off adds 1.3 correct and 1.4 false alerts per 1,000 sessions. This is not a property of 0.50. It happens
+because the scores of this model are close to probabilities (Section~\ref{sec:optim-calibration}) and about 10\% of
+the sessions have a predicted risk above one half. Figure~\ref{fig:optim-threshold} shows that F1 would peak near a
+cut-off of 0.3, where the model flags well over 10\% of the sessions. Our cut-off comes from a stated capacity, so
+it would stay meaningful for a model whose scores are not calibrated.
+
+For an operator, the 10\% budget means 74.0 real failures and 26.0 false alerts in every 100 inspections per 1,000
+sessions, while 109.8 of the 183.8 abnormal sessions per 1,000 are still missed. The protocol's other budgets show
+the trade-off: going from 5\% to 10\% adds 29.3 correct alerts for 20.7 false ones, while going from 10\% to 20\%
+adds 34.4 correct alerts for 65.6 false ones. Of the three budgets, 10\% is the last one where the extra alerts are
+more often right than wrong. Read as a probability, the cut-off of 0.490 treats a missed failure as costing about
+the same as an unnecessary inspection (a cost ratio of 1.04), less than Section~\ref{sec:errors} argued; a larger
+budget would follow if the operator has the capacity.
+
+\section{Calibration}\label{sec:optim-calibration}
+
+\begin{wrapfigure}{r}{0.45\textwidth}
+  \centering
+  \vspace{-\baselineskip}
+  \includegraphics[width=0.45\textwidth]{task4_07_calibration.png}
+  \caption[Reliability of the final model]{Reliability of the pooled out-of-fold scores (ten bands of equal size) and their distribution}
+  \label{fig:optim-calibration}
+\end{wrapfigure}
+
+The cut-off uses the scores only as a ranking, but an operator may read them as risks, so we checked whether they
+behave as probabilities. Trees and boosted trees can give scores that are not probabilities~\cite{mindd04,niculescu2005}.
+On the pooled out-of-fold predictions, the Brier score~\cite{brier1950} is 0.103, against 0.150 for a constant
+prediction of the training prior. In ten bands of equal size (Figure~\ref{fig:optim-calibration}), the mean
+predicted score and the observed abnormal share differ by at most 0.015. The model slightly under-predicts in the
+middle bands and is accurate in the top band, where the alerts are (0.738 predicted, 0.740 observed).
+
+We did not add a calibration step. A calibration that keeps the order of the scores flags exactly the same 10\% of
+the sessions, and the largest gap, under two percentage points, is small enough to read the scores as approximate
+risks.
+
+\section{Final evaluation on the test period}\label{sec:optim-test}
+
+After the freeze, the final configuration was refitted on all 346,931 development sessions whose label was known
+before 1 October 2021; 48 sessions that ended after that date were purged, as in the folds. The test period has
+80,081 sessions and an abnormal share of 17.6\%. Table~\ref{tab:optim-test} gives the single evaluation, with B0
+and B1 scored on the same sessions.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Final evaluation on the test period (October to December 2021), with the development means for comparison (SE: bootstrap standard error of the test \acs{PR-AUC})}
+  \label{tab:optim-test}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrrr}
+    \toprule
+    & \multicolumn{5}{c}{Test period} & \multicolumn{2}{c}{Development} \\
+    Model & \acs{PR-AUC} & SE & Lift & \acs{ROC-AUC} & Brier & \acs{PR-AUC} & \acs{ROC-AUC} \\
+    \midrule
+    Gradient boosting & 0.532 & 0.005 & 3.03 & 0.794 & 0.113 & 0.626 & 0.836 \\
+    B1 post failure rate & 0.381 & 0.004 & 2.17 & 0.723 & 0.129 & 0.511 & 0.772 \\
+    B0 no skill & 0.178 & 0.002 & 1.01 & 0.505 & 0.145 & 0.181 & 0.504 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+The model keeps its advantage. Its test \acs{PR-AUC} of 0.532 is three times the abnormal share and 0.152 above B1,
+a larger margin than on development (0.115). In absolute terms, however, it is 0.093 below the development mean
+and 0.128 below fold 4, the most recent quarter (0.660). That gap is about 27 bootstrap standard errors, so it is a
+real change in the last quarter of 2021 and not sampling noise, and it breaks the upward trend of the development
+folds. B1 falls further, from 0.540 in fold 4 to 0.381, which suggests that recent post failures predicted the
+next failure less well in this quarter. The \acs{ROC-AUC} and the Brier score point the same way.
+
+At the unchanged cut-off the model flags 7.4\% of the test sessions instead of 10\% (Table~\ref{tab:optim-cutoff}).
+Its alerts are less precise (0.677) and catch fewer failures (recall 0.286): per 1,000 sessions, 50.3 correct alerts,
+24.0 false alerts and 125.6 missed failures. A fixed cut-off was expected to move the alert rate with the abnormal
+share, but 7.4\% is lower than in fold 3, which had a similar share (18.2\%) and 10.4\% flagged, so fewer test
+sessions receive a high score. We report these numbers as observed and changed nothing after them.
+
+\section{What drives the final model}\label{sec:optim-importance}
+
+We measured how much the final model uses each group of information with permutation importance: on each
+validation quarter, the columns of one group are shuffled together across the sessions and the drop in
+\acs{PR-AUC} is recorded, five times per group, with the configuration fitted on that fold's training
+window~\cite{breiman2001,sklearn}. Permutation importance is not in the slides; we used it because it works for any
+model and is measured on sessions the model did not see. Shuffling a group at once keeps its correlated history
+windows from standing in for each other.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{task4_10_importance.png}
+  \caption[Permutation importance of the final model]{Permutation importance of the final model on the four validation quarters: (a) feature groups (bar: range over the folds); (b) the ten leading variables (bar: standard deviation)}
+  \label{fig:optim-importance}
+\end{figure}
+
+The post history dominates (Figure~\ref{fig:optim-importance}). Shuffling its eight variables lowers the
+\acs{PR-AUC} by 0.366 on average. User history comes second (0.097), and
+its role shrinks over time, from 0.108 in fold 1 to 0.067 in fold 4. Location costs 0.012; calendar, concurrency
+and weather less than 0.002 each, so the model barely uses them. The leading single variable is the post's abnormal
+rate over the last day (0.196), ahead of the time since the post's last abnormal session (0.038) and the 7-day rate
+that B1 uses (0.026).
+
+The ranking agrees with the ablation of Section~\ref{sec:ablation}, but the sizes differ: removing post history and
+retraining cost 0.294, and removing user history 0.027, against permutation drops of 0.366 and 0.097. The two
+methods answer different questions. Permutation measures how much this fitted model uses a group; the ablation
+measures what is lost when the model is retrained without it, and a retrained model can partly replace user
+history with post history. The method has three limits here. Correlated variables share importance, so single
+variables are understated when the other windows are left intact. It measures use, not cause. And it describes
+the model on the validation quarters, before the change seen on the test period.
+
+%-------------------------------------------------------------- 7
 \chapter{Synthesis}\label{ch:synthesis}
 
 The project asks to what extent the information available when a charging session starts can predict that it
@@ -958,22 +1202,26 @@ Chapter~\ref{ch:models}, recent post history provides the largest measured contr
 User history adds 0.031, with a much larger benefit for returning users and mixed changes for new users. The tariff
 adds no measurable improvement beyond the hour. The best model, gradient boosting on 27 features, reaches 0.626, above B1 in all four folds by 0.115 on average, and a logistic regression
 already reaches 0.593, suggesting that the available information limits what these models can achieve. With alerts on 5\% of the sessions, 88\% of its alerts
-are real failures, against 74\% for B1, but it still catches only a quarter of the failures. So the information
-available at the start supports a useful ranking of risky sessions, with post history providing most of the
-measured improvement. Performance on failures without recent post failures remains to be checked.
+are real failures, against 74\% for B1, but it still catches only a quarter of the failures. Tuning did not
+improve on these settings (Chapter~\ref{ch:optim}).
+On the untouched test quarter it reaches a \acs{PR-AUC} of 0.532, against 0.381 for B1
+and 0.178 for no skill. With the cut-off fixed beforehand at a 10\% development alert rate, it flags 7.4\% of the
+test sessions: 50 correct alerts, 24 false alerts and 126 missed failures per 1,000. The margin over B1 holds, but both fall well below their development
+level (by 0.093 and 0.130). So the information available at the start supports a useful ranking of risky
+sessions, with post history providing most of the measured improvement, but the strength of that signal changes
+over time. Performance on failures without recent post failures is still untested.
 
 Weather is assumed to be a start-time forecast despite its daily resolution. Durations stop at 24\,h, and the
 order and payment timestamps remain unexplained. Every validation post was seen in training, so new-post performance
 is untested. User history raises privacy concerns~\cite{gdpr}; it should only support internal session rankings,
-with the user-free model (0.599) available as an alternative. Feature sets and hyperparameters were chosen on the
-reported folds, so the scores are optimistic, and the ablation covers one model family. The 0.005 tolerance is a
+with the user-free model (0.599) available as an alternative. Feature sets, hyperparameters and the cut-off were chosen on the
+reported folds, so the development scores are optimistic, the ablation covers one model family, and the test
+period is a single quarter. The 0.005 tolerance is a
 practical rule; session resampling ignores dependence, and four folds are insufficient for reliable significance
-claims. Calibration and error costs remain unchecked, so alert budgets are assumptions. B1's 7-day window came
+claims. The scores are close to calibrated, but error costs are unknown, so the 10\% budget is a choice, not a measured
+capacity. B1's 7-day window came
 from Task~1's ranking, whose training period overlaps folds 1 to 3; we expect a small effect because B1 fits
 nothing. Finally, combining 13 fault causes can hide failure types that the model never detects.
-
-The next task chooses the cut-off from the out-of-fold predictions~\cite{mindd_lab_eval} after a calibration check, and scores the chosen
-model once on the test period.
 
 %-------------------------------------------------------------- references
 \clearpage
@@ -981,7 +1229,7 @@ model once on the test period.
 \addcontentsline{toc}{chapter}{Bibliography}
 \begin{thebibliography}{99}
 \bibitem{brief} Departamento de Engenharia Informática, ISEP (2026). \emph{Mineração de Dados, First Project:
-  Classification of Abnormal Electric-Vehicle Charging Sessions} (Tasks 1 to 3). Assignment statement, 2026/2027,
+  Classification of Abnormal Electric-Vehicle Charging Sessions} (Tasks 1 to 4). Assignment statement, 2026/2027,
   1st semester.
 \bibitem{zhang2025} Zhang, Y., Xu, T., Chen, T., et al. (2025). A high-resolution electric vehicle
   charging transaction dataset with multidimensional features in China. \emph{Scientific Data}, 12, 643.
@@ -1003,6 +1251,8 @@ model once on the test period.
   \url{https://doi.org/10.1371/journal.pone.0118432}
 \bibitem{brier1950} Brier, G.\,W. (1950). Verification of forecasts expressed in terms of probability.
   \emph{Monthly Weather Review}, 78(1), 1--3.
+\bibitem{niculescu2005} Niculescu-Mizil, A., Caruana, R. (2005). Predicting good probabilities with supervised learning.
+  In \emph{Proceedings of the 22nd International Conference on Machine Learning (ICML)}, 625--632.
 \bibitem{mindd01} Rodrigues, F. (2026). \emph{Introduction to Data Science}. Lecture slides, Mineração de Dados,
   DEI/ISEP, 2026/2027.
 \bibitem{gdpr} European Parliament and Council of the European Union (2016). Regulation (EU) 2016/679 of 27 April

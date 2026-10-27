@@ -1,0 +1,634 @@
+{
+  "protocol": "prepared/task2_protocol.json (folds, metrics, alert budgets); test rows dropped right after reading until Section 9, read again only after prepared/task4_frozen.json was written, and scored once",
+  "tolerance": 0.005,
+  "selected_models": [
+    {
+      "name": "Gradient boosting",
+      "principle": "boosting",
+      "initial_configuration": "HGB depth=6, lr=0.1, 200 it, leaf=100",
+      "reason": "Task 3 mean PR-AUC 0.626; best mean PR-AUC of Task 3 and cheap to refit"
+    },
+    {
+      "name": "Random forest",
+      "principle": "bagging with random feature subsets",
+      "initial_configuration": "RF leaf=50, features=sqrt",
+      "reason": "Task 3 mean PR-AUC 0.622; 0.003 behind boosting, inside the tolerance, from a different ensemble principle"
+    },
+    {
+      "name": "Decision tree",
+      "principle": "single tree",
+      "initial_configuration": "DT depth=8, leaf=100, gini",
+      "reason": "Task 3 mean PR-AUC 0.597; best individual model; its complexity controls are the ones MINDD-05 says to choose on validation data"
+    }
+  ],
+  "search_spaces": {
+    "Gradient boosting": {
+      "grid": {
+        "max_depth": [
+          4,
+          6,
+          8
+        ],
+        "learning_rate": [
+          0.05,
+          0.1
+        ],
+        "max_iter": [
+          200,
+          400
+        ],
+        "min_samples_leaf": [
+          50,
+          100,
+          200
+        ]
+      },
+      "order": [
+        "max_iter",
+        "max_depth",
+        "min_samples_leaf (larger first)",
+        "learning_rate (larger first)"
+      ],
+      "extended": {
+        "max_depth": [
+          3
+        ],
+        "min_samples_leaf": [
+          400
+        ],
+        "max_iter": [
+          100
+        ]
+      }
+    },
+    "Random forest": {
+      "grid": {
+        "min_samples_leaf": [
+          10,
+          20,
+          50,
+          100
+        ],
+        "max_features": [
+          "sqrt",
+          9,
+          13
+        ]
+      },
+      "order": [
+        "min_samples_leaf (larger first)",
+        "max_features"
+      ],
+      "extended": {
+        "min_samples_leaf": [
+          200
+        ]
+      }
+    },
+    "Decision tree": {
+      "grid": {
+        "max_depth": [
+          6,
+          8,
+          10,
+          12,
+          16
+        ],
+        "min_samples_leaf": [
+          50,
+          100,
+          200,
+          400
+        ],
+        "criterion": [
+          "gini",
+          "entropy"
+        ]
+      },
+      "order": [
+        "max_depth",
+        "min_samples_leaf (larger first)",
+        "criterion (gini first)"
+      ],
+      "extended": {
+        "min_samples_leaf": [
+          800
+        ]
+      }
+    }
+  },
+  "chosen_configurations": {
+    "Gradient boosting": "HGB depth=4, lr=0.1, 100 it, leaf=200",
+    "Random forest": "RF leaf=100, features=9",
+    "Decision tree": "DT depth=8, leaf=400, entropy"
+  },
+  "verdicts": [
+    {
+      "model": "Gradient boosting",
+      "initial": "HGB depth=6, lr=0.1, 200 it, leaf=100",
+      "optimised": "HGB depth=4, lr=0.1, 100 it, leaf=200",
+      "mean gain": -0.0023363033033740876,
+      "folds won": 1,
+      "worst-fold gain": -0.005644076260189035,
+      "ROC-AUC gain": 8.997473863281424e-05,
+      "Brier change": 0.0002908843517383797,
+      "meaningful": false,
+      "stable": false,
+      "kept": "HGB depth=6, lr=0.1, 200 it, leaf=100"
+    },
+    {
+      "model": "Random forest",
+      "initial": "RF leaf=50, features=sqrt",
+      "optimised": "RF leaf=100, features=9",
+      "mean gain": 0.0009743741524336214,
+      "folds won": 4,
+      "worst-fold gain": 0.0009029495152044209,
+      "ROC-AUC gain": 0.0003534447800265239,
+      "Brier change": -0.0001574842041680291,
+      "meaningful": false,
+      "stable": true,
+      "kept": "RF leaf=50, features=sqrt"
+    },
+    {
+      "model": "Decision tree",
+      "initial": "DT depth=8, leaf=100, gini",
+      "optimised": "DT depth=8, leaf=400, entropy",
+      "mean gain": 0.0020059020606618405,
+      "folds won": 3,
+      "worst-fold gain": -0.0028907454552211664,
+      "ROC-AUC gain": 0.0014827918050257516,
+      "Brier change": -4.211719109054046e-06,
+      "meaningful": false,
+      "stable": true,
+      "kept": "DT depth=8, leaf=100, gini"
+    }
+  ],
+  "final_model": "HGB depth=6, lr=0.1, 200 it, leaf=100",
+  "operating_points": [
+    {
+      "name": "default 0.50",
+      "cut_off": 0.5,
+      "scope": "pooled",
+      "precision": 0.747205728257073,
+      "recall": 0.395416002402902,
+      "F1": 0.5171564553901942,
+      "alert rate": 0.09726846504042944,
+      "correct per 1,000": 72.67955425698172,
+      "false per 1,000": 24.588910783447712,
+      "missed per 1,000": 111.12573894136032
+    },
+    {
+      "name": "selected",
+      "cut_off": 0.489885729465315,
+      "scope": "pooled",
+      "precision": 0.7402641525459719,
+      "recall": 0.4027402324345556,
+      "F1": 0.5216675644939247,
+      "alert rate": 0.09999915064211456,
+      "correct per 1,000": 74.02578650540191,
+      "false per 1,000": 25.973364136712647,
+      "missed per 1,000": 109.77950669294013
+    },
+    {
+      "name": "default 0.50",
+      "cut_off": 0.5,
+      "scope": "fold 1",
+      "precision": 0.7575511858909386,
+      "recall": 0.3675617192878922,
+      "F1": 0.4949668874172185,
+      "alert rate": 0.08172089324763104,
+      "correct per 1,000": 61.907759591809686,
+      "false per 1,000": 19.81313365582135,
+      "missed per 1,000": 106.52044264793585
+    },
+    {
+      "name": "selected",
+      "cut_off": 0.489885729465315,
+      "scope": "fold 1",
+      "precision": 0.7506396378665617,
+      "recall": 0.3751352414674929,
+      "F1": 0.5002623294858342,
+      "alert rate": 0.08417268570671262,
+      "correct per 1,000": 63.183354317142665,
+      "false per 1,000": 20.98933138956994,
+      "missed per 1,000": 105.24484792260287
+    },
+    {
+      "name": "default 0.50",
+      "cut_off": 0.5,
+      "scope": "fold 2",
+      "precision": 0.7207438281500481,
+      "recall": 0.3400393283920738,
+      "F1": 0.4620760534429599,
+      "alert rate": 0.07462258056798335,
+      "correct per 1,000": 53.78376438500371,
+      "false per 1,000": 20.838816182979638,
+      "missed per 1,000": 104.38548221164199
+    },
+    {
+      "name": "selected",
+      "cut_off": 0.489885729465315,
+      "scope": "fold 2",
+      "precision": 0.7133975753807895,
+      "recall": 0.34714869157464834,
+      "F1": 0.4670329670329671,
+      "alert rate": 0.07696724645309472,
+      "correct per 1,000": 54.90824700337345,
+      "false per 1,000": 22.058999449721274,
+      "missed per 1,000": 103.26099959327225
+    },
+    {
+      "name": "default 0.50",
+      "cut_off": 0.5,
+      "scope": "fold 3",
+      "precision": 0.7462406015037594,
+      "recall": 0.4164203299322971,
+      "F1": 0.5345492380194626,
+      "alert rate": 0.1016996280977373,
+      "correct per 1,000": 75.89239164436411,
+      "false per 1,000": 25.80723645337319,
+      "missed per 1,000": 106.3570956866289
+    },
+    {
+      "name": "selected",
+      "cut_off": 0.489885729465315,
+      "scope": "fold 3",
+      "precision": 0.7391376727151656,
+      "recall": 0.42338132926480404,
+      "F1": 0.5383775918515824,
+      "alert rate": 0.10439331271071565,
+      "correct per 1,000": 77.16103020402488,
+      "false per 1,000": 27.232282506690765,
+      "missed per 1,000": 105.08845712696812
+    },
+    {
+      "name": "default 0.50",
+      "cut_off": 0.5,
+      "scope": "fold 4",
+      "precision": 0.7513333333333333,
+      "recall": 0.4222027972027972,
+      "F1": 0.5406140070354972,
+      "alert rate": 0.11878208766118069,
+      "correct per 1,000": 89.24494186276709,
+      "false per 1,000": 29.5371457984136,
+      "missed per 1,000": 122.13438213517402
+    },
+    {
+      "name": "selected",
+      "cut_off": 0.489885729465315,
+      "scope": "fold 4",
+      "precision": 0.7446440164466566,
+      "recall": 0.4296953046953047,
+      "F1": 0.5449362578193048,
+      "alert rate": 0.12197600601829243,
+      "correct per 1,000": 90.82870303158283,
+      "false per 1,000": 31.147302986709605,
+      "missed per 1,000": 120.55062096635827
+    },
+    {
+      "name": "default 0.50",
+      "cut_off": 0.5,
+      "scope": "test",
+      "precision": 0.6856591865357644,
+      "recall": 0.2776121521862578,
+      "F1": 0.39521018593371054,
+      "alert rate": 0.07122788176970817,
+      "correct per 1,000": 48.838051472883706,
+      "false per 1,000": 22.389830296824464,
+      "missed per 1,000": 127.08382762453016
+    },
+    {
+      "name": "selected",
+      "cut_off": 0.489885729465315,
+      "scope": "test",
+      "precision": 0.6769799899108795,
+      "recall": 0.28577512776831343,
+      "F1": 0.401896680808585,
+      "alert rate": 0.07426230941172063,
+      "correct per 1,000": 50.27409747630524,
+      "false per 1,000": 23.988211935415393,
+      "missed per 1,000": 125.64778162110862
+    }
+  ],
+  "per_fold_cut_offs": {
+    "1": 0.4286062590072182,
+    "2": 0.3892137847903404,
+    "3": 0.5051993134236988,
+    "4": 0.5667956877829813
+  },
+  "calibration": {
+    "Brier": 0.1031614289637352,
+    "Brier constant prior": 0.1500209073906136,
+    "largest band gap": 0.01479105242543935,
+    "bands": [
+      {
+        "mean predicted": 0.013380845594154233,
+        "observed": 0.01533038899269577
+      },
+      {
+        "mean predicted": 0.02509405354246883,
+        "observed": 0.025480952987641737
+      },
+      {
+        "mean predicted": 0.03911907955581383,
+        "observed": 0.044209453433558414
+      },
+      {
+        "mean predicted": 0.05772975036575981,
+        "observed": 0.06557098568819807
+      },
+      {
+        "mean predicted": 0.08371108687950432,
+        "observed": 0.09343016095468637
+      },
+      {
+        "mean predicted": 0.11602326374145622,
+        "observed": 0.125960844268909
+      },
+      {
+        "mean predicted": 0.15348628938664372,
+        "observed": 0.16120949590181338
+      },
+      {
+        "mean predicted": 0.20782754017659064,
+        "observed": 0.22261859260202999
+      },
+      {
+        "mean predicted": 0.34724238026423965,
+        "observed": 0.3439928653331635
+      },
+      {
+        "mean predicted": 0.7378331225568109,
+        "observed": 0.7402327161542381
+      }
+    ],
+    "per fold": [
+      {
+        "fold": 1,
+        "mean predicted": 0.1583326790758897,
+        "observed abnormal share": 0.16842820223974556,
+        "Brier": 0.09730150286938083
+      },
+      {
+        "fold": 2,
+        "mean predicted": 0.15823724775892367,
+        "observed abnormal share": 0.1581692465966457,
+        "Brier": 0.09669962727787584
+      },
+      {
+        "fold": 3,
+        "mean predicted": 0.1788331096973166,
+        "observed abnormal share": 0.18224948733099303,
+        "Brier": 0.10035582634963862
+      },
+      {
+        "fold": 4,
+        "mean predicted": 0.20439285912848756,
+        "observed abnormal share": 0.2113793239979411,
+        "Brier": 0.11352519896787695
+      }
+    ],
+    "decision": "No calibrator is fitted: the 10% criterion uses the scores only as a ranking, which calibration would not change; the reliability check (Brier 0.1032, largest band gap 0.015) decides how far the scores can be read as probabilities."
+  },
+  "test": {
+    "sessions": 80081,
+    "abnormal share": 0.17592187909741386,
+    "observed alert rate": 0.07426230941172063,
+    "models": [
+      {
+        "model": "Gradient boosting",
+        "PR-AUC": 0.5324364910531001,
+        "PR-AUC bootstrap SE": 0.004657581268403784,
+        "lift": 3.0265507268613936,
+        "ROC-AUC": 0.7935893766347099,
+        "Brier": 0.11309068836028714,
+        "log-loss": 0.3696745515449444
+      },
+      {
+        "model": "B0 no skill",
+        "PR-AUC": 0.1781627551691393,
+        "PR-AUC bootstrap SE": 0.0019499526751294968,
+        "lift": 1.0127379043654063,
+        "ROC-AUC": 0.5053916170862269,
+        "Brier": 0.14506347932987165,
+        "log-loss": 0.46545530584794487
+      },
+      {
+        "model": "B1 post failure rate (7 days)",
+        "PR-AUC": 0.3808747387599973,
+        "PR-AUC bootstrap SE": 0.004448779569390496,
+        "lift": 2.165022001323065,
+        "ROC-AUC": 0.7231452226580947,
+        "Brier": 0.12929774249561587,
+        "log-loss": 0.4166181946427718
+      }
+    ]
+  },
+  "importance": {
+    "groups": [
+      {
+        "name": "post history",
+        "PR-AUC drop": 0.3656640010361648,
+        "std": 0.02486381967984426,
+        "per fold": {
+          "fold 1": 0.36174320902317386,
+          "fold 2": 0.3277598601262638,
+          "fold 3": 0.3880461648026924,
+          "fold 4": 0.38510677019252915
+        }
+      },
+      {
+        "name": "user history",
+        "PR-AUC drop": 0.09739998848857942,
+        "std": 0.020448082464352698,
+        "per fold": {
+          "fold 1": 0.10840700205258798,
+          "fold 2": 0.12018523470241486,
+          "fold 3": 0.09414137822100324,
+          "fold 4": 0.0668663389783116
+        }
+      },
+      {
+        "name": "location",
+        "PR-AUC drop": 0.012074727151812275,
+        "std": 0.001389542184355223,
+        "per fold": {
+          "fold 1": 0.013830488058041657,
+          "fold 2": 0.01106238635124237,
+          "fold 3": 0.01132606541990211,
+          "fold 4": 0.012079968778062966
+        }
+      },
+      {
+        "name": "calendar",
+        "PR-AUC drop": 0.0016058547505339916,
+        "std": 0.000834466191903787,
+        "per fold": {
+          "fold 1": 0.0018203604852586653,
+          "fold 2": 0.002709506663112804,
+          "fold 3": 0.001033827423100786,
+          "fold 4": 0.0008597244306637108
+        }
+      },
+      {
+        "name": "concurrency",
+        "PR-AUC drop": 0.0010606096442615288,
+        "std": 0.0004306726719280182,
+        "per fold": {
+          "fold 1": 0.001661548317218653,
+          "fold 2": 0.0007860660772744277,
+          "fold 3": 0.0009464266198199178,
+          "fold 4": 0.0008483975627331164
+        }
+      },
+      {
+        "name": "weather",
+        "PR-AUC drop": 0.0006502672189144076,
+        "std": 0.0010296750477058777,
+        "per fold": {
+          "fold 1": -0.00026514954506626773,
+          "fold 2": 0.002233284224941223,
+          "fold 3": 0.0005647841427270262,
+          "fold 4": 6.815005305564892e-05
+        }
+      }
+    ],
+    "variables": [
+      {
+        "name": "post_previous_abnormal_rate_1D",
+        "PR-AUC drop": 0.1959008250319801,
+        "std": 0.03843061932319096
+      },
+      {
+        "name": "post_hours_since_previous_completed_abnormal",
+        "PR-AUC drop": 0.03829565366674879,
+        "std": 0.011635145966552267
+      },
+      {
+        "name": "post_previous_abnormal_rate_7D",
+        "PR-AUC drop": 0.02584588561829639,
+        "std": 0.009564806355703524
+      },
+      {
+        "name": "user_days_since_previous_completed_abnormal",
+        "PR-AUC drop": 0.024284568596804983,
+        "std": 0.007165202227349011
+      },
+      {
+        "name": "post_previous_abnormal_rate_30D",
+        "PR-AUC drop": 0.011934576571444458,
+        "std": 0.002807027893741822
+      },
+      {
+        "name": "location",
+        "PR-AUC drop": 0.011814378641549356,
+        "std": 0.0009680829541352647
+      },
+      {
+        "name": "user_previous_abnormal_rate_730D",
+        "PR-AUC drop": 0.009258452552832567,
+        "std": 0.002956962779994688
+      },
+      {
+        "name": "user_previous_abnormal_rate_30D",
+        "PR-AUC drop": 0.006708956990128643,
+        "std": 0.0019066376747967403
+      },
+      {
+        "name": "post_previous_sessions_1D",
+        "PR-AUC drop": 0.004735408441930526,
+        "std": 0.002891532897582945
+      },
+      {
+        "name": "post_hours_since_previous_completed_session",
+        "PR-AUC drop": 0.0046376538558995746,
+        "std": 0.0016218355217753045
+      },
+      {
+        "name": "user_previous_abnormal_rate_180D",
+        "PR-AUC drop": 0.0030200388089828556,
+        "std": 0.0019559280106100484
+      },
+      {
+        "name": "user_previous_sessions_730D",
+        "PR-AUC drop": 0.002262892618178969,
+        "std": 0.0006684000395561349
+      },
+      {
+        "name": "user_days_since_previous_completed_session",
+        "PR-AUC drop": 0.0019929645345080904,
+        "std": 0.0009595652900458576
+      },
+      {
+        "name": "post_previous_sessions_30D",
+        "PR-AUC drop": 0.0014695955597782973,
+        "std": 0.000709883514770902
+      },
+      {
+        "name": "hour",
+        "PR-AUC drop": 0.0014476844454962279,
+        "std": 0.000709526178595831
+      },
+      {
+        "name": "post_previous_sessions_7D",
+        "PR-AUC drop": 0.001320905035159479,
+        "std": 0.001626671347246423
+      },
+      {
+        "name": "user_active_sessions_at_start",
+        "PR-AUC drop": 0.0010074162602533114,
+        "std": 0.0002941719041645038
+      },
+      {
+        "name": "user_previous_sessions_30D",
+        "PR-AUC drop": 0.0007084661818108443,
+        "std": 0.0003958283144917257
+      },
+      {
+        "name": "user_previous_sessions_180D",
+        "PR-AUC drop": 0.0005288125441917461,
+        "std": 0.00021198397387384247
+      },
+      {
+        "name": "humidity",
+        "PR-AUC drop": 0.00036896410296449744,
+        "std": 0.00047279446345298087
+      },
+      {
+        "name": "temperature",
+        "PR-AUC drop": 0.00020435958480149083,
+        "std": 0.0006003356262925291
+      },
+      {
+        "name": "dow",
+        "PR-AUC drop": 0.00017543360725804277,
+        "std": 0.00023623961852669662
+      },
+      {
+        "name": "precipitation",
+        "PR-AUC drop": 3.7768534862823534e-05,
+        "std": 0.0004305882264727782
+      },
+      {
+        "name": "district",
+        "PR-AUC drop": 1.4023279074626416e-06,
+        "std": 4.6145961668224104e-05
+      },
+      {
+        "name": "rain_flag",
+        "PR-AUC drop": 0.0,
+        "std": 0.0
+      },
+      {
+        "name": "user_no_previous_completed_abnormal",
+        "PR-AUC drop": 0.0,
+        "std": 0.0
+      },
+      {
+        "name": "is_new_user",
+        "PR-AUC drop": -3.5544783778910607e-06,
+        "std": 7.504565612142385e-06
+      }
+    ]
+  }
+}
