@@ -42,7 +42,7 @@
   \vspace*{2.5cm}
   {\LARGE Project 1 -- Abnormal EV Charging Sessions\par}
   \vspace{0.3cm}
-  {\Large Tasks 1 to 3: Data Preparation, Evaluation Setting and Models\par}
+  {\Large Final Report: Data Preparation, Evaluation Setting, Models and Final Model\par}
   \vspace{0.6cm}
   {\large MSc in Informatics Engineering\\
   Data Mining (MINDD)\par}
@@ -98,8 +98,14 @@ model. We fixed its cut-off so that 10\% of the sessions raise an alert, and onl
 and 0.18 for no skill. Both scores are lower than on the validation quarters, which suggests that recent post
 failures predicted the next failure less well in that quarter.
 
+The last chapter before the Synthesis brings the final choices together. One table compares the candidate,
+baseline and final models, another describes the final model, and a reproducibility statement explains how every
+result can be regenerated from the repository and the data file.
+
 \addtocontents{toc}{\protect\enlargethispage{2\baselineskip}}% keeps the contents on one page
-\tableofcontents
+{\makeatletter% a smaller gap above the heading keeps the contents on one page
+ \renewcommand{\@makeschapterhead}[1]{{\parindent\z@\raggedright\normalfont\Huge\bfseries #1\par\nobreak\vskip 30\p@}}
+ \tableofcontents\makeatother}
 \listoffigures
 
 \chapter*{Acronyms}
@@ -136,7 +142,8 @@ session will end abnormally~\cite{brief}. We work with an educational version of
 \cite{zhang2025}: 441,077 sessions and 47 columns, from 31 Dec 2019 to 31 Dec 2021, at 92 charging posts in 13
 stations and 3 districts. All the numbers in this report come from our notebooks
 \nolinkurl{Task1.ipynb}, \nolinkurl{Task2.ipynb}, \nolinkurl{Task3.ipynb} and \nolinkurl{Task4.ipynb}
-(seed 42).
+(seed 42). Chapters 2 to 6 follow the four tasks, Chapter~\ref{ch:final} gathers the final model and how to
+reproduce it, and Chapter~\ref{ch:synthesis} answers the project question.
 
 We followed three rules during the whole project. First, a variable can only be a predictor if it is known when the
 session starts. Second, before fixing a problem in the data, we tried to understand it. Third, any value learned
@@ -152,8 +159,8 @@ vehicle faults, so we label them \emph{abnormal}.
 
 To check this choice, we used the history columns of the dataset. For each session, they count how many earlier
 sessions of the same post or user were abnormal. We recounted them with our label and with an alternative where
-only ``Charging ends normally'' is normal. Our definition reproduces the supplied counts almost exactly, and the
-alternative does not (Table~\ref{tab:target}). This means the dataset was built with the same definition as ours.
+only ``Charging ends normally'' is normal. Our definition reproduces the supplied counts almost exactly and the
+alternative does not (Table~\ref{tab:target}), so the dataset was built with the same definition as ours.
 
 \begin{table}[!htb]
   \centering\small
@@ -243,8 +250,8 @@ the day the abnormal share moves between 14.7\% and 20.5\%, across the days of t
 18.9\%, and the weather effects are weak and not linear.
 
 The history columns gave the clearest signal (Figure~\ref{fig:history}). When we split the 7-day post rate into
-deciles, the abnormal share goes from about 4\% in the lowest decile to about 60\% in the highest. In other
-words, a post that failed recently tends to fail again. User history also helps, but less: its \acs{AUC} is around
+deciles, the abnormal share goes from about 4\% in the lowest decile to about 60\% in the highest, so a post that
+failed recently tends to fail again. User history also helps, but less: its \acs{AUC} is around
 0.69--0.70, against 0.75--0.77 for post history.
 
 \begin{figure}[!htb]
@@ -706,7 +713,7 @@ understate uncertainty.
     S1 context and weather & 9  & 0.290 & 1.60 & 0.660 & -- & -- \\
     S2 + tariff            & 10 & 0.290 & 1.60 & 0.659 & $+0.0006$ & 3 of 4 \\
     S3 + post history      & 18 & 0.584 & 3.26 & 0.805 & $+0.294$ & 4 of 4 \\
-    S4 + user history      & 29 & 0.615 & 3.44 & 0.832 & $+0.031$ & 4 of 4 \\
+    S4 + user history      & 29 & 0.615 & 3.44 & 0.833 & $+0.031$ & 4 of 4 \\
     \midrule
     Selected set         & 27 & 0.626 & 3.50 & 0.836 & -- & -- \\
     Selected, no user history & 16 & 0.599 & 3.34 & 0.811 & -- & -- \\
@@ -1181,6 +1188,118 @@ variables are understated when the other windows are left intact. It measures us
 the model on the validation quarters, before the change seen on the test period.
 
 %-------------------------------------------------------------- 7
+\chapter{Final Model}\label{ch:final}
+
+This chapter brings the final choices together; the evidence for each stays in the chapter where it was made. Its
+numbers come from the last section of \nolinkurl{Task4.ipynb}, which reads the saved results and fits nothing.
+
+\section{Candidate, baseline and final models}\label{sec:final-comparison}
+
+Table~\ref{tab:final-comparison} lists every model we evaluated on the four validation quarters, with the baselines
+of Section~\ref{sec:baselines}. Only three rows have a test score, because the test period was used once.
+
+\begin{table}[!htb]
+  \centering\footnotesize\setlength{\tabcolsep}{4pt}
+  \caption[Candidate, baseline and final models]{Candidate, baseline and final models: \acs{PR-AUC} on the four validation quarters and on the test period. Blocks: baselines (Task 2), candidates (Task 3), tuned configurations not kept (Task 4), final model in bold. lr: learning rate; it.: iterations}
+  \label{tab:final-comparison}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrrrr@{}}
+    \toprule
+    & & \multicolumn{4}{c}{Development (four folds)} & Test \\
+    \cmidrule(lr){3-6}
+    Model & Configuration & Mean & Worst & vs B1 & Won & \acs{PR-AUC} \\
+    \midrule
+    B0 no skill & random score & 0.181 & 0.162 & $-0.329$ & 0 of 4 & 0.178 \\
+    B1 post failure rate & 7-day rate of the post & 0.511 & 0.456 & -- & -- & 0.381 \\
+    \midrule
+    Logistic regression & $C = 0.01$ & 0.593 & 0.534 & $+0.082$ & 4 of 4 & --\textsuperscript{a} \\
+    Naive Bayes & categorical, 10 bins & 0.525 & 0.472 & $+0.015$ & 3 of 4 & --\textsuperscript{a} \\
+    Decision tree & depth 8, leaf 100 & 0.597 & 0.544 & $+0.087$ & 4 of 4 & --\textsuperscript{a} \\
+    Random forest & leaf 50, $\sqrt{27}$ features & 0.622 & 0.567 & $+0.112$ & 4 of 4 & --\textsuperscript{a} \\
+    Gradient boosting & depth 6, lr 0.1, 200 it., leaf 100 & 0.626 & 0.575 & $+0.115$ & 4 of 4 & --\textsuperscript{a} \\
+    Stacking & LR + NB + DT & 0.610 & 0.556 & $+0.100$ & 4 of 4 & --\textsuperscript{a} \\
+    \midrule
+    Gradient boosting & depth 4, lr 0.1, 100 it., leaf 200 & 0.623 & 0.570 & $+0.113$ & 4 of 4 & --\textsuperscript{a} \\
+    Random forest & leaf 100, 9 features & 0.623 & 0.567 & $+0.113$ & 4 of 4 & --\textsuperscript{a} \\
+    Decision tree & depth 8, leaf 400, entropy & 0.599 & 0.541 & $+0.089$ & 4 of 4 & --\textsuperscript{a} \\
+    \midrule
+    \textbf{Final model} & \textbf{boosting as in Task 3} & \textbf{0.626} & \textbf{0.575} & $\mathbf{+0.115}$ & \textbf{4 of 4} & \textbf{0.532} \\
+    \bottomrule
+    \multicolumn{7}{@{}l}{\textsuperscript{a} Not scored: the test period was used once, for the final model and the two baselines.} \\[-1ex]
+  \end{tabular*}
+\end{table}
+
+Gradient boosting leads the candidates, 0.115 above B1 on average and better in every fold. Its lead over the
+random forest is 0.003, inside our tolerance of 0.005, so the choice between them rested on the worst fold, 0.575
+against 0.567 (Section~\ref{sec:optim-verdict}). None of the three tuned configurations beat its Task 3 version by
+more than the tolerance, so the final model is the Task 3 gradient boosting configuration. On the test period it
+keeps a margin of 0.152 over B1 (0.532 against 0.381), although both fall below their development level
+(Section~\ref{sec:optim-test}).
+
+\section{Final preprocessing, features, hyperparameters and threshold}\label{sec:final-spec}
+
+Table~\ref{tab:final-spec} lists what is needed to rebuild the final model. Every value equals the choices written
+to file on 27 October 2026, before the test period was read. The last column gives the section with the evidence.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{The final model}
+  \label{tab:final-spec}
+  \begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}Xr@{}}
+    \toprule
+    Item & Final choice & Section \\
+    \midrule
+    Data and split & Development from 1 April 2020 to 30 September 2021, in four expanding-window folds with a
+      purge gap; final fit on the 346,931 development sessions that ended before 1 October 2021; test from October
+      to December 2021, scored once & \ref{sec:split}, \ref{sec:folds} \\
+    Target & Abnormal when the session ends with one of the 13 fault or failure causes; predicted when the session
+      starts & \ref{sec:target} \\
+    Preprocessing & Ordinal codes for location and district, learned on the training window (an unseen category
+      counts as missing); numeric features unchanged; no imputation, resampling or class weights & \ref{sec:prep} \\
+    Features (27) & Post history 8, user history 10, weather 4, calendar 2, location 2, concurrency 1
+      & \ref{sec:ablation} \\
+    Hyperparameters & Gradient boosting with depth 6, learning rate 0.1, 200 iterations and at least 100 sessions
+      per leaf; no early stopping; seed 42 & \ref{sec:optim-search}, \ref{sec:optim-verdict} \\
+    Threshold & Cut-off 0.490, which flags 10\% of the pooled out-of-fold development predictions (precision
+      0.740, recall 0.403) & \ref{sec:optim-threshold} \\
+    Calibration & None; the alert budget uses the scores only as a ranking (Brier score 0.103)
+      & \ref{sec:optim-calibration} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\section{Reproducibility statement}\label{sec:final-repro}
+
+Every result in this report can be regenerated from the project repository and the course data file. The notebooks
+run in Python 3.12.3 with the package versions pinned in \nolinkurl{requirements.txt}, in a fresh virtual
+environment. The data file, \nolinkurl{Charging_Data_educational.csv} (about 179\,MB), comes from the course channel,
+is not stored in the repository, and has the SHA-256 fingerprint\\
+\hspace*{\fill}{\footnotesize\texttt{f6109dc066162bc770417c39294cdecc7519646c3cfa8c1d95671ea30f0e0a9b}}\hspace*{\fill}\\
+Every random step uses the seed 42. The four notebooks run in the order of Table~\ref{tab:final-runs}, each with a
+full restart and run, because each one reads the files the previous ones saved.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Run order, time and files written (laptop, Intel Core Ultra 7 165H, 22 logical cores)}
+  \label{tab:final-runs}
+  \begin{tabularx}{\textwidth}{@{}lr>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Notebook & Time & Content and main files written \\
+    \midrule
+    \nolinkurl{Task1.ipynb} & 1 min & audit and preparation: feature groups, ledger, prepared data \\
+    \nolinkurl{Task2.ipynb} & 12 s & evaluation setting: protocol and baselines \\
+    \nolinkurl{Task3.ipynb} & 6 min & ablation and models: Task 3 results and fold metrics \\
+    \nolinkurl{Task4.ipynb} & 40 min & search, threshold, test: frozen choices, results, Tables~\ref{tab:final-comparison}--\ref{tab:final-spec} \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+On 28 October 2026 we ran the four notebooks in a fresh clone of the repository with only the data file added.
+Tasks 1, 2 and 4 gave the same saved results, every test number included; Task 3 moved by less than 0.0002 in
+\acs{PR-AUC}, which changed one value (a \acs{ROC-AUC} in Table~\ref{tab:ablation}, now 0.833 instead of 0.832).
+The choices were frozen on 27 October 2026 at 11:40 and the test period was scored once that day. The reproduction
+repeated it unchanged; its notebook prints the re-run's freeze time, and the submitted file keeps the original. No model, feature, hyperparameter or threshold was changed after the test result was seen.
+
+%-------------------------------------------------------------- 8
 \chapter{Synthesis}\label{ch:synthesis}
 
 The project asks to what extent the information available when a charging session starts can predict that it
@@ -1205,7 +1324,7 @@ already reaches 0.593, suggesting that the available information limits what the
 are real failures, against 74\% for B1, but it still catches only a quarter of the failures. Tuning did not
 improve on these settings (Chapter~\ref{ch:optim}).
 On the untouched test quarter it reaches a \acs{PR-AUC} of 0.532, against 0.381 for B1
-and 0.178 for no skill. With the cut-off fixed beforehand at a 10\% development alert rate, it flags 7.4\% of the
+and 0.178 for no skill (Table~\ref{tab:final-comparison}). With the cut-off fixed beforehand at a 10\% development alert rate, it flags 7.4\% of the
 test sessions: 50 correct alerts, 24 false alerts and 126 missed failures per 1,000. The margin over B1 holds, but both fall well below their development
 level (by 0.093 and 0.130). So the information available at the start supports a useful ranking of risky
 sessions, with post history providing most of the measured improvement, but the strength of that signal changes

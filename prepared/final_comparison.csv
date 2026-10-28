@@ -1,0 +1,13 @@
+block,model,configuration,dev PR-AUC mean,worst fold,gain over B1,folds won vs B1,test PR-AUC,is final
+baseline,B0 no skill,random score,0.18119598600822998,0.16151433544773408,-0.3293683878562765,0 of 4,0.1781627551691393,False
+baseline,B1 post failure rate (7 days),"share of abnormal sessions at the post, last 7 days",0.5105643738645065,0.45621743849497187,0.0,0 of 4,0.3808747387599973,False
+candidate,Logistic regression,LR C=0.01,0.5925100355662689,0.5344791564854567,0.08194566170176242,4 of 4,,False
+candidate,Naive Bayes,NB,0.525101332496852,0.4716345030838514,0.01453695863234547,3 of 4,,False
+candidate,Decision tree,DT depth=8,0.5973967818361708,0.5440271638093402,0.08683240797166437,4 of 4,,False
+candidate,Random forest,RF leaf=50,0.6224426736565657,0.5665598709665571,0.11187829979205917,4 of 4,,False
+candidate,Gradient boosting,"HGB depth=6, lr=0.1, 200 it",0.6258015504465707,0.5754894674570296,0.11523717658206419,4 of 4,,False
+candidate,Stacking,Stacking (LR + NB + DT),0.6104804690811475,0.5555877683409327,0.09991609521664101,4 of 4,,False
+optimised,Gradient boosting,"HGB depth=4, lr=0.1, 100 it, leaf=200",0.6234652471431966,0.5698453911968405,0.11290087327869014,4 of 4,,False
+optimised,Random forest,"RF leaf=100, features=9",0.6234170478089993,0.5674628204817616,0.11285267394449283,4 of 4,,False
+optimised,Decision tree,"DT depth=8, leaf=400, entropy",0.5994026838968327,0.5411364183541191,0.08883831003232623,4 of 4,,False
+final,Gradient boosting,"HGB depth=6, lr=0.1, 200 it, leaf=100",0.6258015504465707,0.5754894674570296,0.11523717658206423,4 of 4,0.5324364910531001,True

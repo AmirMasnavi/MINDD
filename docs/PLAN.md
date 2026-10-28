@@ -1,7 +1,10 @@
 # Work plan
 
 This is the team's proposed sequence.
-Task 1 (submitted on 2026-10-04), Task 2 and Task 3 are complete. The focused Task 3 review changes await user approval before a commit. The next modelling step is calibration, operating-rule selection and one final test evaluation.
+Tasks 1 to 4 are complete (Task 1 submitted on 2026-10-04). The final submission package is ready as of 2026-10-28:
+the four notebooks re-run from a fresh clone, `docs/FINAL_REPORT.pdf` with chapter 7 (comparison of the candidate,
+baseline and final models, the final model description, the reproducibility statement), and an updated README. The
+final submission is due on Friday 2026-10-30.
 Owners and reviewers are still unassigned, so replace `TBD` when the team allocates work.
 
 ## Task 1 sequence
@@ -46,8 +49,7 @@ Task 2 defines the prediction and evaluation setting. It fits no model. The tabl
 - Verified: clean execution of all 25 code cells, fold/result consistency, unchanged B0/B1/LR/tree metrics,
   temporal assertions, full specified boosting iterations, and finite predictions for unseen categories.
 - Refreshed: Task 3 results, decision log, existing figures, notebook explanations and matching report.
-- Pending: user review and approval before committing. The final test remains reserved; calibration and threshold
-  selection belong to the next step under the existing Task 2 protocol.
+- Closed: committed, and followed by Task 4 (calibration check, threshold and the single test evaluation on 2026-10-27).
 
 ## Notebook structure
 
@@ -158,6 +160,19 @@ as ordinary missing data without checking the associated flags and definitions.
    the same so the ablation can be interpreted.
 5. Evaluate the chosen approach once on the held-out test, investigate limitations and subgroup and time behaviour,
    and finish the report with privacy, generalisation, cold-start, operational assumptions and reproducibility details.
+
+## Final submission (due 2026-10-30)
+
+| Deliverable | Where | Status |
+| --- | --- | --- |
+| Complete and reproducible notebooks | `Task1.ipynb` to `Task4.ipynb`, re-run in order from a fresh clone on 2026-10-28 | Done. Tasks 1, 2 and 4 identical to the committed results (test numbers included); Task 3 within 0.0002 PR-AUC |
+| Final report | `docs/FINAL_REPORT.pdf` (34 pages) | Done |
+| Comparison of candidate, baseline and final models | Report Table 7.1; `prepared/final_comparison.csv` | Done |
+| Final preprocessing, features, hyperparameters and threshold | Report Table 7.2; `prepared/final_model.json` | Done |
+| Reproducibility statement | Report Section 7.3; README "Local setup" | Done |
+| Test set used once, nothing changed after it | `prepared/task4_frozen.json` (frozen 2026-10-27T11:40:32), report Section 7.3 | Done |
+| Teammate check of the statement (setup and fingerprint only) | One teammate who did not write it | Pending |
+| Commit, push and upload | Team | Pending |
 
 ## Submission check
 

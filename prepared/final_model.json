@@ -1,0 +1,96 @@
+{
+  "data": {
+    "development": "sessions starting from 2020-04-01 (end of the burn-in) and before 2021-10-01",
+    "folds": "four expanding-window folds with a purge gap (Task 2 protocol), used for every choice",
+    "final training": "all development sessions that ended before 2021-10-01, so every label was known before the test",
+    "test": "sessions starting from 2021-10-01, scored once with the frozen choices"
+  },
+  "target": {
+    "positive": "is_Abnormal = 1: end_cause is one of the 13 fault / failure causes",
+    "negative": "is_Abnormal = 0: 'Charging ends normally' or 'User stops charging'",
+    "prediction moment": "Start Time of the session"
+  },
+  "preprocessing": {
+    "categories": "location, district: ordinal codes learned on the training window; an unseen category is treated as missing",
+    "numeric features": "used as they are: no scaling and no log transform, since the trees only use the order of the values",
+    "missing values": "kept as missing; the model sends them to the better side of each split, so nothing is imputed",
+    "class imbalance": "no resampling and no class weights",
+    "fitted on": "every learned step is fitted on the training window only (learned-operations ledger, Task 1)"
+  },
+  "feature_groups": {
+    "calendar": [
+      "hour",
+      "dow"
+    ],
+    "location": [
+      "location",
+      "district"
+    ],
+    "weather": [
+      "temperature",
+      "humidity",
+      "precipitation",
+      "rain_flag"
+    ],
+    "post_history": [
+      "post_previous_sessions_1D",
+      "post_previous_sessions_7D",
+      "post_previous_sessions_30D",
+      "post_previous_abnormal_rate_1D",
+      "post_previous_abnormal_rate_7D",
+      "post_previous_abnormal_rate_30D",
+      "post_hours_since_previous_completed_session",
+      "post_hours_since_previous_completed_abnormal"
+    ],
+    "user_history": [
+      "is_new_user",
+      "user_previous_sessions_30D",
+      "user_previous_sessions_180D",
+      "user_previous_sessions_730D",
+      "user_previous_abnormal_rate_30D",
+      "user_previous_abnormal_rate_180D",
+      "user_previous_abnormal_rate_730D",
+      "user_days_since_previous_completed_session",
+      "user_days_since_previous_completed_abnormal",
+      "user_no_previous_completed_abnormal"
+    ],
+    "concurrency": [
+      "user_active_sessions_at_start"
+    ]
+  },
+  "hyperparameters": {
+    "max_depth": 6,
+    "learning_rate": 0.1,
+    "max_iter": 200,
+    "min_samples_leaf": 100
+  },
+  "fixed_settings": {
+    "early_stopping": false,
+    "random_state": 42,
+    "categorical_features": [
+      "location",
+      "district"
+    ],
+    "other settings": "scikit-learn 1.9.1 defaults"
+  },
+  "threshold": {
+    "criterion": "alert rate 10% of pooled out-of-fold predictions",
+    "cut_off": 0.489885729465315,
+    "alert rate": 0.09999915064211456,
+    "precision": 0.7402641525459719,
+    "recall": 0.4027402324345556
+  },
+  "calibration": {
+    "decision": "none",
+    "reason": "No calibrator is fitted: the 10% criterion uses the scores only as a ranking, which calibration would not change; the reliability check (Brier 0.1032, largest band gap 0.015) decides how far the scores can be read as probabilities."
+  },
+  "decided_in": {
+    "data": "report Sections 3.1 and 4.5",
+    "target": "report Section 1.1",
+    "preprocessing": "report Section 3.3",
+    "feature_groups": "report Section 5.1",
+    "hyperparameters": "report Sections 6.1 and 6.2",
+    "threshold": "report Section 6.3",
+    "calibration": "report Section 6.4"
+  }
+}
