@@ -95,16 +95,18 @@ In the fourth task we tuned gradient boosting, the random forest and the decisio
 tuned setting beat the Task 3 configuration by more than our tolerance, so gradient boosting stays the final
 model. We fixed its cut-off so that 10\% of the sessions raise an alert, and only then scored the last quarter of
 2021, which no earlier step had used. There it reaches a PR-AUC of 0.53, against 0.38 for the 7-day failure rate
-and 0.18 for no skill. Both scores are lower than on the validation quarters, which suggests that recent post
-failures predicted the next failure less well in that quarter.
+and 0.18 for no skill.
 
-The last chapter before the Synthesis brings the final choices together. One table compares the candidate,
-baseline and final models, another describes the final model, and a reproducibility statement explains how every
-result can be regenerated from the repository and the data file.
+In the fifth task we compared the model with the baseline on the test period using every measure of the brief. It
+stays ahead in every district and station, and most of its fall comes from the lower abnormal share of the quarter.
+It misses failures at posts with no recent failure and works worse for new users, so it ranks the posts that are
+failing now but is not a complete detector. The last chapter before the Synthesis compares all the models, describes
+the final model and states how to reproduce every result.
 
 \addtocontents{toc}{\protect\enlargethispage{2\baselineskip}}% keeps the contents on one page
-{\makeatletter% a smaller gap above the heading keeps the contents on one page
+{\makeatletter% a smaller gap above the heading and between chapter entries keeps the contents on one page
  \renewcommand{\@makeschapterhead}[1]{{\parindent\z@\raggedright\normalfont\Huge\bfseries #1\par\nobreak\vskip 30\p@}}
+ \patchcmd{\l@chapter}{\vskip 1.0em \@plus\p@}{\vskip 0.2em \@plus\p@}{}{}
  \tableofcontents\makeatother}
 \listoffigures
 
@@ -115,6 +117,7 @@ result can be regenerated from the repository and the data file.
   \acro{FN}{False Negative}
   \acro{FP}{False Positive}
   \acro{IQR}{Interquartile Range}
+  \acro{MCC}{Matthews Correlation Coefficient}
   \acro{NaN}{Not a Number (missing value)}
   \acro{PCA}{Principal Component Analysis}
   \acro{PR-AUC}{Area under the Precision--Recall curve}
@@ -141,9 +144,9 @@ The project asks whether the information available when an \ac{EV} charging sess
 session will end abnormally~\cite{brief}. We work with an educational version of the China EV Charging Dataset
 \cite{zhang2025}: 441,077 sessions and 47 columns, from 31 Dec 2019 to 31 Dec 2021, at 92 charging posts in 13
 stations and 3 districts. All the numbers in this report come from our notebooks
-\nolinkurl{Task1.ipynb}, \nolinkurl{Task2.ipynb}, \nolinkurl{Task3.ipynb} and \nolinkurl{Task4.ipynb}
-(seed 42). Chapters 2 to 6 follow the four tasks, Chapter~\ref{ch:final} gathers the final model and how to
-reproduce it, and Chapter~\ref{ch:synthesis} answers the project question.
+\nolinkurl{Task1.ipynb}, \nolinkurl{Task2.ipynb}, \nolinkurl{Task3.ipynb}, \nolinkurl{Task4.ipynb} and
+\nolinkurl{Task5.ipynb} (seed 42). Chapters 2 to 7 follow the five tasks, Chapter~\ref{ch:final} gathers the final
+model and how to reproduce it, and Chapter~\ref{ch:synthesis} answers the project question.
 
 We followed three rules during the whole project. First, a variable can only be a predictor if it is known when the
 session starts. Second, before fixing a problem in the data, we tried to understand it. Third, any value learned
@@ -1188,10 +1191,144 @@ variables are understated when the other windows are left intact. It measures us
 the model on the validation quarters, before the change seen on the test period.
 
 %-------------------------------------------------------------- 7
+\chapter{Final Evaluation and Analysis}\label{ch:t5}
+
+The fifth task asks us to justify the final model with development results only, compare it with the baseline on
+the test period, and study where and why it succeeds or fails. We start from the choices frozen in
+Section~\ref{sec:optim-test}, refit the same model and score the test period again with the same frozen file, which
+gives the 2026-10-27 numbers back exactly. Everything after that scoring is descriptive: it uses the test labels to
+describe the frozen model and changes none of its choices. The numbers come from \nolinkurl{Task5.ipynb}.
+
+\section{Choosing the final model and the baseline}\label{sec:t5-selection}
+
+We applied the selection rule of Tasks 2 to 4 to the development results alone. Only the random forest (0.622)
+is within our tolerance of 0.005 of gradient boosting (0.626), so the choice between the two rests on temporal
+stability and cost: gradient boosting has the better worst fold (0.575 against 0.567), the smaller spread across
+folds (0.038 against 0.042) and a fit four times cheaper (3.2\,s against 12.6\,s per fold). Readability does not
+separate them, because both are tree ensembles, and the best readable model, the decision tree, is 0.028 behind,
+more than five times the tolerance. No tuned configuration passed the rule of Section~\ref{sec:optim-verdict}, so the
+final model is the Task 3 configuration. The baseline is B1, the 7-day failure rate of the post
+(Section~\ref{sec:baselines}): it is known at the start, fits nothing and is what an operator could use today, and B0
+remains the reference for chance.
+
+\section{The final model against the baseline}\label{sec:t5-test}
+
+Table~\ref{tab:t5-test} gives the measures of the brief at the frozen cut-off. B1 needs a cut-off too, so we gave
+it the same criterion as the model, the score that flags 10\% of the pooled development predictions (0.393), fixed
+on development data before the test was scored. Because the two cut-offs flag different numbers of test sessions,
+the table also gives B1 and B0 the same number of alerts as the model.
+
+\begin{table}[!htb]
+  \centering\scriptsize\setlength{\tabcolsep}{2.5pt}
+  \caption[Final model against the baseline on the test period]{Final model against the baseline on the test
+  period (80,081 sessions, 17.6\% abnormal). Bal.\ acc.: balanced accuracy; alerts per 1,000 sessions: correct,
+  false and missed}
+  \label{tab:t5-test}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrrrrrr@{}}
+    \toprule
+    & & & & & & & & \multicolumn{3}{c}{Per 1,000} \\
+    \cmidrule(l){9-11}
+    Model and cut-off & \acs{PR-AUC} & Prec. & Recall & F1 & Bal.\ acc. & \acs{MCC} & Alerts & Correct & False & Missed \\
+    \midrule
+    \textbf{Final model (0.490)} & \textbf{0.532} & \textbf{0.677} & \textbf{0.286} & \textbf{0.402} & \textbf{0.628} & \textbf{0.373} & \textbf{7.4\%} & \textbf{50.3} & \textbf{24.0} & \textbf{125.6} \\
+    B1 (development cut-off 0.393) & 0.381 & 0.504 & 0.225 & 0.311 & 0.589 & 0.251 & 7.8\% & 39.5 & 38.9 & 136.4 \\
+    B1 (same number of alerts) & 0.381 & 0.509 & 0.215 & 0.302 & 0.585 & 0.248 & 7.4\% & 37.8 & 36.4 & 138.1 \\
+    B0 (same number of alerts) & 0.178 & 0.180 & 0.076 & 0.107 & 0.501 & 0.003 & 7.4\% & 13.4 & 60.9 & 162.5 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+The model beats B1 on every measure. At the same number of alerts it gives 12.4 more correct alerts and 12.4 fewer
+false ones per 1,000 sessions. The gain in \acs{PR-AUC} is 0.152, with a 95\% bootstrap interval of 0.145 to
+0.158, and in the exact McNemar test~\cite{mindd04} the model alone is right on 4,283 sessions against 2,223 for B1.
+Sessions of the same post and day are not independent, so both results show the size of the gain, not a precise
+p-value. Balanced accuracy (0.628) and \acs{MCC} (0.373) are well above chance (0.501 and 0.003 for B0) but
+moderate, because the high specificity (0.971) hides a low recall. Figure~\ref{fig:t5-test} compares the
+precision--recall curves and the operating points.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{task5_05_1_final_vs_baseline.png}
+  \caption{Final model and B1 on the test period: (a) precision--recall curves with the frozen cut-off of the model and the development cut-off of B1; (b) correct, false and missed alerts per 1,000 sessions}
+  \label{fig:t5-test}
+\end{figure}
+
+\section{Over time and across groups}\label{sec:t5-groups}
+
+Against the development level the test looks much worse: the pooled out-of-fold \acs{PR-AUC} is 0.635, the test
+0.532, and fold 4 alone 0.660. Most of that fall is arithmetic. \acs{PR-AUC} rises with the abnormal share, which
+was 21.1\% in fold 4 and is 17.6\% in the test; with the lift of fold 4 applied to the test share, the expected
+score is 0.550, so 87\% of the fall of 0.128 comes from the share and 13\% from a lower lift. The ranking did weaken,
+though: the \acs{ROC-AUC}, which does not depend on the share, is 0.794 on the test against 0.825 to 0.844 in the four
+folds. By month the model scores 0.553, 0.483 and 0.551, and week by week it follows the abnormal share without a
+downward drift inside the quarter (Figure~\ref{fig:t5-time}).
+
+The model is above B1 in all three districts (gains of 0.144 to 0.189) and in all 12 stations of the test (0.083 to
+0.269). Tongxiang, with 47.9\% of the sessions and only 12.0\% abnormal, has the lowest district score (0.474) and
+a recall of 0.224. The alerts follow the posts that fail most: the nine posts with the most alerts receive 46.4\%
+of them, and the Spearman correlation between the abnormal share of a post and its alert rate is 0.91. New users,
+12.9\% of the test sessions, are the clearest weak group: \acs{PR-AUC} 0.394 against 0.551 for returning users and a
+recall of 0.146 against 0.307, with similar precision. The model raises fewer alerts for them because it has no user
+history to use, which is the cold-start limit of Section~\ref{sec:variables}.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{task5_06_1_performance_over_time.png}
+  \caption{Final model and B1 over time: (a) \acs{PR-AUC} by development fold and test month, with the abnormal share; (b) weeks of the test period, with the alert rate at the frozen cut-off}
+  \label{fig:t5-time}
+\end{figure}
+
+\section{Where the model fails}\label{sec:t5-errors}
+
+At the frozen cut-off the test has 4,026 true positives, 1,921 false positives, 10,062 false negatives and
+64,072 true negatives. The false positives look like the true positives, and the missed failures look like normal
+sessions. For both kinds of alert the median session starts about a minute and a half after an abnormal session at the
+same post, against 6.9\,h for the missed failures, and the model cannot tell whether that next session will fail too.
+Sessions that start less than 6\,h after a failure at their post (38.3\% of the test) hold 91.7\% of the false
+alerts and have a recall of 0.445. Beyond 6\,h the recall falls to between 0.02 and 0.05, and these quieter
+periods hold 52.9\% of the missed failures. The 7-day failure rate of the post shows the same pattern
+(Figure~\ref{fig:t5-errors}): at 0.30 or more the model flags 33.0\% of the sessions with a recall of 0.553, and
+below 0.10 it flags 0.5\% with a recall of 0.037. We used the end cause only to describe the misses, never as a
+predictor: recall goes from 0.19 for control-loop failures, 0.20 for BMS failures and DC output
+faults to 0.50 for DC switching device failures.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{task5_08_1_error_analysis.png}
+  \caption{Errors at the frozen cut-off: (a) recall by end cause (dashed: all causes); (b) abnormal share, alert rate, precision and recall by 7-day failure rate of the post}
+  \label{fig:t5-errors}
+\end{figure}
+
+\section{What the model relies on}\label{sec:t5-interpretation}
+
+We repeated the grouped permutation importance of Section~\ref{sec:optim-importance} on the test period. The order is
+the same: shuffling the post history lowers the \acs{PR-AUC} by 0.271 (74\% of its development value) and the user
+history by 0.114 (117\%), while location costs 0.009 and concurrency, weather and calendar less than 0.001 each. The 1-day
+failure rate of the post is still the leading single variable. Partial dependence is not in the slides; we used it
+as the model-based version of the decile curves of Section~\ref{sec:relations}. It shows the average score
+rising sharply once the 1-day rate of the post passes 0.3 and dropping in the first hours after a failure at the post,
+so the model reacts to a post that is failing now. Both methods describe how the fitted model uses its inputs, not
+what causes failures, and they share importance between correlated windows.
+
+\section{What the threshold means for the operator}\label{sec:t5-threshold}
+
+On an average test day the frozen cut-off gives 65 alerts for 870 sessions, of which 21 are false, while 109
+abnormal sessions go without an alert. The alerts come from about 20 posts a day, so the number of inspections is
+smaller than the number of alerts, but the daily count goes from 18 to 210 and follows the failures. After the test,
+we also described what other capacities would have given on the test scores: the 5\%, 10\% and 20\% budgets give
+precisions of 0.766, 0.614 and 0.466 and recalls of 0.218, 0.349 and 0.529. These numbers only describe the
+trade-off; the frozen cut-off of 0.490 stays, and no cut-off was taken from them. With a false alert costing 1 and
+a missed failure costing $c$, the model costs less than raising no alerts when $c$ is above 0.48 and less than
+alerting every session when $c$ is below 6.4, so it is useful over a wide range of costs. The frozen cut-off
+corresponds to a cost ratio of about 1, and the real costs and capacity are not in the data
+(Section~\ref{sec:errors}).
+
+%-------------------------------------------------------------- 8
 \chapter{Final Model}\label{ch:final}
 
 This chapter brings the final choices together; the evidence for each stays in the chapter where it was made. Its
-numbers come from the last section of \nolinkurl{Task4.ipynb}, which reads the saved results and fits nothing.
+numbers come from the last section of \nolinkurl{Task4.ipynb}, which reads the saved results and fits nothing. The
+Task 5 analyses of the same model are in Chapter~\ref{ch:t5}.
 
 \section{Candidate, baseline and final models}\label{sec:final-comparison}
 
@@ -1274,8 +1411,9 @@ run in Python 3.12.3 with the package versions pinned in \nolinkurl{requirements
 environment. The data file, \nolinkurl{Charging_Data_educational.csv} (about 179\,MB), comes from the course channel,
 is not stored in the repository, and has the SHA-256 fingerprint\\
 \hspace*{\fill}{\footnotesize\texttt{f6109dc066162bc770417c39294cdecc7519646c3cfa8c1d95671ea30f0e0a9b}}\hspace*{\fill}\\
-Every random step uses the seed 42. The four notebooks run in the order of Table~\ref{tab:final-runs}, each with a
-full restart and run, because each one reads the files the previous ones saved.
+Every random step uses the seed 42. The five notebooks run in the order of Table~\ref{tab:final-runs}, each with a
+full restart and run, because each one reads the files the previous ones saved. \nolinkurl{Task5.ipynb} needs only
+the committed files of Tasks 1 to 4 and the data file, so it can also run on its own.
 
 \begin{table}[!htb]
   \centering\small
@@ -1289,17 +1427,26 @@ full restart and run, because each one reads the files the previous ones saved.
     \nolinkurl{Task2.ipynb} & 12 s & evaluation setting: protocol and baselines \\
     \nolinkurl{Task3.ipynb} & 6 min & ablation and models: Task 3 results and fold metrics \\
     \nolinkurl{Task4.ipynb} & 40 min & search, threshold, test: frozen choices, results, Tables~\ref{tab:final-comparison}--\ref{tab:final-spec} \\
+    \nolinkurl{Task5.ipynb} & 1.5 min & selection, test comparison, groups, errors, threshold: Task 5 results and figures \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-On 28 October 2026 we ran the four notebooks in a fresh clone of the repository with only the data file added.
-Tasks 1, 2 and 4 gave the same saved results, every test number included; Task 3 moved by less than 0.0002 in
-\acs{PR-AUC}, which changed one value (a \acs{ROC-AUC} in Table~\ref{tab:ablation}, now 0.833 instead of 0.832).
-The choices were frozen on 27 October 2026 at 11:40 and the test period was scored once that day. The reproduction
-repeated it unchanged; its notebook prints the re-run's freeze time, and the submitted file keeps the original. No model, feature, hyperparameter or threshold was changed after the test result was seen.
+On 28 October 2026 we ran the first four notebooks in a fresh clone of the repository with only the data file
+added. Tasks 1, 2 and 4 gave the same saved results, every test number included; Task 3 moved by less than 0.0002
+in \acs{PR-AUC}, which changed one value (a \acs{ROC-AUC} in Table~\ref{tab:ablation}, now 0.833 instead of 0.832).
+On 29 October we ran \nolinkurl{Task5.ipynb} the same way, under Python 3.12.3. Its frozen choices, test scores and
+decision log came back identical, and a few development values moved in the fifth decimal, below the rounding of
+this report.
 
-%-------------------------------------------------------------- 8
+The choices were frozen on 27 October 2026 at 11:40, and \nolinkurl{Task4.ipynb} evaluated the test period once
+that day. The Task 4 reproduction and \nolinkurl{Task5.ipynb} score it again with the same frozen file: the first
+checks the evaluation, the second needs the scores for the descriptive analyses of Chapter~\ref{ch:t5}. Both give
+the numbers of 27 October back, and nothing was chosen from either of them. The Task 4 notebook prints the re-run's
+freeze time, and the submitted file keeps the original. No model, feature, hyperparameter or threshold was changed
+after the test result was seen.
+
+%-------------------------------------------------------------- 9
 \chapter{Synthesis}\label{ch:synthesis}
 
 The project asks to what extent the information available when a charging session starts can predict that it
@@ -1325,22 +1472,34 @@ are real failures, against 74\% for B1, but it still catches only a quarter of t
 improve on these settings (Chapter~\ref{ch:optim}).
 On the untouched test quarter it reaches a \acs{PR-AUC} of 0.532, against 0.381 for B1
 and 0.178 for no skill (Table~\ref{tab:final-comparison}). With the cut-off fixed beforehand at a 10\% development alert rate, it flags 7.4\% of the
-test sessions: 50 correct alerts, 24 false alerts and 126 missed failures per 1,000. The margin over B1 holds, but both fall well below their development
-level (by 0.093 and 0.130). So the information available at the start supports a useful ranking of risky
-sessions, with post history providing most of the measured improvement, but the strength of that signal changes
-over time. Performance on failures without recent post failures is still untested.
+test sessions: 50 correct alerts, 24 false alerts and 126 missed failures per 1,000. The margin over B1 holds in every district and station, and the model stays ahead at the same number of
+alerts (Chapter~\ref{ch:t5}). Both fall below their development level, but most of that fall is the lower abnormal
+share of the quarter; the \acs{ROC-AUC} shows a smaller real weakening, from 0.825--0.844 to 0.794. The errors follow
+the post history. Sessions that start a few hours after a failure at their post receive almost all the alerts, right
+or wrong, while failures that start after a quiet period are almost never flagged and make up half of the misses.
+New users, who have no history, get a recall of 0.146 against 0.307. With a false alert costing 1 and a missed
+failure $c$, the model costs less than raising no alerts or alerting every session for $c$ between 0.48 and 6.4. So
+the information available at the start supports a useful ranking of the posts that are failing now, with post
+history providing most of the measured improvement, but it cannot see failures that give no warning in the recent
+history of the post, and the strength of the signal changes over time.
 
 Weather is assumed to be a start-time forecast despite its daily resolution. Durations stop at 24\,h, and the
 order and payment timestamps remain unexplained. Every validation post was seen in training, so new-post performance
 is untested. User history raises privacy concerns~\cite{gdpr}; it should only support internal session rankings,
 with the user-free model (0.599) available as an alternative. Feature sets, hyperparameters and the cut-off were chosen on the
 reported folds, so the development scores are optimistic, the ablation covers one model family, and the test
-period is a single quarter. The 0.005 tolerance is a
-practical rule; session resampling ignores dependence, and four folds are insufficient for reliable significance
-claims. The scores are close to calibrated, but error costs are unknown, so the 10\% budget is a choice, not a measured
-capacity. B1's 7-day window came
+period is a single quarter; the weekly, group and post results of Chapter~\ref{ch:t5} come from that quarter, some
+from few failures. The 0.005 tolerance is a practical rule. The bootstrap and the McNemar test treat sessions as
+independent although sessions of a post and a day are related, and four folds are insufficient for reliable
+significance claims. The scores are close to calibrated, but error costs are unknown, so the 10\% budget is a choice,
+not a measured capacity, and the frozen cut-off corresponds to a cost ratio of about 1. The real costs and the daily
+capacity have to come from the operator before a cut-off is set again on development data, and the drop in
+\acs{ROC-AUC} on the test quarter suggests refitting the model regularly and watching its ranking over time.
+Failures after a quiet period would need information that the file does not hold, such as the maintenance record of
+the post or telemetry from earlier sessions. B1's 7-day window came
 from Task~1's ranking, whose training period overlaps folds 1 to 3; we expect a small effect because B1 fits
-nothing. Finally, combining 13 fault causes can hide failure types that the model never detects.
+nothing. Finally, combining 13 fault causes hides failure types that the model detects poorly: recall ranges from
+0.19 for control-loop failures to 0.50 for DC switching device failures.
 
 %-------------------------------------------------------------- references
 \clearpage

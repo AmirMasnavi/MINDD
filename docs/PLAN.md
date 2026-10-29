@@ -1,10 +1,11 @@
 # Work plan
 
 This is the team's proposed sequence.
-Tasks 1 to 4 are complete (Task 1 submitted on 2026-10-04). The final submission package is ready as of 2026-10-28:
-the four notebooks re-run from a fresh clone, `docs/FINAL_REPORT.pdf` with chapter 7 (comparison of the candidate,
-baseline and final models, the final model description, the reproducibility statement), and an updated README. The
-final submission is due on Friday 2026-10-30.
+Tasks 1 to 5 are complete (Task 1 submitted on 2026-10-04). The final submission package was built on 2026-10-28
+and extended with Task 5 on 2026-10-29: the five notebooks reproduced from a fresh clone, `docs/FINAL_REPORT.pdf`
+with chapter 7 (Task 5) and chapter 8 (comparison of the candidate, baseline and final models, the final model
+description, the reproducibility statement), and an updated README. The team reviews it at a meeting on Friday
+2026-10-30, and the final submission is due on Saturday 2026-10-31.
 Owners and reviewers are still unassigned, so replace `TBD` when the team allocates work.
 
 ## Task 1 sequence
@@ -161,16 +162,17 @@ as ordinary missing data without checking the associated flags and definitions.
 5. Evaluate the chosen approach once on the held-out test, investigate limitations and subgroup and time behaviour,
    and finish the report with privacy, generalisation, cold-start, operational assumptions and reproducibility details.
 
-## Final submission (due 2026-10-30)
+## Final submission (due 2026-10-31)
 
 | Deliverable | Where | Status |
 | --- | --- | --- |
-| Complete and reproducible notebooks | `Task1.ipynb` to `Task4.ipynb`, re-run in order from a fresh clone on 2026-10-28 | Done. Tasks 1, 2 and 4 identical to the committed results (test numbers included); Task 3 within 0.0002 PR-AUC |
-| Final report | `docs/FINAL_REPORT.pdf` (34 pages) | Done |
-| Comparison of candidate, baseline and final models | Report Table 7.1; `prepared/final_comparison.csv` | Done |
-| Final preprocessing, features, hyperparameters and threshold | Report Table 7.2; `prepared/final_model.json` | Done |
-| Reproducibility statement | Report Section 7.3; README "Local setup" | Done |
-| Test set used once, nothing changed after it | `prepared/task4_frozen.json` (frozen 2026-10-27T11:40:32), report Section 7.3 | Done |
+| Complete and reproducible notebooks | `Task1.ipynb` to `Task5.ipynb`; Tasks 1 to 4 re-run in order from a fresh clone on 2026-10-28, `Task5.ipynb` on 2026-10-29 | Done. Tasks 1, 2 and 4 identical to the committed results (test numbers included); Task 3 within 0.0002 PR-AUC; Task 5 see `docs/MEMORY.md` 2026-10-29 |
+| Final report | `docs/FINAL_REPORT.pdf` | Done |
+| Task 5: selection, final evaluation, time, groups, errors, interpretation, threshold | Report chapter 7; `Task5.ipynb`; `prepared/task5_results.json`, `prepared/task5_decision_log.csv`, `prepared/figures_task5/` | Done |
+| Comparison of candidate, baseline and final models | Report Table 8.1; `prepared/final_comparison.csv` | Done |
+| Final preprocessing, features, hyperparameters and threshold | Report Table 8.2; `prepared/final_model.json` | Done |
+| Reproducibility statement | Report Section 8.3; README "Local setup" | Done |
+| Test set used once, nothing changed after it | `prepared/task4_frozen.json` (frozen 2026-10-27T11:40:32), report Section 8.3 | Done |
 | Teammate check of the statement (setup and fingerprint only) | One teammate who did not write it | Pending |
 | Commit, push and upload | Team | Pending |
 
