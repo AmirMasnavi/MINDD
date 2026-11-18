@@ -1,0 +1,17 @@
+check,rows,action,reason
+rows read,441077,total,All rows of Charging_Data.csv.
+test period,80081,held out,"Start on or after 2021-10-01, dropped right after the start time was parsed (Section 2.2)."
+start time unreadable,0,removed,Without a start time the session cannot be placed in an hour.
+before the study period,17,removed,"Sessions of 2019-12-31, a partial first day; the series start on the first full day, 2020-01-01."
+district not one of the three,0,removed,The levels are the network and the three districts.
+exact duplicate rows,0,removed,A repeated record would count one session twice.
+"repeated user, post and start time",0,"flagged, kept","Not an exact copy, so it may be a real restart; it is counted and kept."
+other time field unreadable,0,"flagged, kept","Order, end and payment times are not used to count demand."
+end before start,0,"flagged, kept",Only the start time is used to count demand.
+payment before end,72006,"flagged, kept",Payment time is not used to count demand.
+order created after start,205028,"flagged, kept",Order time is not used to count demand.
+numeric field unreadable,0,"flagged, kept","Energy, amounts and weather are not used to count demand."
+negative energy or amount,0,"flagged, kept",Energy and amounts are not used to count demand.
+zero energy delivered,46052,"flagged, kept","The session still started and occupied a post, so it counts as demand."
+weather outside physical range,0,"flagged, kept","Ranges used: temperature -30 to 45 °C, humidity 0 to 100 %, precipitation 0 to 500 mm per day."
+rows kept,360979,kept,Sessions used to build the hourly series.

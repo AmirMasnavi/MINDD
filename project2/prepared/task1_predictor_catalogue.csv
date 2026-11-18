@@ -1,0 +1,21 @@
+name,kind,anchor,availability,min_lag_hours,decision,reason
+lag_24,historical,target,sessions at the same hour of the previous day,24,include,Strongest single lag (Section 5.3) and known for every horizon.
+lag_48,historical,target,sessions at the same hour two days before,48,include,A second daily value smooths one unusual day.
+lag_168,historical,target,sessions at the same hour one week before,168,include,Carries the weekday pattern of the target day.
+same_hour_mean_7d,historical,target,mean of the same hour over the 7 previous days,24,include,Averaging removes part of the hour-to-hour noise.
+same_hour_mean_4w,historical,target,mean of the same hour and weekday over the 4 previous weeks,168,include,Weekday-matched level; also the mean_4w baseline.
+prev_day_total,historical,issuance,sessions on day D-1 (window ends with the hour starting at D-1 23:00),,include,"Most recent daily level, complete at 00:00."
+prev_7day_total,historical,issuance,sessions on days D-7 to D-1,,include,"Weekly level, less affected by one unusual day."
+hour_of_day,known future,none,"clock hour of the target, equal to the horizon minus 1",,include,Main daily pattern (Section 5.2).
+day_of_week,known future,none,weekday of the target day,,include,Weekly pattern (Section 5.2).
+is_holiday,known future,none,public holiday from the State Council calendar,,include,Holiday effect (Section 5.4).
+is_adjusted_workday,known future,none,weekend day worked in exchange for a holiday,,include,They differ from both weekdays and weekends (Section 5.4).
+month,known future,none,calendar month of the target day,,include,Slow seasonal change.
+level,known future,none,"network or district of the row, fixed before any forecast",,include,Lets one shared model serve the four levels.
+"daily temperature, humidity, precipitation",exogenous,none,known at 00:00 only as a weather forecast for day D,,candidate,Usable only if a daily weather forecast is assumed known at 00:00; Task 2 tests it (Section 5.7).
+observed weather of day D,exogenous,none,"recorded during the target day, after the issuance",,exclude,Observed future weather is not available at issuance.
+lags 1 to 23 hours,historical,target,known only for the horizons shorter than the lag,1,exclude,Not available for every horizon under midnight issuance.
+any session starting after D 00:00,historical,target,after the issuance,0,exclude,Leakage.
+"energy, costs, payment amounts",historical,none,recorded when a session ends,,exclude,"Describe sessions, not how many start; not needed for the counts."
+end cause and fault flags,historical,none,recorded when a session ends,,exclude,"Outcomes of single sessions, known only after they end."
+"user and post identifiers, location type",historical,none,attributes of single sessions,,exclude,The series aggregate over users and posts.

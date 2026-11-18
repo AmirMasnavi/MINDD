@@ -63,7 +63,22 @@
 \pagenumbering{roman}
 
 \chapter*{Abstract}
-% Written from the notebook outputs once Task1.ipynb has run on the complete dataset (tasks T037 and T038).
+The second project asks how well the number of EV charging sessions starting in each of the next 24 hours can be
+forecast, for the whole network and for each of its three districts. In this first task we built the hourly series,
+studied them, and fixed how forecasts are issued and evaluated, before training any model.
+
+The original transaction file holds 441,077 sessions. We held out the 80,081 sessions from 2021-10-01 on as the final
+test, right after reading, and built four hourly series from the remaining 360,979, from 2020-01-01 to 2021-09-30.
+The data are clean where it matters for counting: only 17 sessions were removed, and no recording gap was found.
+
+Demand has a strong daily cycle and a weak weekly one. Its level grew by 19.6\% from April--September 2020 to the
+same months of 2021, but unevenly: Xiuzhou grew by 60\% while Nanhu fell by 30\%. The February 2020 restrictions and the
+2021 Spring Festival are the two clear breaks.
+
+Forecasts are issued every day at 00:00 for the 24 hours of that day, with one shared model that uses only
+information known at midnight. Models are compared on four quarterly folds by the mean absolute scaled error (MASE)
+with a daily seasonal period. The best of three simple baselines, the mean of the same hour over the four previous weeks, reaches a
+MASE of 0.869. Every model of the next tasks has to beat it.
 
 \tableofcontents
 \listoffigures
@@ -90,30 +105,432 @@
 
 %-------------------------------------------------------------- 1
 \chapter{Introduction}\label{ch:intro}
-% Project question, the 24-hour objective, the two aggregation levels and the structure of the report.
+
+\ac{EV} charging operators need to know how much demand to expect in the coming hours to plan capacity and
+resources. The second project of the course asks to what extent historical charging activity, temporal patterns and
+other relevant information can forecast the number of charging sessions starting in each of the next 24 hours, at
+two levels: the whole network and each of its three districts, Tongxiang, Xiuzhou and Nanhu~\cite{brief}.
+
+The data are the original transaction file of the China EV Charging Dataset~\cite{zhang2025}, without the history
+features added for the first project. Each row is one charging session, so before any forecasting we have to turn
+the transactions into time series. Task 1, the subject of this report, does that and then fixes the forecasting
+setting: when a forecast is made, what it may use, and how it is scored. No model is trained here. The protocol is saved
+to a file that the later tasks read unchanged, and three simple baselines set the bar the models must clear.
+
+Chapter~\ref{ch:data} describes the file, the test period, the audit and the hourly series. Chapter~\ref{ch:eda}
+explores the series. Chapter~\ref{ch:formulation} defines the forecasting problem and Chapter~\ref{ch:protocol} the
+evaluation protocol and the baseline scores. Chapter~\ref{ch:synthesis} brings the results together. Every number
+comes from the Task 1 notebook (\texttt{project2/Task1.ipynb}), and every decision is in its decision log.
 
 %-------------------------------------------------------------- 2
 \chapter{Data and Hourly Series}\label{ch:data}
-% File checks, test drop, data-quality audit, the four hourly series and the gap rule (notebook Sections 2 to 4).
+
+\section{Reading and checking the file}\label{sec:read}
+
+The file is GBK text, which we read with the \texttt{gb18030} encoding, and every timestamp ends with a tab
+character, which we strip. Before using it we check four things and stop with an instruction if any fails: the 24
+expected columns, rows for all three districts, a complete last line, and the SHA-256 fingerprint recorded in the
+project plan. Our first download had stopped halfway, at 254,171 rows with no
+Xiuzhou and the last row cut, and the notebook refuses such a copy with a message naming the missing district (Task 1
+notebook, Section 2.1). The complete file has 441,077 rows, the same number as the Project 1 file.
+
+\section{Test period}\label{sec:test}
+
+The final test period has to be fixed before looking at the data, from coverage facts only. The file covers
+2019-12-31 21:27 to 2021-12-31 23:52. We keep the boundary of the first project and reserve the last quarter,
+2021-10-01 to 2021-12-31, so both projects are tested on the same months. Right after parsing the start time, which
+is the field that tells which rows belong to the test, the notebook counts these 80,081 rows (18.2\%) and drops them.
+From there on only the development period exists; the test rows survive only as a count.
+
+\section{Data-quality audit}\label{sec:audit}
+
+Demand is the number of sessions starting in each hour of each district, so a row matters only through its start
+time and its district. Following the data preparation deck~\cite{mindd03}, we checked every field for unreadable
+values, duplicates, inconsistencies and impossible ranges, and investigated each finding before acting on it.
+Table~\ref{tab:audit} summarises the result.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Data-quality audit of the development rows}
+  \label{tab:audit}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.2cm}rL}
+    \toprule
+    Check & Rows & Decision \\
+    \midrule
+    Rows read & 441,077 & \\
+    Test period (from 2021-10-01) & 80,081 & Held out \\
+    Start before 2020-01-01 & 17 & Removed (partial first day) \\
+    Start unreadable, unknown district, duplicates & 0 & Nothing to remove \\
+    Order created after start & 205,028 & Kept: median delay 57\,s, likely the order in which records are written \\
+    Payment stamped before end & 72,006 & Kept: median 23\,s, not used for counting \\
+    Zero energy delivered & 46,052 & Kept: failed attempts that still started at a post \\
+    Negative values, weather out of range & 0 & Nothing to flag \\
+    \midrule
+    Rows kept & 360,979 & Used to build the series \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+The file is clean where it matters. No start time is unreadable, every row belongs to one of the three districts,
+and there is no duplicate. The only rows removed are the 17 sessions of 2019-12-31, which started after 21:27 and
+would look like a day with almost no demand. The large flags are not errors. Orders are created a median of 57
+seconds after the start, and payments are stamped a median of 23 seconds before the recorded end, which looks like
+the order in which the system writes its records. The 46,052 sessions with zero energy (12.8\% of the kept rows)
+last a median of 77 seconds against 2,335 seconds for the others, and most ended with a charging-pile or vehicle
+fault. They are failed attempts, but each one started at a post and occupied it, so we count it as demand.
+
+\section{Hourly series and data gaps}\label{sec:series}
+
+We count sessions by the hour of their start, separately for each district, on one hourly calendar from 2020-01-01
+00:00 to 2021-09-30 23:00 (15,336 hours). An hour without sessions gets zero, and the network value is the sum of the
+districts. From the training start, 2020-04-01, the network averages 26.4 sessions per hour, Tongxiang 13.4, Xiuzhou
+8.6 and Nanhu 4.4.
+
+With such small counts, a zero can mean that nobody started a session or that the system was not recording. We call
+a run of 24 or more hours with no session anywhere in the network a data gap, to be flagged and left out of training,
+scoring and the \ac{MASE} scale. The rule flags nothing: the longest network run without a session is 12 hours, from
+23:00 on 2020-02-13, during the February 2020 restrictions. From 2020-04-01 only 0.4\% of network hours are empty,
+against 2.1\% in Tongxiang, 6.5\% in Xiuzhou and 15.0\% in Nanhu. The district zeros occur while the rest of the
+network is recording, so they are real zero demand.
 
 %-------------------------------------------------------------- 3
 \chapter{Exploratory Analysis}\label{ch:eda}
-% Level and trend, daily and weekly seasonality, autocorrelation, holidays, the early-2020 restrictions,
-% change over time, districts and weather (notebook Section 5).
+
+The exploration uses the development period only. Most summaries start at 2020-04-01, so the collapse of February
+2020 does not distort the averages; Section~\ref{sec:change} looks at that period on its own.
+
+\section{Level and trend}\label{sec:trend}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{05_1_level_trend.png}
+  \caption{Sessions per day for the network and 7-day means for the districts, 2020-01 to 2021-09}
+  \label{fig:trend}
+\end{figure}
+
+Demand grows over the two years, but not smoothly (Figure~\ref{fig:trend}). The network went from 154 sessions per
+day in the first quarter of 2020 to 737 in the third, fell to 464 in the first quarter of 2021, around the Spring
+Festival, and reached 824 per day in the third quarter of 2021, its highest level. The districts do not move
+together. Xiuzhou keeps growing (197 sessions per day in 2020-Q3, 320 in 2021-Q3), while Nanhu falls from 140 to 112
+and stayed near 70 in the first half of 2021. A model trained on one period meets a different level in the next,
+which is why the evaluation moves forward in time.
+
+\section{Daily and weekly seasonality}\label{sec:season}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{05_2_daily_weekly_profiles.png}
+  \caption{Mean sessions per hour by hour of day and mean sessions per day by day of week, from 2020-04-01}
+  \label{fig:profiles}
+\end{figure}
+
+The daily cycle is strong and the weekly one is weak (Figure~\ref{fig:profiles}). Network demand is lowest at 05:00
+(5.5 sessions per hour) and highest at 15:00 (46.3), 8.5 times more. It climbs from 07:00 to a plateau between 11:00
+and 15:00, falls at 16:00 and 17:00, and has smaller evening peaks at 19:00 and 22:00. The same shape appears on
+every day of the week. Weekend days have only 1.7\% more sessions per day than weekdays at network level, and in
+Nanhu slightly fewer.
+
+\section{Autocorrelation and the seasonal period}\label{sec:acf}
+
+The \ac{ACF} gives the correlation of a series with itself shifted by a number of hours. It is not covered in
+class; we reached it through research~\cite{fpp3}. Figure~\ref{fig:acf} shows a peak at every multiple of 24 hours,
+and the peak at 24 hours is higher than the one at 168 hours at every level (Table~\ref{tab:acf}). The seasonal naive
+forecast, which repeats the value of one season earlier~\cite{fpp3}, agrees: repeating yesterday's hour gives a lower
+error than repeating last week's at every level. The daily period is the stronger one, so we scale \ac{MASE} with
+$m = 24$.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{05_3_autocorrelation.png}
+  \caption{Autocorrelation of hourly sessions at lags 1 to 336 hours, from 2020-04-01}
+  \label{fig:acf}
+\end{figure}
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Autocorrelation at 24 and 168 hours and in-sample seasonal naive MAE (sessions per hour), from 2020-04-01}
+  \label{tab:acf}
+  \begin{tabular}{lrrrr}
+    \toprule
+    Level & ACF lag 24 & ACF lag 168 & MAE, $m=24$ & MAE, $m=168$ \\
+    \midrule
+    Network   & 0.848 & 0.821 & 7.12 & 7.63 \\
+    Tongxiang & 0.788 & 0.748 & 4.48 & 4.83 \\
+    Xiuzhou   & 0.662 & 0.642 & 4.19 & 4.27 \\
+    Nanhu     & 0.590 & 0.581 & 2.53 & 2.55 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Holidays}\label{sec:holidays}
+
+The holiday calendar comes from the State Council notices for 2020 and 2021~\cite{holidays2020,holidays2021}, which
+are published months ahead. It marks 61 holiday days and 13 adjusted working days, the weekend days worked in
+exchange for a longer holiday. Over the 548 days from 2020-04-01, holidays as a whole hardly change network demand
+(0.99 times a normal weekday), but the average hides opposite effects: Tongxiang loses 5\% on holidays and Xiuzhou
+gains 7\%. The Spring Festival is a real break. In its 2021 week the network averaged 327 sessions per day against
+504 on the normal weekdays of the four weeks before, 35\% less (Figure~\ref{fig:holidays}). Adjusted working days
+are not ordinary weekdays either: they have 9\% fewer sessions at network level and 16\% fewer in Tongxiang. We keep
+every holiday as legitimate variation and give models the two calendar flags instead of removing days.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{05_4_holidays.png}
+  \caption{Mean sessions per day by day type relative to normal weekdays, and network demand around the 2021 Spring Festival}
+  \label{fig:holidays}
+\end{figure}
+
+\section{The early-2020 restrictions and change over time}\label{sec:change}
+
+February 2020 had 1,391 network sessions, against 6,217 in January and 6,392 in March. These are the first COVID-19
+restrictions, and demand only came back in April (11,136 sessions) and May (15,033), as the left panel of
+Figure~\ref{fig:change} shows. Those months describe an exceptional situation, so training rows start on 2020-04-01,
+as in Project 1, and January to March 2020 serve only as lag history.
+
+After April 2020 the level keeps changing but the daily shape does not. Between April--September 2020 and the same
+months of 2021 network demand per day grew by 19.6\%, Xiuzhou by 60.4\% and Tongxiang by 17.0\%, while Nanhu fell by
+29.5\%. The share of the day's sessions in each hour moved by at most 1.04 percentage points (right panel). A
+forecaster therefore has to follow the level, while the shape of the day can be learnt from the whole training
+window.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{05_5_change_over_time.png}
+  \caption{Network sessions per day from January to May 2020, and the hourly share of daily sessions in 2020 and 2021}
+  \label{fig:change}
+\end{figure}
+
+\section{Districts}\label{sec:districts}
+
+The districts differ mainly in size (Table~\ref{tab:districts}). Their hourly counts are overdispersed, with a
+variance several times the mean, because the daily cycle moves the mean through the day. The smallest district has
+the most empty hours. The shapes are close but not equal (Figure~\ref{fig:districts}): Xiuzhou and Nanhu peak before
+noon, Tongxiang in the early afternoon with a stronger evening rise, and none has a weekly pattern larger than about
+4\%. One shared model with the level as an input can learn these differences, while \ac{MASE} puts the districts on
+the same scale.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{District profiles, hours from 2020-04-01}
+  \label{tab:districts}
+  \begin{tabular}{lrrrrr}
+    \toprule
+    District & Share of sessions & Mean per hour & Variance / mean & Zero hours & Peak hour \\
+    \midrule
+    Tongxiang & 50.7\% & 13.4 & 6.9 & 2.1\% & 14:00 \\
+    Xiuzhou   & 32.6\% &  8.6 & 6.0 & 6.5\% & 11:00 \\
+    Nanhu     & 16.6\% &  4.4 & 3.9 & 15.0\% & 12:00 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{05_6_districts.png}
+  \caption{Hourly share of daily sessions and day-of-week index by district, from 2020-04-01}
+  \label{fig:districts}
+\end{figure}
+
+\section{Weather}\label{sec:weather}
+
+Weather is recorded once per day and district, so only daily weather can be built from the file. Temperature is the
+one variable that moves with demand, with a Spearman correlation of 0.62 with daily network sessions. Most of it is
+seasonal, since temperature and demand both rise from spring to summer, so this does not show that warm days cause
+charging. Humidity (0.04) and precipitation (0.01) show no relation, and rainy days have 0.98 times the sessions of
+dry days. At 00:00 the weather of the coming day is not observed, so a model could only use a daily forecast, while
+the file holds observed values. Weather therefore stays an exogenous candidate, to be tested in Task 2 under that
+stated assumption.
 
 %-------------------------------------------------------------- 4
 \chapter{Forecasting Formulation}\label{ch:formulation}
-% Issuance schedule, direct strategy with one shared model, forecast rows, predictor catalogue and the worked
-% issuance (notebook Section 6).
+
+\section{Issuance schedule}\label{sec:issuance}
+
+A forecast is issued once a day at 00:00, using the data up to the hour that starts at 23:00 of the previous day. It
+covers the 24 hours of that day: horizon 1 is 00:00 to 01:00 and horizon 24 is 23:00 to 24:00, so horizon $h$ is
+always clock hour $h-1$. One forecast a day matches the daily planning of capacity and resources that the statement
+describes. At midnight the same hour of the previous day is known for every horizon, and Section~\ref{sec:acf}
+showed that this is the strongest single lag.
+
+\section{Multi-step strategy}\label{sec:strategy}
+
+There are three common ways to produce 24 values~\cite{bentaieb2012}; multi-step strategies are not covered in
+class, and we reached them through research. A recursive forecaster predicts one hour and feeds the prediction back
+as an input for the next, so its errors pile up over the day. A direct forecaster with one model per horizon needs 24
+models, each trained on a 24th of the data. We use the direct strategy with one shared model: each target hour of an
+issuance is one row, all inputs of the row are known at 00:00, the hour of the day is one of the inputs, and no
+forecast is fed back. The development period gives 52,608 such rows (548 issuances, 4 levels, 24 horizons), and none
+is lost to gaps.
+
+\section{Predictors and leakage}\label{sec:predictors}
+
+Each candidate input is labelled as a historical observation, known future information or an exogenous variable
+(Table~\ref{tab:catalogue}). A lag counted back from the target hour is known at 00:00 for every horizon only if it
+is at least 24 hours: for horizon 24 (23:00), a lag of 23 hours would read 00:00 of the same day, which has not
+happened yet. Windows counted back from the issuance, such as the previous day's total, end with the hour starting at
+23:00 of the previous day and are known for every horizon. The function that builds the forecast rows works out the
+latest hour each input reads and asserts, for every row, that it is before the issuance.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Predictor catalogue (Task 1 notebook, Section 6.3)}
+  \label{tab:catalogue}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{4.6cm}>{\raggedright\arraybackslash}p{2.3cm}L}
+    \toprule
+    Input & Kind & Decision \\
+    \midrule
+    Same hour 24, 48 and 168 hours before; mean of the same hour over 7 days and over 4 weeks & Historical (from the target hour, lag $\geq 24$) & Included \\
+    \addlinespace[2pt]
+    Total of the previous day and of the previous 7 days & Historical (from the issuance) & Included \\
+    \addlinespace[2pt]
+    Hour of day, day of week, holiday, adjusted working day, month, level & Known future & Included \\
+    \addlinespace[2pt]
+    Daily temperature, humidity and precipitation as a forecast & Exogenous & Candidate for Task 2 \\
+    \addlinespace[2pt]
+    Observed weather of the target day; lags of 1 to 23 hours; any session after 00:00 & Exogenous / historical & Excluded: not known at issuance \\
+    \addlinespace[2pt]
+    Energy, costs, end cause, fault flags, user and post identifiers & Historical & Excluded: describe single sessions \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{06_4_worked_issuance.png}
+  \caption{One issuance, Monday 2021-03-15 at 00:00: known hours, target hours and the hours read by the lags}
+  \label{fig:issuance}
+\end{figure}
+
+Figure~\ref{fig:issuance} shows one issuance. Everything left of the red line is known; the orange part is the 24
+hours to forecast. For horizon 1 (00:00) the target was 8 sessions, against 9 at the same hour the day before and 11
+a week before; for horizon 24 (23:00) it was 19, against 14 the day before. The previous day's total (413) and the
+previous week's (3,216) are the same for all 24 rows, because they depend only on the issuance.
 
 %-------------------------------------------------------------- 5
 \chapter{Evaluation Protocol and Baselines}\label{ch:protocol}
-% Test period, folds, metrics and the MASE period, primary score, baselines and their scores (notebook Sections 7
-% and 8).
+
+\section{Folds}\label{sec:folds}
+
+We keep the four expanding-window folds of Project 1 (Table~\ref{tab:folds}). Every fold trains from 2020-04-01 up
+to the start of one validation quarter and validates on that quarter. Time order is kept, as the evaluation
+deck~\cite{mindd04} requires for data that change over time, and each validation day is one issuance, so every model
+is scored on the same 365 issuances. Project 1 purged a few sessions at each boundary; here demand is counted by
+start hour, nothing crosses a boundary, and no gap is needed. In every fold our training sessions equal those of
+Project 1 plus the sessions it purged, which confirms that both projects use the same data and periods.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Expanding-window folds (network sessions)}
+  \label{tab:folds}
+  \begin{tabular}{clrrr}
+    \toprule
+    Fold & Validation & Training days & Validation days & Validation sessions \\
+    \midrule
+    1 & 2020-Q4 & 183 & 92 & 60,364 \\
+    2 & 2021-Q1 & 275 & 90 & 41,797 \\
+    3 & 2021-Q2 & 365 & 91 & 57,542 \\
+    4 & 2021-Q3 & 456 & 92 & 75,769 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Metrics and primary score}\label{sec:metrics}
+
+\ac{MAE} and \ac{RMSE} are in sessions per hour~\cite{mindd04}; \ac{RMSE} weighs large misses more. \ac{MASE}, which
+the statement asks for, divides the \ac{MAE} by the in-sample \ac{MAE} of the seasonal naive forecast on the
+training hours of the same fold and level~\cite{hyndman2006}; it is not covered in class, and we reached it through
+research:
+\[
+  \text{MASE} = \frac{\frac{1}{n}\sum_{t} |y_t - \hat{y}_t|}{\frac{1}{T-m}\sum_{t=m+1}^{T} |y_t - y_{t-m}|},
+  \qquad m = 24 .
+\]
+A value below 1 means the forecaster beats, on the validation quarter, what repeating yesterday's value achieved on
+its training data. The scale is fitted on each fold's training hours only, so it is a learned operation and is
+recorded in the ledger; every scale is positive, the smallest being 2.54 sessions per hour (Nanhu, fourth fold).
+
+To choose between forecasters we need one number. The primary score averages \ac{MASE} over the 24 horizons, then
+over the four levels with equal weight, then over the four folds, and the four fold values are always reported
+beside it. Because \ac{MASE} has no unit, Nanhu counts as much as the network. \ac{MAE} and \ac{RMSE} per level
+remain secondary scores, since they say how many sessions a forecast misses. Results can also be broken down by
+horizon, by month and by day type.
+
+\section{Baselines}\label{sec:baselines}
+
+The baselines need no fitting and are all legal at 00:00. The daily seasonal naive repeats the same hour one day
+earlier, the weekly seasonal naive the same hour one week earlier, and the four-week mean averages the same hour and
+weekday over the four previous weeks. Table~\ref{tab:baselines} gives their scores.
+
+\begin{table}[!htb]
+  \centering\small
+  \caption{Baseline scores on the development folds: primary MASE per fold and overall, mean MASE per level, and MAE (sessions per hour)}
+  \label{tab:baselines}
+  \setlength{\tabcolsep}{3.6pt}
+  \begin{tabular}{lrrrrrrrrrr}
+    \toprule
+    & \multicolumn{5}{c}{Primary MASE} & \multicolumn{4}{c}{MASE per level} & MAE \\
+    \cmidrule(lr){2-6}\cmidrule(lr){7-10}\cmidrule(lr){11-11}
+    Baseline & F1 & F2 & F3 & F4 & All & Net. & Tong. & Xiu. & Nan. & Net. \\
+    \midrule
+    Daily naive   & 1.007 & 0.827 & 0.999 & 1.167 & 1.000 & 1.022 & 1.033 & 1.130 & 0.814 & 7.14 \\
+    Weekly naive  & 1.066 & 0.860 & 1.048 & 1.216 & 1.047 & 1.096 & 1.111 & 1.158 & 0.824 & 7.65 \\
+    Four-week mean & 0.854 & 0.782 & 0.829 & 1.012 & \textbf{0.869} & 0.916 & 0.926 & 0.940 & 0.695 & 6.40 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The four-week mean is the best in every fold and at every level: averaging four weeks removes much of the
+hour-to-hour noise that a single copied value carries. The weekly naive is the worst, as the weak weekly pattern
+suggested. Figure~\ref{fig:baselines} shows how the errors depend on the hour. All three baselines have a \ac{MASE}
+around 0.4 in the night hours, when few sessions start; for the network and the two larger districts they exceed 1
+for most hours between 10:00 and 20:00, when demand is high and changes most from day to day, while Nanhu stays closer
+to 1. The fourth fold is the hardest, because demand grew fast in the third quarter of 2021, and holidays are the
+hardest day type (0.985 for the four-week mean against 0.865 on normal weekdays). In sessions, the four-week mean
+misses the network by 6.4 sessions per hour on average (\ac{RMSE} 8.2) and Nanhu by 1.9. It is the reference
+baseline: a model is useful only if it beats 0.869 on the same folds.
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=\textwidth]{07_5_baselines_by_horizon.png}
+  \caption{MASE by horizon for the three baselines, mean of the four folds}
+  \label{fig:baselines}
+\end{figure}
+
+\section{Saved protocol}\label{sec:saved}
+
+The protocol file \texttt{task1\_protocol.json} holds the problem definition, the data fingerprint, the periods, the
+folds, the predictors with the leakage rule, the metrics, the breakdowns and the baselines. With the hourly series it
+is enough to rebuild the folds and recompute any baseline score; we checked this in a fresh session for one score
+(fold 2, Xiuzhou, horizon 9). Two runs of the notebook give identical files apart from the run date and times, and a
+full run needs less than ten seconds of computation.
 
 %-------------------------------------------------------------- 6
 \chapter{Synthesis}\label{ch:synthesis}
-% The one closing chapter, rewritten by later tasks around the project question; the only place for limitations.
+
+The question of the project is how far past demand, calendar patterns and other information can forecast the next
+24 hours of charging sessions. Task 1 cannot answer it yet, but it sets up a fair way to answer it and gives a first
+reference.
+
+The data support hourly forecasting well. The file is complete and clean: 17 sessions removed, no recording gap, and
+flags that describe how the system records sessions rather than errors. The four series show a strong and stable
+daily cycle, a weak weekly one, and a level that changes from quarter to quarter and differs by district. The two
+clear breaks, the restrictions of February 2020 and the Spring Festival of 2021, fall respectively before training
+starts and inside the second validation quarter.
+
+The forecasting problem is fixed as follows. A forecast is issued every day at 00:00 for the 24 hours of that day,
+with a direct strategy and one shared model whose inputs are known at midnight: lags of at least 24 hours from the
+target hour, totals of the previous day and week, and calendar information. Models are compared on the four Project
+1 folds by \ac{MASE} with a daily period, averaged over horizons, levels and folds, with \ac{MAE} and \ac{RMSE} per
+level beside it. The final test, the last quarter of 2021, stays untouched.
+
+Repeating yesterday's value gives a primary \ac{MASE} of 1.000, and the four-week
+same-hour mean lowers it to 0.869, with the largest errors in the daytime hours, on holidays and in the growing third
+quarter of 2021. A model has to beat 0.869 to show that it uses information the calendar averages miss.
+
+Four limitations remain. Weather can only enter as a daily forecast, which the file does not contain, so its use in
+Task 2 rests on treating the recorded values as that forecast. Midnight issuance is one choice; an operator who needs
+the forecast earlier would lose the 24-hour lag. The holiday calendar was typed from the official notices. And the
+seasonal period of \ac{MASE} was chosen on the whole development period, validation quarters included, although the
+evidence for $m = 24$ holds at every level.
 
 %-------------------------------------------------------------- bibliography
 \phantomsection

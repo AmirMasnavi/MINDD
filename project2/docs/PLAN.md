@@ -12,9 +12,9 @@ Owners and reviewers are still unassigned, so replace `TBD` when the team alloca
 
 | Deliverable | Content | Owner / reviewer | Status |
 | --- | --- | --- | --- |
-| `Task1.ipynb` | Checked read, test drop, audit, four hourly series, exploration, formulation, protocol, baseline scores, synthesis | TBD / TBD | Skeleton and calendar drafted; data sections wait for the complete download |
-| `prepared/task1_*` | Protocol, series, calendar, audit, predictor catalogue, folds, baseline scores, results, run information, decision log, ledger, figures | TBD / TBD | Not yet generated |
-| `docs/report/main.tex` and `docs/TASK1_REPORT.pdf` | Task 1 chapters and one closing Synthesis chapter | TBD / TBD | Skeleton written; chapters wait for the notebook outputs |
+| `Task1.ipynb` | Checked read, test drop, audit, four hourly series, exploration, formulation, protocol, baseline scores, synthesis | TBD / TBD | Complete on 2026-11-18; runs in under ten seconds, two runs give identical files |
+| `prepared/task1_*` | Protocol, series, calendar, audit, predictor catalogue, folds, baseline scores (also by period), results, run information, decision log, ledger, 10 figures | TBD / TBD | Generated on 2026-11-18 |
+| `docs/report/main.tex` and `docs/TASK1_REPORT.pdf` | Task 1 chapters and one closing Synthesis chapter | TBD / TBD | Complete on 2026-11-18 (18 pages, main text 12); teammate review pending |
 
 ## Decisions fixed before the data work
 
@@ -33,4 +33,4 @@ These come from the Task 1 specification (2026-11-18) and are written into the n
 
 | File | Rows | SHA-256 | Status |
 | --- | --- | --- | --- |
-| `Charging_Data.csv` | pending | pending | Pending: complete re-download. The copy of 2026-11-18 is truncated (254,171 rows, no Xiuzhou, last row cut) and must not be used |
+| `Charging_Data.csv` | 441,077 | `6f3643db401327ec4f4a074109987706e421896869acac26a8ee1a5c6e3b45ee` | Complete copy downloaded again from Moodle on 2026-11-18 (85.6 MB, GBK text, CRLF line ends, 24 columns, three districts, last line complete). The earlier truncated copy must not be used |

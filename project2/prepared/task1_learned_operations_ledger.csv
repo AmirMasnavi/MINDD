@@ -1,0 +1,17 @@
+operation,fitted_on,level,fold,value
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2020-09-30,network,1,7.082195
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2020-09-30,Tongxiang,1,4.350638
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2020-09-30,Xiuzhou,1,3.840619
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2020-09-30,Nanhu,1,3.038024
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2020-12-31,network,2,7.126364
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2020-12-31,Tongxiang,2,4.505758
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2020-12-31,Xiuzhou,2,3.856818
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2020-12-31,Nanhu,2,2.924394
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2021-03-31,network,3,6.856735
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2021-03-31,Tongxiang,3,4.371461
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2021-03-31,Xiuzhou,3,3.767466
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2021-03-31,Nanhu,3,2.692009
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2021-06-30,network,4,6.905976
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2021-06-30,Tongxiang,4,4.360471
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2021-06-30,Xiuzhou,4,3.962537
+"MASE scale: in-sample seasonal naive MAE, m = 24",2020-04-01 to 2021-06-30,Nanhu,4,2.537098

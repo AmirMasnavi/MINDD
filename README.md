@@ -5,7 +5,7 @@ Data mining projects (MEI, ISEP) on the China EV Charging Dataset (Zhang et al.,
 | Folder | Project | Status |
 | --- | --- | --- |
 | [project1/](project1/README.md) | Project 1: classification of abnormal charging sessions at session start (Tasks 1 to 5) | Complete; notebooks, `prepared/` files and report kept as delivered |
-| [project2/](project2/README.md) | Project 2: day-ahead forecasting of hourly charging demand, network and district level | Starting (Task 1) |
+| [project2/](project2/README.md) | Project 2: day-ahead forecasting of hourly charging demand, network and district level | Task 1 complete (notebook, protocol, report); Task 2 next |
 
 Each project folder is self-contained: its notebooks run from that folder, read the dataset placed next to them and
 write only to that folder's `prepared/`. Each has its own `requirements.txt`, `docs/` and report.
@@ -26,7 +26,7 @@ Datasets come from the course channel and are never committed. Place each one in
 | Project | File | SHA-256 |
 | --- | --- | --- |
 | 1 | `project1/Charging_Data_educational.csv` | `f6109dc066162bc770417c39294cdecc7519646c3cfa8c1d95671ea30f0e0a9b` |
-| 2 | `project2/Charging_Data.csv` | to be recorded once a complete copy is downloaded (see `project2/README.md`) |
+| 2 | `project2/Charging_Data.csv` | `6f3643db401327ec4f4a074109987706e421896869acac26a8ee1a5c6e3b45ee` |
 
 ## Team workflow
 

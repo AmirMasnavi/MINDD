@@ -1,0 +1,338 @@
+{
+  "rows_read": 441077,
+  "test_rows": 80081,
+  "audit": {
+    "rows_kept": 360979,
+    "rows_removed": 17,
+    "test_rows": 80081,
+    "order_after_start_median_s": 57.0,
+    "payment_before_end_median_s": 23.0,
+    "zero_energy_share": 0.1276,
+    "zero_energy_median_duration_s": 77.0,
+    "other_median_duration_s": 2335.0
+  },
+  "gap_hours": 0,
+  "longest_network_zero_run_hours": 12,
+  "zero_share_from_train_start": {
+    "network": 0.004,
+    "Tongxiang": 0.021,
+    "Xiuzhou": 0.0652,
+    "Nanhu": 0.1499
+  },
+  "daily_mean_by_quarter": {
+    "2020-Q1": {
+      "network": 153.8,
+      "Tongxiang": 72.9,
+      "Xiuzhou": 50.2,
+      "Nanhu": 30.7
+    },
+    "2020-Q2": {
+      "network": 480.0,
+      "Tongxiang": 204.0,
+      "Xiuzhou": 155.3,
+      "Nanhu": 120.7
+    },
+    "2020-Q3": {
+      "network": 737.2,
+      "Tongxiang": 400.3,
+      "Xiuzhou": 196.6,
+      "Nanhu": 140.2
+    },
+    "2020-Q4": {
+      "network": 656.1,
+      "Tongxiang": 356.4,
+      "Xiuzhou": 182.2,
+      "Nanhu": 117.6
+    },
+    "2021-Q1": {
+      "network": 464.4,
+      "Tongxiang": 255.2,
+      "Xiuzhou": 140.0,
+      "Nanhu": 69.2
+    },
+    "2021-Q2": {
+      "network": 632.3,
+      "Tongxiang": 315.8,
+      "Xiuzhou": 244.7,
+      "Nanhu": 71.8
+    },
+    "2021-Q3": {
+      "network": 823.6,
+      "Tongxiang": 391.9,
+      "Xiuzhou": 319.8,
+      "Nanhu": 111.9
+    }
+  },
+  "profile": {
+    "network": {
+      "peak hour": 15.0,
+      "sessions at peak": 46.285,
+      "quietest hour": 5.0,
+      "sessions at quietest": 5.458,
+      "peak / quietest": 8.48,
+      "weekend / weekday (per day)": 1.017
+    },
+    "Tongxiang": {
+      "peak hour": 14.0,
+      "sessions at peak": 23.354,
+      "quietest hour": 5.0,
+      "sessions at quietest": 2.542,
+      "peak / quietest": 9.187,
+      "weekend / weekday (per day)": 1.024
+    },
+    "Xiuzhou": {
+      "peak hour": 11.0,
+      "sessions at peak": 15.474,
+      "quietest hour": 3.0,
+      "sessions at quietest": 1.69,
+      "peak / quietest": 9.158,
+      "weekend / weekday (per day)": 1.019
+    },
+    "Nanhu": {
+      "peak hour": 12.0,
+      "sessions at peak": 8.901,
+      "quietest hour": 4.0,
+      "sessions at quietest": 0.714,
+      "peak / quietest": 12.476,
+      "weekend / weekday (per day)": 0.992
+    }
+  },
+  "acf": {
+    "1": {
+      "network": 0.8193,
+      "Tongxiang": 0.7622,
+      "Xiuzhou": 0.6704,
+      "Nanhu": 0.5778
+    },
+    "24": {
+      "network": 0.8479,
+      "Tongxiang": 0.788,
+      "Xiuzhou": 0.6622,
+      "Nanhu": 0.59
+    },
+    "48": {
+      "network": 0.8364,
+      "Tongxiang": 0.7719,
+      "Xiuzhou": 0.6514,
+      "Nanhu": 0.599
+    },
+    "168": {
+      "network": 0.8211,
+      "Tongxiang": 0.7476,
+      "Xiuzhou": 0.6425,
+      "Nanhu": 0.5812
+    },
+    "336": {
+      "network": 0.8075,
+      "Tongxiang": 0.733,
+      "Xiuzhou": 0.6258,
+      "Nanhu": 0.5697
+    }
+  },
+  "snaive_in_sample_mae": {
+    "m=24": {
+      "network": 7.1226,
+      "Tongxiang": 4.4776,
+      "Xiuzhou": 4.1897,
+      "Nanhu": 2.5284
+    },
+    "m=168": {
+      "network": 7.6258,
+      "Tongxiang": 4.8279,
+      "Xiuzhou": 4.2686,
+      "Nanhu": 2.5487
+    }
+  },
+  "mase_period": 24,
+  "day_type_ratio": {
+    "normal weekday": {
+      "network": 1.0,
+      "Tongxiang": 1.0,
+      "Xiuzhou": 1.0,
+      "Nanhu": 1.0
+    },
+    "weekend": {
+      "network": 1.027,
+      "Tongxiang": 1.047,
+      "Xiuzhou": 1.01,
+      "Nanhu": 0.999
+    },
+    "holiday": {
+      "network": 0.993,
+      "Tongxiang": 0.947,
+      "Xiuzhou": 1.069,
+      "Nanhu": 0.983
+    },
+    "adjusted working day": {
+      "network": 0.906,
+      "Tongxiang": 0.839,
+      "Xiuzhou": 0.987,
+      "Nanhu": 0.952
+    }
+  },
+  "spring_festival_2021": {
+    "mean_per_day": 327.3,
+    "reference_per_day": 503.5,
+    "change": -0.35
+  },
+  "month_totals_2020": {
+    "2020-01": 6217,
+    "2020-02": 1391,
+    "2020-03": 6392,
+    "2020-04": 11136,
+    "2020-05": 15033
+  },
+  "growth_2021_vs_2020_apr_sep": {
+    "network": 0.196,
+    "Tongxiang": 0.17,
+    "Xiuzhou": 0.604,
+    "Nanhu": -0.295
+  },
+  "districts": {
+    "Tongxiang": {
+      "share of sessions": 0.5071,
+      "mean per hour": 13.3776,
+      "variance / mean": 6.9162,
+      "share of zero hours": 0.021,
+      "peak hour": 14.0,
+      "weekend / weekday": 1.0242
+    },
+    "Xiuzhou": {
+      "share of sessions": 0.3265,
+      "mean per hour": 8.6128,
+      "variance / mean": 6.0278,
+      "share of zero hours": 0.0652,
+      "peak hour": 11.0,
+      "weekend / weekday": 1.0186
+    },
+    "Nanhu": {
+      "share of sessions": 0.1665,
+      "mean per hour": 4.3918,
+      "variance / mean": 3.9452,
+      "share of zero hours": 0.1499,
+      "peak hour": 12.0,
+      "weekend / weekday": 0.9916
+    }
+  },
+  "weather_corr": {
+    "temperature": {
+      "Pearson": 0.533,
+      "Spearman": 0.625
+    },
+    "humidity": {
+      "Pearson": 0.059,
+      "Spearman": 0.045
+    },
+    "precipitation": {
+      "Pearson": 0.087,
+      "Spearman": 0.012
+    }
+  },
+  "rain_ratio": 0.984,
+  "primary_score": {
+    "mean_4w": 0.8691,
+    "snaive_day": 0.9999,
+    "snaive_week": 1.0474
+  },
+  "primary_score_per_fold": {
+    "mean_4w": {
+      "1": 0.8539,
+      "2": 0.7816,
+      "3": 0.8287,
+      "4": 1.0122
+    },
+    "snaive_day": {
+      "1": 1.0065,
+      "2": 0.8274,
+      "3": 0.9986,
+      "4": 1.167
+    },
+    "snaive_week": {
+      "1": 1.0664,
+      "2": 0.8598,
+      "3": 1.0477,
+      "4": 1.2158
+    }
+  },
+  "mase_per_level": {
+    "snaive_day": {
+      "network": 1.022,
+      "Tongxiang": 1.0333,
+      "Xiuzhou": 1.1299,
+      "Nanhu": 0.8143
+    },
+    "snaive_week": {
+      "network": 1.0957,
+      "Tongxiang": 1.1114,
+      "Xiuzhou": 1.1583,
+      "Nanhu": 0.8243
+    },
+    "mean_4w": {
+      "network": 0.9159,
+      "Tongxiang": 0.9261,
+      "Xiuzhou": 0.9398,
+      "Nanhu": 0.6947
+    }
+  },
+  "mae_per_level": {
+    "snaive_day": {
+      "network": 7.137,
+      "Tongxiang": 4.538,
+      "Xiuzhou": 4.361,
+      "Nanhu": 2.27
+    },
+    "snaive_week": {
+      "network": 7.652,
+      "Tongxiang": 4.88,
+      "Xiuzhou": 4.471,
+      "Nanhu": 2.297
+    },
+    "mean_4w": {
+      "network": 6.4,
+      "Tongxiang": 4.071,
+      "Xiuzhou": 3.627,
+      "Nanhu": 1.936
+    }
+  },
+  "rmse_per_level": {
+    "snaive_day": {
+      "network": 9.203,
+      "Tongxiang": 5.887,
+      "Xiuzhou": 5.673,
+      "Nanhu": 3.016
+    },
+    "snaive_week": {
+      "network": 9.85,
+      "Tongxiang": 6.29,
+      "Xiuzhou": 5.799,
+      "Nanhu": 3.068
+    },
+    "mean_4w": {
+      "network": 8.223,
+      "Tongxiang": 5.174,
+      "Xiuzhou": 4.698,
+      "Nanhu": 2.536
+    }
+  },
+  "mase_by_day_type": {
+    "snaive_day": {
+      "normal weekday": 0.9751,
+      "weekend": 1.0315,
+      "holiday": 1.1422,
+      "adjusted working day": 0.909
+    },
+    "snaive_week": {
+      "normal weekday": 1.0434,
+      "weekend": 1.0375,
+      "holiday": 1.1356,
+      "adjusted working day": 1.0893
+    },
+    "mean_4w": {
+      "normal weekday": 0.8648,
+      "weekend": 0.8438,
+      "holiday": 0.9848,
+      "adjusted working day": 0.8906
+    }
+  },
+  "reference_baseline": "mean_4w"
+}

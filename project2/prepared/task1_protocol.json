@@ -1,0 +1,168 @@
+{
+  "problem": {
+    "target": "sessions starting per hour",
+    "levels": [
+      "network",
+      "Tongxiang",
+      "Xiuzhou",
+      "Nanhu"
+    ],
+    "issuance": "daily at 00:00, data up to the hour starting at 23:00 of the previous day",
+    "horizons": {
+      "from": 1,
+      "to": 24
+    },
+    "horizon_rule": "horizon h is clock hour h-1 of the issuance day",
+    "strategy": "direct, one shared model, hour of day as input"
+  },
+  "data": {
+    "file": "Charging_Data.csv",
+    "sha256": "6f3643db401327ec4f4a074109987706e421896869acac26a8ee1a5c6e3b45ee",
+    "encoding": "gb18030",
+    "rows_read": 441077,
+    "series_rule": "count by start hour per district; network = sum of districts; zero-filled; gap = network run >= 24 h with no session",
+    "series_file": "task1_hourly_series.csv"
+  },
+  "periods": {
+    "series_from": "2020-01-01",
+    "train_from": "2020-04-01",
+    "test_from": "2021-10-01",
+    "test_until": "2021-12-31",
+    "test_rows": 80081
+  },
+  "folds": [
+    {
+      "fold": 1,
+      "train_from": "2020-04-01",
+      "train_before": "2020-10-01",
+      "validate_from": "2020-10-01",
+      "validate_before": "2021-01-01"
+    },
+    {
+      "fold": 2,
+      "train_from": "2020-04-01",
+      "train_before": "2021-01-01",
+      "validate_from": "2021-01-01",
+      "validate_before": "2021-04-01"
+    },
+    {
+      "fold": 3,
+      "train_from": "2020-04-01",
+      "train_before": "2021-04-01",
+      "validate_from": "2021-04-01",
+      "validate_before": "2021-07-01"
+    },
+    {
+      "fold": 4,
+      "train_from": "2020-04-01",
+      "train_before": "2021-07-01",
+      "validate_from": "2021-07-01",
+      "validate_before": "2021-10-01"
+    }
+  ],
+  "predictors": {
+    "include": [
+      "lag_24",
+      "lag_48",
+      "lag_168",
+      "same_hour_mean_7d",
+      "same_hour_mean_4w",
+      "prev_day_total",
+      "prev_7day_total",
+      "hour_of_day",
+      "day_of_week",
+      "is_holiday",
+      "is_adjusted_workday",
+      "month",
+      "level"
+    ],
+    "candidate": [
+      "daily temperature, humidity, precipitation"
+    ],
+    "exclude": [
+      "observed weather of day D",
+      "lags 1 to 23 hours",
+      "any session starting after D 00:00",
+      "energy, costs, payment amounts",
+      "end cause and fault flags",
+      "user and post identifiers, location type"
+    ],
+    "target_lags": {
+      "lag_24": [
+        24
+      ],
+      "lag_48": [
+        48
+      ],
+      "lag_168": [
+        168
+      ],
+      "same_hour_mean_7d": [
+        24,
+        48,
+        72,
+        96,
+        120,
+        144,
+        168
+      ],
+      "same_hour_mean_4w": [
+        168,
+        336,
+        504,
+        672
+      ]
+    },
+    "issuance_windows_days": {
+      "prev_day_total": [
+        -1,
+        -1
+      ],
+      "prev_7day_total": [
+        -7,
+        -1
+      ]
+    },
+    "leakage_rule": "every input hour of every row is before the issuance D 00:00",
+    "min_target_lag_hours": 24,
+    "issuance_anchored_window_end": "hour starting at D-1 23:00",
+    "gap_rule": "a row is left out if its target hour or any input hour is a gap"
+  },
+  "metrics": {
+    "list": [
+      "MAE",
+      "RMSE",
+      "MASE"
+    ],
+    "mase_period": 24,
+    "mase_scale": "in-sample seasonal naive MAE on the fold training hours, per level, gap hours left out",
+    "primary": "MASE: mean over horizons, then levels (equal weight), then folds"
+  },
+  "breakdowns": {
+    "horizon": "1 to 24",
+    "level": [
+      "network",
+      "Tongxiang",
+      "Xiuzhou",
+      "Nanhu"
+    ],
+    "time_period": [
+      "fold",
+      "month",
+      "day_type"
+    ],
+    "day_type": [
+      "normal weekday",
+      "weekend",
+      "holiday",
+      "adjusted working day"
+    ]
+  },
+  "baselines": {
+    "snaive_day": "lag 24",
+    "snaive_week": "lag 168",
+    "mean_4w": "mean of lags 168, 336, 504, 672",
+    "reference": "mean_4w"
+  },
+  "test_protection": "test rows dropped right after parsing start time; only the count saved; not scored in Task 1"
+}
