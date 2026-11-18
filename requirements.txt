@@ -1,6 +1,6 @@
-# Task 1 direct dependencies, pinned to the exact versions that ran the notebook top to bottom
-# (Python 3.12.3, 2026-10-02). scikit-learn is pinned because a different version changes the
-# §14–§15 diagnostic metrics in the third decimal. pip resolves the transitive dependencies.
+# Direct dependencies of the five task notebooks, pinned to the versions that ran them under Python 3.12.3.
+# scikit-learn is pinned because another version changes some metrics in the third decimal.
+# pip resolves the transitive dependencies.
 pandas==3.0.6
 numpy==2.5.3
 scipy==1.18.1

@@ -9,6 +9,11 @@ behaviour over time, across groups and in its errors (Task 5). The final report 
 [docs/FINAL_REPORT.pdf](docs/FINAL_REPORT.pdf). Its chapter 8 compares the candidate, baseline and final models,
 describes the final model and gives the reproducibility statement.
 
+The submission holds the five task notebooks below, each executed and able to run on its own, together with the
+small files they save for one another in `prepared/`. The report cites them as "Task N notebook, Section M", which is
+Section M of `TaskN.ipynb`. `scripts/stage_run.py N` checks that a notebook runs alone from the zip contents, and
+`scripts/compare_prepared.py N` checks that the run saved the same results as the committed files.
+
 | Read this | For |
 | --- | --- |
 | [Task1.ipynb](Task1.ipynb) | **Task 1 notebook.** Sections 2 to 4 load, describe and clean the data, Section 5 builds the target, Section 6 covers missing values, 7 changes over time, 8 leakage, 9 the start-time predictors, 10 outliers, 11 the time split and sampling, 12 feature engineering and reduction, 13 the learned operations and class imbalance, 14 the saved files and integrity checks, and 15 the synthesis and decision log |
@@ -22,6 +27,7 @@ describes the final model and gives the reproducibility statement.
 | [docs/TASK1_REPORT.pdf](docs/TASK1_REPORT.pdf) / [docs/TASK1_REPORT.md](docs/TASK1_REPORT.md) | The report as submitted for Task 1 |
 | [TP1_Task1_Data_Understanding_and_Preparation.ipynb](TP1_Task1_Data_Understanding_and_Preparation.ipynb) | Reference material, not part of the submission. Extended Task 1 notebook (Sections 0 to 17). It holds model-based diagnostics that were later done properly in Task 3: class weights (Section 14) and a preliminary feature-group ablation with cold-start scores (Section 15) |
 | [Task1_Minimal_EDA.ipynb](Task1_Minimal_EDA.ipynb) | Reference material, not part of the submission. Earlier minimal EDA |
+| [docs/SUBMISSION_CHECKLIST.md](docs/SUBMISSION_CHECKLIST.md) / [docs/STUDY_GUIDE.md](docs/STUDY_GUIDE.md) | Team documents, not part of the submission: the submission checklist (every requirement of the statement mapped to the report) and the study guide by student. Portuguese versions: [docs/CHECKLIST_ENTREGA.md](docs/CHECKLIST_ENTREGA.md) and [docs/GUIAO_ESTUDO.md](docs/GUIAO_ESTUDO.md), with the same content |
 | [docs/TEAMMATE_CHECK.md](docs/TEAMMATE_CHECK.md) | The 15-minute reproducibility check that a teammate who did not write the statement does before the final submission |
 | [docs/DATASET.md](docs/DATASET.md) | Field meanings and the derived target |
 | [docs/MEMORY.md](docs/MEMORY.md) / [docs/PLAN.md](docs/PLAN.md) | Progress, decisions, open questions, work order |
@@ -74,7 +80,10 @@ so do not run it before the five notebooks above.
 
 | Path | Purpose |
 | --- | --- |
-| `TP1-MINDD2026_27-Tasks_1+2+3+4.pdf` | Assignment statement for Tasks 1 to 4 (`TP1-MINDD2026_27-Task1+Task2+Task3.pdf`, `TP1-MINDD2026_27-Task1+Task2.pdf` and `TP1-MINDD2026_27-Task1.pdf` are the earlier versions) |
+| `TP1-MINDD2026_27-Tasks_1+2+3+4+5.pdf` | Final assignment statement, Tasks 1 to 5 and the final submission (`TP1-MINDD2026_27-Tasks_1+2+3+4.pdf`, `TP1-MINDD2026_27-Task1+Task2+Task3.pdf`, `TP1-MINDD2026_27-Task1+Task2.pdf` and `TP1-MINDD2026_27-Task1.pdf` are the earlier versions) |
+| `scripts/stage_run.py` | Runs one task notebook on its own in `../entrega/staging/taskN/`, from the files the submission zip holds, and logs the time and error cells |
+| `scripts/compare_prepared.py` | Compares the files a staging run saved with the committed `prepared/` files (tolerance 1e-6; times, timestamps and paths ignored) |
+| `MINDD_Project1.ipynb`, `scripts/merge_notebooks.py` | The earlier merged notebook and the script that built it; no longer part of the submission (decision of 2026-10-30) |
 | `Task1.ipynb` | Task 1 notebook |
 | `Task2.ipynb` | Task 2 notebook |
 | `Task3.ipynb` | Task 3 notebook |

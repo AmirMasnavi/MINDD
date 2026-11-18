@@ -1,8 +1,64 @@
 # Project memory
 
-Last updated: 2026-10-20
+Last updated: 2026-10-31
 
 ## Current state
+
+- 2026-10-31: the zip was renamed to the required format `MINDD-GPA-NumberX-NumberY-NumberZ.zip`, with the student
+  numbers in ascending order: `../entrega/MINDD-GPA-1200720-1221579-1231205.zip` (its source folder renamed to match). Contents unchanged: every
+  file in it is byte-identical to the repository's notebooks, `requirements.txt`, `prepared/` files and
+  `docs/FINAL_REPORT.pdf`, and `unzip -t` reports no errors.
+
+- 2026-10-30 (evening): report review fixes and separate-notebook submission (spec `specs/007-review-fixes-separate-notebooks`,
+  run log in its `runlog.md`). Decision: the zip ships the five task notebooks plus a `prepared/` folder with the 17 small
+  files they save for one another, instead of the merged `MINDD_Project1.ipynb` of spec 006 (the team asked for separate
+  notebooks, the statement accepts "notebook(s)", and each notebook now runs alone). The English report is the one
+  delivered; the user restored `docs/report/main.tex` to `HEAD` at 21:26 and removed `main_pt.tex`, and all fixes were
+  re-applied on that version. Report: smoothing (k + 1)/(n + 5) and the 9,058 zero-energy sessions explained with how we
+  found them; the cost-ratio rule derived step by step, and the old claim that a cut-off below the abnormal share flags
+  "almost every session" corrected with the measured share (28.5% of development sessions, against 9.7% at c = 1);
+  inline explanations of Spearman, Isolation Forest, VIF, Brier, log-loss, Wilcoxon, bootstrap, permutation importance,
+  partial dependence, McNemar, balanced accuracy and MCC; the 29 candidate features / 27 columns / 27 selected features
+  told in order; course slides cited as references only and four techniques marked "not covered in class; our research
+  led us to it" with a source; no repository and no dated run log (the dates of 27 to 30 October stay in this file);
+  list of tables; the three statement gaps (bibliography Tasks 1 to 5, operational implication in 7.1, recommendations
+  paragraph) closed again. All 14 report figures redrawn in their notebooks (text size and layout only, panels stacked,
+  7 in wide) and included at text width. Notebook markdown: 55 slide-attribution sentences rewritten, one bold run-in
+  label removed, code and outputs unchanged by the pass. Each notebook ran alone from the zip contents in a new
+  Python 3.12.3 environment (Task 1 1.2 min, Task 2 12 s, Task 3 5.8 min, Task 4 39.4 min, Task 5 1.5 min): 0 error
+  cells, 0 differences from the committed `prepared/` files (`scripts/compare_prepared.py`), test PR-AUC 0.5324 /
+  0.3809 / 0.1782 in Tasks 4 and 5. `prepared/task4_frozen.json` keeps 2026-10-27T11:40:32. Unslop before / after:
+  notebooks 0 hard hits throughout, opener ratio 0.391/0.395, 0.366/0.366, 0.404/0.405, 0.473/0.482, 0.449/0.452 for
+  Tasks 1 to 5; report 0 hard hits, opener ratio 0.335/0.340, average sentence 21.1/21.3 words. Presentation added:
+  `docs/MINDD_TP1_Presentation.pptx` (English, 12 slides, about 13 min, notes per speaker). The Task 4 markdown now quotes the search
+  and fit times of the shipped run (10.6, 17.7, 8.9 and 37.2 min; 3.3 against 12.4 s per fold), and the report says
+  37 minutes and 3.3 against 12.4 s. `docs/FINAL_REPORT.pdf` rebuilt (45 pages, 0 undefined references). The zip
+  `../entrega/MINDD_TP1_Amir_Ines_Manuela.zip` (named with our first names; 4.4 MB, 26 entries: README.md, the English PDF as
+  `MINDD_TP1_Relatorio.pdf`, requirements.txt, Task1 to Task5 and `prepared/` with 17 files) was unpacked into an empty
+  folder and `Task2.ipynb` ran from it in 13 s with 0 errors. Remaining: team review, names on the cover, upload by 18:00
+  on 2026-10-31.
+
+- 2026-10-30: The final statement `TP1-MINDD2026_27-Tasks_1+2+3+4+5.pdf` (Task 5 and the final-submission list) was
+  checked item by item against the report; every requirement maps to a report section (`docs/CHECKLIST_ENTREGA.md`,
+  group 0). Three wording gaps were closed in `docs/report/main.tex`: the brief's bibliography entry now names Tasks 1
+  to 5, Section 7.1 states the operational implication of the choice, and the Synthesis ends with a paragraph of
+  recommendations. Section 7.1 now points to Section 6.2 for the fit cost instead of quoting a second set of timings.
+  The submission is one notebook, `MINDD_Project1.ipynb`, built by `scripts/merge_notebooks.py` from the five task
+  notebooks (code cells identical; a part heading and a `%reset -f` cell before Parts 2 to 5). The first headless run
+  failed in Part 5 because a comment on the `%reset -f` line was read as arguments and skipped the reset; the comment
+  now sits on its own line. The second run, in a fresh clone with a new `.venv` (Python 3.12.3), took 49 min 11 s
+  with no errors; every metric, test number and frozen choice equals `HEAD`, and only measured fit times differ. Only
+  the executed notebook was copied back; `prepared/` is unchanged and `task4_frozen.json` keeps 2026-10-27T11:40:32.
+  The report cites "Part N" of the merged notebook, the reproducibility statement records the run, and
+  `docs/FINAL_REPORT.pdf` was rebuilt (38 pages, no undefined references). The zip
+  `../entrega/MINDD_TP1_Masnavi_Oliveira_Leite.zip` (4.4 MB) holds the notebook, the report as
+  `MINDD_TP1_Relatorio.pdf`, `LEIA-ME.md` and `requirements.txt`. Team documents added: `docs/CHECKLIST_ENTREGA.md`
+  and `docs/GUIAO_ESTUDO.md` (study guide by student; 337 numbers checked against the report, none different).
+  Unslop: 0 hard and 0 soft phrase hits on the new report paragraphs; the Portuguese documents are outside the
+  scanners' language, with one soft opener-repetition flag from the question-and-answer format, kept.
+  English versions for the teammate who does not read Portuguese: `docs/SUBMISSION_CHECKLIST.md` and
+  `docs/STUDY_GUIDE.md` (same headings, questions and numbers as the Portuguese files; unslop: 0 hard phrase hits, one
+  soft hit on a sentence quoted from the report, kept). Tick an item in both checklists.
 
 - Task 3 is complete and its focused review changes are awaiting user approval before a commit. `Task3.ipynb`
   was rerun top to bottom on 2026-10-20 (25 code cells, no errors). Boosting explicitly disables early stopping;
@@ -73,6 +129,10 @@ Last updated: 2026-10-20
 | 2026-10-28 | Final submission package (spec `specs/004-final-submission-package`). Added `Task4.ipynb` Section 13, which reads the saved Task 3 and Task 4 files, fits nothing and reads no test row, and writes `prepared/final_comparison.csv` (12 rows; test PR-AUC only for the final model, B0 and B1) and `prepared/final_model.json`; a standalone check against the committed files passed before the run. Ran the four notebooks in order in a fresh clone holding only Git-tracked files, the CSV and the edited `Task4.ipynb` (Task 1 74 s, Task 2 12 s, Task 3 360 s, Task 4 2,370 s; Intel Core Ultra 7 165H, 22 logical cores). Tasks 1, 2 and 4 matched the committed files, the frozen choices and every test number included (Task 4 CSVs differ only in the 16th digit of a few log-loss values). Task 3 differed by at most 0.00012 in PR-AUC: the committed Task 3 files came from an earlier run, and the new gradient-boosting mean (0.6258016) equals the value Task 4 had already used. The user chose to accept the re-run; one report value changed (ablation table, S4 ROC-AUC 0.832 to 0.833). The committed Task 3 figures in the report (ablation, model comparison) predated the 2026-10-20 fixes (Naive Bayes at about 0.533 instead of 0.525) and were replaced by the re-run versions. The re-run wrote freeze time 2026-10-28T11:16:57; `prepared/task4_frozen.json` and `prepared/task4_decision_log.csv` were restored from Git after the identity check, so they keep 2026-10-27T11:40:32. Report: new chapter 7 "Final Model" (2.0 pages: comparison table, final model table, reproducibility statement with run table), Synthesis is chapter 8, title page, Abstract and Introduction updated, contents kept on one page (smaller gap above the contents heading); 34 pages, saved as `docs/FINAL_REPORT.pdf`. README, PLAN and the Task 2 and Task 3 commentary no longer call finished work "the next task" (markdown only). Unslop (rewrite flow, crisp): chapter 7 and new sentences 0 hard hits, opener unique ratio 0.812, average sentence 22.0 words; Section 13 markdown 0 hard hits, 1.0, 30.0 words, one empty framing sentence removed; README 0 hard hits. No commit; the teammate check of the statement and the upload remain. |
 | 2026-10-28 | Humanizer pass (new `/humanizer` skill) over the report and the markdown of the four notebooks. Scans for contrasts, closers, dashes, stock AI words, inflated verbs, bold labels and self-reference found mostly protected uses (number ranges and compound names with en dashes, "key field" from the slides, "robust to outliers", informative "rather than"/"instead of" pairs, the title-cell metadata labels). Six sentences changed, markdown and prose only: Task 1 Section 8.1 (staged "exactly what makes it a leaker"), Task 1 Section 13 (said the pipeline is re-fitted "in Task 2", which fits no model; now "in the later tasks"), Task 2 Section 5 (restating closer merged), Task 2 Section 7 (announcement before the list), and report Sections 1.1 and 2.3 (two one-line conclusions merged into the sentence before). Notebook code and outputs unchanged; report still 34 pages, chapter 7 still 2 pages. Added `docs/TEAMMATE_CHECK.md` and linked it from the README. |
 | 2026-10-29 | Task 5 integration (spec `specs/005-task5-final-integration`). The teammate's `Task5.ipynb` (commit `c093d9f`, confirmed final) ran with Restart and Run All in a fresh clone (Git-tracked files plus the CSV, Python 3.12.3, pinned packages) in 96 s, without re-running Tasks 1 to 4. Verdict: reproduced. Frozen file, selection, cut-offs, test PR-AUC (0.5324, 0.3809, 0.1782) and the decision log are identical to `HEAD`; 16 development-side values moved in the 5th or 6th decimal (pooled out-of-fold row and fold 3; one session crossed the cut-off), none of them visible at the rounding of the text. The committed run used Python 3.11.9; the figures differ only in the font. `prepared/task4_frozen.json` is byte-identical (SHA-256 `d1ee31cb76ac...`). Markdown-only edits to `Task5.ipynb` (no code cell changed): Section 10.2 and 10.3 now say the cut-offs read from the test scores are after-the-fact descriptions and that 0.490 stays; the B1 cut-off is stated as fixed before the test; the bold run-in labels of cells 0, 4, 60, 73 and 91 and the numbered recommendations of cell 95 became prose; Section 9.2 gives the reason for partial dependence (the model-based version of the Task 1 decile curves). Every number in the markdown matches an output (13 derived or Task 4 values checked by hand). Report: new chapter 7 "Final Evaluation and Analysis" (pages 24 to 26, 1 table, 3 figures), Final Model is now chapter 8 and the Synthesis chapter 9, the Synthesis is rewritten with the Task 5 findings, the Abstract and Introduction cover five notebooks, the run table and statement cover Task 5 and both reproduction scorings; `docs/FINAL_REPORT.pdf` is 37 pages, 0 undefined references. README, PLAN, TEAMMATE_CHECK and the handoff say five notebooks and delivery on 2026-10-31. Humanizer and unslop (rewrite flow, crisp preset) over the Task 5 markdown and the new report text: 0 hard and 0 soft phrase hits; soft cadence and silhouette flags only (advisory); one sentence of Section 7.4 rewritten. Constitution amended 1.0.1 -> 1.0.2 (Principle II: the test is evaluated once; disclosed reproduction scorings with the unchanged frozen file are allowed and inform no choice); the team confirms it at the meeting on 2026-10-30. |
+| 2026-11-03 | Presentation script. Added `docs/PRESENTATION_SCRIPT.md` (English) and `docs/GUIAO_APRESENTACAO.md` (Portuguese), built from the speaker notes of `docs/MINDD_TP1_Presentation.pptx`, with a table of who presents what checked against the commits: Amir slides 1 to 4 (Task 1), Inês 5 to 8 (Tasks 2 and 3), Manuela 9 to 12 (Tasks 4, 5 and conclusion). The presentation is given in English. Unslop scan with tables stripped: English 0 hard and 0 soft hits, average sentence 19.4 words; the Portuguese file is outside the English-only scanner, average sentence 21.3 words. |
+| 2026-11-03 | Defence prep for Manuela: `docs/DEFESA_MANUELA.md` (Portuguese). It reads the instructor message (code on screen, about 10 min of individual questions per member, slides optional), maps each Task 4 and Task 5 requirement of the brief to its notebook section and code object, lists the contribution by commit, adds 10 code-level questions and the weak points to own. Search time in `GUIAO_ESTUDO.md` and `STUDY_GUIDE.md` corrected from 36 to 37 minutes, the value in the report (Table 6.1). Portuguese prose is outside the English-only unslop scanner. |
+| 2026-11-03 | `docs/DEFESA_MANUELA.md` Section 8 added: the ML concepts of Tasks 4 and 5 in three levels (simple, in depth, technical), each tied to the project numbers. Fit time per fold corrected to 3.3 against 12.4 s (Task 4 notebook and report) in both study guides. |
+| 2026-11-03 | `docs/DEFESA_MANUELA.md` Section 9 added: the ML concepts of Tasks 1 to 3 (data audit, target, imbalance, missing values, outliers, encoding, cyclic features, scaling, smoothed rates as a Beta(1, 4) prior, VIF, PCA, univariate AUC, drift, key fields, problem framing, K-fold, fold aggregation, Wilcoxon with 4 folds, log-loss, ablation, inductive bias, logistic regression, CategoricalNB, kNN and SVM, temporal stacking, privacy, reproducibility), same three levels. |
 
 ## Open questions
 
@@ -93,8 +153,8 @@ Last updated: 2026-10-20
 
 ## Handoff
 
-Final submission due Saturday 2026-10-31; the team reviews it at a meeting on Friday 2026-10-30. Everything is
-built: the five notebooks (Tasks 1 to 4 re-run from a fresh clone on 2026-10-28, Task 5 on 2026-10-29),
+Final submission due Saturday 2026-10-31 at 20:00 on Moodle, one zip per group (notebook and report). The zip is
+built (see the 2026-10-30 entry); open items are in `docs/CHECKLIST_ENTREGA.md`. Earlier state, for reference: the five notebooks (Tasks 1 to 4 re-run from a fresh clone on 2026-10-28, Task 5 on 2026-10-29),
 `docs/FINAL_REPORT.pdf` and the README. Remaining: one teammate who did not write the reproducibility statement
 follows it for setup and the fingerprint check; then the team commits, pushes and uploads. Do not re-run
 `Task4.ipynb` before submitting; if anyone does, restore `prepared/task4_frozen.json` and `prepared/task4_decision_log.csv`

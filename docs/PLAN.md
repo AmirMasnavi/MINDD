@@ -166,6 +166,7 @@ as ordinary missing data without checking the associated flags and definitions.
 
 | Deliverable | Where | Status |
 | --- | --- | --- |
+| Submitted notebooks | `Task1.ipynb` to `Task5.ipynb` with the small `prepared/` files, each run on its own from the zip contents (spec 007). The merged notebook `MINDD_Project1.ipynb` of spec 006 is no longer submitted: the team asked for the separate notebooks, the statement accepts "notebook(s)", and each notebook now runs alone | See `docs/MEMORY.md` 2026-10-30 |
 | Complete and reproducible notebooks | `Task1.ipynb` to `Task5.ipynb`; Tasks 1 to 4 re-run in order from a fresh clone on 2026-10-28, `Task5.ipynb` on 2026-10-29 | Done. Tasks 1, 2 and 4 identical to the committed results (test numbers included); Task 3 within 0.0002 PR-AUC; Task 5 see `docs/MEMORY.md` 2026-10-29 |
 | Final report | `docs/FINAL_REPORT.pdf` | Done |
 | Task 5: selection, final evaluation, time, groups, errors, interpretation, threshold | Report chapter 7; `Task5.ipynb`; `prepared/task5_results.json`, `prepared/task5_decision_log.csv`, `prepared/figures_task5/` | Done |
@@ -174,7 +175,9 @@ as ordinary missing data without checking the associated flags and definitions.
 | Reproducibility statement | Report Section 8.3; README "Local setup" | Done |
 | Test set used once, nothing changed after it | `prepared/task4_frozen.json` (frozen 2026-10-27T11:40:32), report Section 8.3 | Done |
 | Teammate check of the statement (setup and fingerprint only) | One teammate who did not write it | Pending |
-| Commit, push and upload | Team | Pending |
+| Zip for Moodle | `../entrega/MINDD-GPA-1200720-1221579-1231205.zip`: five task notebooks, `prepared/` (17 small files), English report, `README.md`, `requirements.txt` | Rebuilt for spec 007; rebuild if the report changes |
+| Pull request to `main` reviewed by another member | Team | Pending |
+| Commit, push and upload by 18:00 on 2026-10-31 (deadline 20:00) | Team, following `docs/CHECKLIST_ENTREGA.md` | Pending |
 
 ## Submission check
 
