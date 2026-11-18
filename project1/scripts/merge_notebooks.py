@@ -7,7 +7,7 @@ from pathlib import Path
 
 import nbformat
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent  # project1/
 TASKS = [ROOT / f"Task{n}.ipynb" for n in range(1, 6)]
 OUT = ROOT / "MINDD_Project1.ipynb"
 RUN_TIMES = ["about 1 minute", "about 12 seconds", "about 6 minutes", "about 40 minutes", "about 1.5 minutes"]

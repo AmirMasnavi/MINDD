@@ -14,12 +14,13 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-STAGING = ROOT.parent / "entrega" / "staging"
+ROOT = Path(__file__).resolve().parent.parent  # project1/
+REPO = ROOT.parent
+STAGING = REPO.parent / "entrega" / "staging"
 CSV = ROOT / "Charging_Data_educational.csv"
-RUNLOG = ROOT / "specs" / "007-review-fixes-separate-notebooks" / "runlog.md"
+RUNLOG = REPO / "specs" / "007-review-fixes-separate-notebooks" / "runlog.md"
 # The fresh environment built from requirements.txt; the repository .venv (same pins) is the fallback
-PYTHON = next(p for p in [STAGING / ".venv/bin/python", ROOT / ".venv/bin/python"] if p.exists())
+PYTHON = next(p for p in [STAGING / ".venv/bin/python", REPO / ".venv/bin/python"] if p.exists())
 
 
 def build_folder(n):
@@ -50,7 +51,7 @@ def main():
         cells = json.loads((folder / notebook).read_text())["cells"]
         errors = sum(o.get("output_type") == "error" for c in cells for o in c.get("outputs", []))
     line = (f"| {datetime.now():%Y-%m-%d %H:%M} | Task {n} | {seconds / 60:.1f} min | exit {run.returncode} | "
-            f"{errors} error cells | {PYTHON.relative_to(ROOT.parent)} |")
+            f"{errors} error cells | {PYTHON.relative_to(REPO.parent)} |")
     print(line)
     if run.returncode:
         print(run.stderr[-3000:])

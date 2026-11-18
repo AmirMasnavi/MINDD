@@ -15,7 +15,8 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent  # project1/
+REPO = ROOT.parent
 TOL = 1e-6
 VOLATILE_KEY = re.compile(r"time|seconds|minutes|frozen_at|duration|path", re.I)
 TIMESTAMP = re.compile(r"\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(:\d{2})?")
@@ -78,7 +79,7 @@ def test_pr_auc(n, folder):
 
 def main():
     n = int(sys.argv[1])
-    folder = ROOT.parent / "entrega" / "staging" / f"task{n}" / "prepared"
+    folder = REPO.parent / "entrega" / "staging" / f"task{n}" / "prepared"
     out = []
     for new in sorted(folder.iterdir()):
         old = ROOT / "prepared" / new.name
