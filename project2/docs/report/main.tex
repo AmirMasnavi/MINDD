@@ -1,0 +1,146 @@
+\documentclass[12pt,a4paper,openany]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{microtype}
+\usepackage{acronym}
+\usepackage{etoolbox}
+\usepackage{needspace}
+\usepackage{wrapfig}
+\patchcmd{\thebibliography}{\chapter*}{\section*}{}{}
+\usepackage[hidelinks]{hyperref}
+\makeatletter\g@addto@macro\UrlBreaks{\do\_}\makeatother
+% Column names in typewriter font that can break at underscores
+\DeclareUrlCommand\col{\urlstyle{tt}}
+
+\graphicspath{{figures/}}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\setlist{itemsep=2pt,topsep=4pt}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\textfloatsep}{12pt plus 2pt minus 4pt}
+\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
+
+\begin{document}
+
+%-------------------------------------------------------------- cover
+\begin{titlepage}
+  \centering
+  \vspace*{2.5cm}
+  {\LARGE Project 2 -- Day-Ahead Forecasting of EV Charging Demand\par}
+  \vspace{0.3cm}
+  {\Large Task 1 Report: Hourly Series, Exploratory Analysis and Forecasting Framework\par}
+  \vspace{0.6cm}
+  {\large MSc in Informatics Engineering\\
+  Data Mining (MINDD)\par}
+  \vfill
+  \includegraphics[width=0.62\textwidth]{isep_logo.pdf}
+  \vfill
+  {\large \textbf{Students:}\\
+  Amir Masnavi | 1221579@isep.ipp.pt\\
+  Ines Oliveira | 1231205@isep.ipp.pt\\
+  Manuela Leite | 1200720@isep.ipp.pt\par}
+  \vfill
+  {\large Professor: Alberto Pinheira\\
+  Academic year: 2026/2027\par}
+  \vspace*{1cm}
+\end{titlepage}
+
+%-------------------------------------------------------------- front matter
+\pagenumbering{roman}
+
+\chapter*{Abstract}
+% Written from the notebook outputs once Task1.ipynb has run on the complete dataset (tasks T037 and T038).
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\chapter*{Acronyms}
+\begin{acronym}[RMSE]
+  \acro{ACF}{Autocorrelation Function}
+  \acro{EV}{Electric Vehicle}
+  \acro{MAE}{Mean Absolute Error}
+  \acro{MASE}{Mean Absolute Scaled Error}
+  \acro{RMSE}{Root Mean Squared Error}
+\end{acronym}
+
+\cleardoublepage
+\pagenumbering{arabic}
+
+% Main chapters: one-line headings that follow each other without a page break
+\makeatletter
+\patchcmd{\chapter}{\if@openright\cleardoublepage\else\clearpage\fi}{\par\bigskip\needspace{6\baselineskip}}{}{}
+\renewcommand{\@makechapterhead}[1]{{\parindent\z@\raggedright\normalfont
+  \LARGE\bfseries\thechapter\quad #1\par\nobreak\vskip 12\p@}}
+\makeatother
+
+%-------------------------------------------------------------- 1
+\chapter{Introduction}\label{ch:intro}
+% Project question, the 24-hour objective, the two aggregation levels and the structure of the report.
+
+%-------------------------------------------------------------- 2
+\chapter{Data and Hourly Series}\label{ch:data}
+% File checks, test drop, data-quality audit, the four hourly series and the gap rule (notebook Sections 2 to 4).
+
+%-------------------------------------------------------------- 3
+\chapter{Exploratory Analysis}\label{ch:eda}
+% Level and trend, daily and weekly seasonality, autocorrelation, holidays, the early-2020 restrictions,
+% change over time, districts and weather (notebook Section 5).
+
+%-------------------------------------------------------------- 4
+\chapter{Forecasting Formulation}\label{ch:formulation}
+% Issuance schedule, direct strategy with one shared model, forecast rows, predictor catalogue and the worked
+% issuance (notebook Section 6).
+
+%-------------------------------------------------------------- 5
+\chapter{Evaluation Protocol and Baselines}\label{ch:protocol}
+% Test period, folds, metrics and the MASE period, primary score, baselines and their scores (notebook Sections 7
+% and 8).
+
+%-------------------------------------------------------------- 6
+\chapter{Synthesis}\label{ch:synthesis}
+% The one closing chapter, rewritten by later tasks around the project question; the only place for limitations.
+
+%-------------------------------------------------------------- bibliography
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\begin{thebibliography}{99}
+\bibitem{brief} Departamento de Engenharia Informática, ISEP (2026). \emph{Mineração de Dados, Second Project:
+  Day-Ahead Forecasting of EV Charging Demand} (Task 1). Assignment statement, 2026/2027, 1st semester.
+\bibitem{zhang2025} Zhang, Y., Xu, T., Chen, T., et al. (2025). A high-resolution electric vehicle
+  charging transaction dataset with multidimensional features in China. \emph{Scientific Data}, 12, 643.
+  \url{https://doi.org/10.1038/s41597-025-04982-1}
+\bibitem{mindd03} Rodrigues, F. (2026). \emph{Data Preparation}. Lecture slides, Mineração de Dados, DEI/ISEP,
+  2026/2027.
+\bibitem{mindd04} Rodrigues, F. (2026). \emph{Evaluation of Machine Learning Models}. Lecture slides, Mineração
+  de Dados, DEI/ISEP, 2026/2027.
+\bibitem{fpp3} Hyndman, R.\,J., Athanasopoulos, G. (2021). \emph{Forecasting: Principles and Practice}, 3rd ed.
+  OTexts, Melbourne. Section 5.2, Some simple forecasting methods; Section 5.8, Evaluating point forecast
+  accuracy. \url{https://otexts.com/fpp3/}
+\bibitem{hyndman2006} Hyndman, R.\,J., Koehler, A.\,B. (2006). Another look at measures of forecast accuracy.
+  \emph{International Journal of Forecasting}, 22(4), 679--688.
+\bibitem{bentaieb2012} Ben Taieb, S., Bontempi, G., Atiya, A.\,F., Sorjamaa, A. (2012). A review and comparison
+  of strategies for multi-step ahead time series forecasting based on the NN5 forecasting competition.
+  \emph{Expert Systems with Applications}, 39(8), 7067--7083.
+\bibitem{holidays2020} General Office of the State Council of China (2019). Notice on the arrangement of some
+  holidays in 2020 (Guobanfa Mingdian [2019] No.\,16), and the January 2020 notice extending the Spring Festival
+  holiday to 2 February.
+\bibitem{holidays2021} General Office of the State Council of China (2020). Notice on the arrangement of some
+  holidays in 2021 (Guobanfa Mingdian [2020] No.\,27).
+\end{thebibliography}
+
+\end{document}

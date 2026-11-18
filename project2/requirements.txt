@@ -1,0 +1,11 @@
+# Direct dependencies of the Project 2 notebooks, pinned to the versions that ran Project 1 under Python 3.12.3.
+# No package is added for Project 2: autocorrelation comes from pandas and the holiday calendar is written in the
+# notebook. pip resolves the transitive dependencies.
+pandas==3.0.6
+numpy==2.5.3
+scipy==1.18.1
+scikit-learn==1.9.1
+matplotlib==3.11.2
+seaborn==0.13.2
+jupyterlab==4.6.4
+ipykernel==7.4.0
