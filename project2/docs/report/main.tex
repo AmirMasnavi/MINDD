@@ -64,11 +64,11 @@
 
 \chapter*{Abstract}
 The second project asks how well the number of EV charging sessions starting in each of the next 24 hours can be
-forecast, for the whole network and for each of its three districts. In this first task we built the hourly series,
-studied them, and fixed how forecasts are issued and evaluated, before training any model.
+forecast, for the whole network and for each of its three districts. In this first task the hourly series were built
+and studied, and the way forecasts are issued and evaluated was fixed, before any model was trained.
 
-The original transaction file holds 441,077 sessions. We held out the 80,081 sessions from 2021-10-01 on as the final
-test, right after reading, and built four hourly series from the remaining 360,979, from 2020-01-01 to 2021-09-30.
+The original transaction file holds 441,077 sessions. The 80,081 sessions from 2021-10-01 on were held out as the final
+test, right after reading, and four hourly series were built from the remaining 360,979, from 2020-01-01 to 2021-09-30.
 The data are clean where it matters for counting: only 17 sessions were removed, and no recording gap was found.
 
 Demand has a strong daily cycle and a weak weekly one. Its level grew by 19.6\% from April--September 2020 to the
@@ -112,8 +112,8 @@ other relevant information can forecast the number of charging sessions starting
 two levels: the whole network and each of its three districts, Tongxiang, Xiuzhou and Nanhu~\cite{brief}.
 
 The data are the original transaction file of the China EV Charging Dataset~\cite{zhang2025}, without the history
-features added for the first project. Each row is one charging session, so before any forecasting we have to turn
-the transactions into time series. Task 1, the subject of this report, does that and then fixes the forecasting
+features added for the first project. Each row is one charging session, so before any forecasting the transactions
+have to be turned into time series. Task 1, the subject of this report, does that and then fixes the forecasting
 setting: when a forecast is made, what it may use, and how it is scored. No model is trained here. The protocol is saved
 to a file that the later tasks read unchanged, and three simple baselines set the bar the models must clear.
 
@@ -127,17 +127,17 @@ comes from the Task 1 notebook (\texttt{project2/Task1.ipynb}), and every decisi
 
 \section{Reading and checking the file}\label{sec:read}
 
-The file is GBK text, which we read with the \texttt{gb18030} encoding, and every timestamp ends with a tab
-character, which we strip. Before using it we check four things and stop with an instruction if any fails: the 24
+The file is GBK text, read with the \texttt{gb18030} encoding, and every timestamp ends with a tab
+character, which is stripped. Before the file is used, four things are checked, and the run stops with an instruction if any fails: the 24
 expected columns, rows for all three districts, a complete last line, and the SHA-256 fingerprint recorded in the
-project plan. Our first download had stopped halfway, at 254,171 rows with no
+project plan. The first download had stopped halfway, at 254,171 rows with no
 Xiuzhou and the last row cut, and the notebook refuses such a copy with a message naming the missing district (Task 1
 notebook, Section 2.1). The complete file has 441,077 rows, the same number as the Project 1 file.
 
 \section{Test period}\label{sec:test}
 
 The final test period has to be fixed before looking at the data, from coverage facts only. The file covers
-2019-12-31 21:27 to 2021-12-31 23:52. We keep the boundary of the first project and reserve the last quarter,
+2019-12-31 21:27 to 2021-12-31 23:52. The boundary of the first project is kept and the last quarter is reserved,
 2021-10-01 to 2021-12-31, so both projects are tested on the same months. Right after parsing the start time, which
 is the field that tells which rows belong to the test, the notebook counts these 80,081 rows (18.2\%) and drops them.
 From there on only the development period exists; the test rows survive only as a count.
@@ -145,8 +145,8 @@ From there on only the development period exists; the test rows survive only as 
 \section{Data-quality audit}\label{sec:audit}
 
 Demand is the number of sessions starting in each hour of each district, so a row matters only through its start
-time and its district. Following the data preparation deck~\cite{mindd03}, we checked every field for unreadable
-values, duplicates, inconsistencies and impossible ranges, and investigated each finding before acting on it.
+time and its district. Following the data preparation deck~\cite{mindd03}, every field was checked for unreadable
+values, duplicates, inconsistencies and impossible ranges, and each finding was investigated before acting on it.
 Table~\ref{tab:audit} summarises the result.
 
 \begin{table}[!htb]
@@ -177,17 +177,16 @@ would look like a day with almost no demand. The large flags are not errors. Ord
 seconds after the start, and payments are stamped a median of 23 seconds before the recorded end, which looks like
 the order in which the system writes its records. The 46,052 sessions with zero energy (12.8\% of the kept rows)
 last a median of 77 seconds against 2,335 seconds for the others, and most ended with a charging-pile or vehicle
-fault. They are failed attempts, but each one started at a post and occupied it, so we count it as demand.
+fault. They are failed attempts, but each one started at a post and occupied it, so it counts as demand.
 
 \section{Hourly series and data gaps}\label{sec:series}
 
-We count sessions by the hour of their start, separately for each district, on one hourly calendar from 2020-01-01
+Sessions are counted by the hour of their start, separately for each district, on one hourly calendar from 2020-01-01
 00:00 to 2021-09-30 23:00 (15,336 hours). An hour without sessions gets zero, and the network value is the sum of the
 districts. From the training start, 2020-04-01, the network averages 26.4 sessions per hour, Tongxiang 13.4, Xiuzhou
 8.6 and Nanhu 4.4.
 
-With such small counts, a zero can mean that nobody started a session or that the system was not recording. We call
-a run of 24 or more hours with no session anywhere in the network a data gap, to be flagged and left out of training,
+With such small counts, a zero can mean that nobody started a session or that the system was not recording. A run of 24 or more hours with no session anywhere in the network is called a data gap, to be flagged and left out of training,
 scoring and the \ac{MASE} scale. The rule flags nothing: the longest network run without a session is 12 hours, from
 23:00 on 2020-02-13, during the February 2020 restrictions. From 2020-04-01 only 0.4\% of network hours are empty,
 against 2.1\% in Tongxiang, 6.5\% in Xiuzhou and 15.0\% in Nanhu. The district zeros occur while the rest of the
@@ -233,10 +232,10 @@ Nanhu slightly fewer.
 \section{Autocorrelation and the seasonal period}\label{sec:acf}
 
 The \ac{ACF} gives the correlation of a series with itself shifted by a number of hours. It is not covered in
-class; we reached it through research~\cite{fpp3}. Figure~\ref{fig:acf} shows a peak at every multiple of 24 hours,
+class and was found through research~\cite{fpp3}. Figure~\ref{fig:acf} shows a peak at every multiple of 24 hours,
 and the peak at 24 hours is higher than the one at 168 hours at every level (Table~\ref{tab:acf}). The seasonal naive
 forecast, which repeats the value of one season earlier~\cite{fpp3}, agrees: repeating yesterday's hour gives a lower
-error than repeating last week's at every level. The daily period is the stronger one, so we scale \ac{MASE} with
+error than repeating last week's at every level. The daily period is the stronger one, so \ac{MASE} is scaled with
 $m = 24$.
 
 \begin{figure}[!htb]
@@ -270,8 +269,8 @@ exchange for a longer holiday. Over the 548 days from 2020-04-01, holidays as a 
 (0.99 times a normal weekday), but the average hides opposite effects: Tongxiang loses 5\% on holidays and Xiuzhou
 gains 7\%. The Spring Festival is a real break. In its 2021 week the network averaged 327 sessions per day against
 504 on the normal weekdays of the four weeks before, 35\% less (Figure~\ref{fig:holidays}). Adjusted working days
-are not ordinary weekdays either: they have 9\% fewer sessions at network level and 16\% fewer in Tongxiang. We keep
-every holiday as legitimate variation and give models the two calendar flags instead of removing days.
+are not ordinary weekdays either: they have 9\% fewer sessions at network level and 16\% fewer in Tongxiang. Every
+holiday is kept as legitimate variation, and models receive the two calendar flags instead of days being removed.
 
 \begin{figure}[!htb]
   \centering
@@ -355,9 +354,9 @@ showed that this is the strongest single lag.
 \section{Multi-step strategy}\label{sec:strategy}
 
 There are three common ways to produce 24 values~\cite{bentaieb2012}; multi-step strategies are not covered in
-class, and we reached them through research. A recursive forecaster predicts one hour and feeds the prediction back
+class and were found through research. A recursive forecaster predicts one hour and feeds the prediction back
 as an input for the next, so its errors pile up over the day. A direct forecaster with one model per horizon needs 24
-models, each trained on a 24th of the data. We use the direct strategy with one shared model: each target hour of an
+models, each trained on a 24th of the data. The direct strategy with one shared model is used: each target hour of an
 issuance is one row, all inputs of the row are known at 00:00, the hour of the day is one of the inputs, and no
 forecast is fed back. The development period gives 52,608 such rows (548 issuances, 4 levels, 24 horizons), and none
 is lost to gaps.
@@ -411,11 +410,11 @@ previous week's (3,216) are the same for all 24 rows, because they depend only o
 
 \section{Folds}\label{sec:folds}
 
-We keep the four expanding-window folds of Project 1 (Table~\ref{tab:folds}). Every fold trains from 2020-04-01 up
+The four expanding-window folds of Project 1 are reused (Table~\ref{tab:folds}). Every fold trains from 2020-04-01 up
 to the start of one validation quarter and validates on that quarter. Time order is kept, as the evaluation
 deck~\cite{mindd04} requires for data that change over time, and each validation day is one issuance, so every model
 is scored on the same 365 issuances. Project 1 purged a few sessions at each boundary; here demand is counted by
-start hour, nothing crosses a boundary, and no gap is needed. In every fold our training sessions equal those of
+start hour, nothing crosses a boundary, and no gap is needed. In every fold the training sessions equal those of
 Project 1 plus the sessions it purged, which confirms that both projects use the same data and periods.
 
 \begin{table}[!htb]
@@ -438,7 +437,7 @@ Project 1 plus the sessions it purged, which confirms that both projects use the
 
 \ac{MAE} and \ac{RMSE} are in sessions per hour~\cite{mindd04}; \ac{RMSE} weighs large misses more. \ac{MASE}, which
 the statement asks for, divides the \ac{MAE} by the in-sample \ac{MAE} of the seasonal naive forecast on the
-training hours of the same fold and level~\cite{hyndman2006}; it is not covered in class, and we reached it through
+training hours of the same fold and level~\cite{hyndman2006}; it is not covered in class and was found through
 research:
 \[
   \text{MASE} = \frac{\frac{1}{n}\sum_{t} |y_t - \hat{y}_t|}{\frac{1}{T-m}\sum_{t=m+1}^{T} |y_t - y_{t-m}|},
@@ -448,7 +447,7 @@ A value below 1 means the forecaster beats, on the validation quarter, what repe
 its training data. The scale is fitted on each fold's training hours only, so it is a learned operation and is
 recorded in the ledger; every scale is positive, the smallest being 2.54 sessions per hour (Nanhu, fourth fold).
 
-To choose between forecasters we need one number. The primary score averages \ac{MASE} over the 24 horizons, then
+Choosing between forecasters requires one number. The primary score averages \ac{MASE} over the 24 horizons, then
 over the four levels with equal weight, then over the four folds, and the four fold values are always reported
 beside it. Because \ac{MASE} has no unit, Nanhu counts as much as the network. \ac{MAE} and \ac{RMSE} per level
 remain secondary scores, since they say how many sessions a forecast misses. Results can also be broken down by
@@ -499,7 +498,7 @@ baseline: a model is useful only if it beats 0.869 on the same folds.
 
 The protocol file \texttt{task1\_protocol.json} holds the problem definition, the data fingerprint, the periods, the
 folds, the predictors with the leakage rule, the metrics, the breakdowns and the baselines. With the hourly series it
-is enough to rebuild the folds and recompute any baseline score; we checked this in a fresh session for one score
+is enough to rebuild the folds and recompute any baseline score; this was checked in a fresh session for one score
 (fold 2, Xiuzhou, horizon 9). Two runs of the notebook give identical files apart from the run date and times, and a
 full run needs less than ten seconds of computation.
 
