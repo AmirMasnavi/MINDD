@@ -1,0 +1,65 @@
+method,level,candidate,aic,chosen
+sarima,network,"(1,0,0)(0,1,1)24",2696.96,False
+sarima,network,"(1,0,0)(1,1,1)24",2697.02,False
+sarima,network,"(1,0,1)(0,1,1)24",2512.68,False
+sarima,network,"(1,0,1)(1,1,1)24",2514.51,False
+sarima,network,"(2,0,0)(0,1,1)24",2646.26,False
+sarima,network,"(2,0,0)(1,1,1)24",2647.33,False
+sarima,network,"(2,0,1)(0,1,1)24",2484.11,True
+sarima,network,"(2,0,1)(1,1,1)24",2486.01,False
+sarima,Tongxiang,"(1,0,0)(0,1,1)24",4522.86,False
+sarima,Tongxiang,"(1,0,0)(1,1,1)24",4524.2,False
+sarima,Tongxiang,"(1,0,1)(0,1,1)24",4297.43,False
+sarima,Tongxiang,"(1,0,1)(1,1,1)24",4299.26,False
+sarima,Tongxiang,"(2,0,0)(0,1,1)24",4482.05,False
+sarima,Tongxiang,"(2,0,0)(1,1,1)24",4483.88,False
+sarima,Tongxiang,"(2,0,1)(0,1,1)24",4270.36,True
+sarima,Tongxiang,"(2,0,1)(1,1,1)24",4271.71,False
+sarima,Xiuzhou,"(1,0,0)(0,1,1)24",6397.62,False
+sarima,Xiuzhou,"(1,0,0)(1,1,1)24",6399.08,False
+sarima,Xiuzhou,"(1,0,1)(0,1,1)24",6382.2,False
+sarima,Xiuzhou,"(1,0,1)(1,1,1)24",6383.3,False
+sarima,Xiuzhou,"(2,0,0)(0,1,1)24",6388.35,False
+sarima,Xiuzhou,"(2,0,0)(1,1,1)24",6389.62,False
+sarima,Xiuzhou,"(2,0,1)(0,1,1)24",6346.0,True
+sarima,Xiuzhou,"(2,0,1)(1,1,1)24",6346.21,False
+sarima,Nanhu,"(1,0,0)(0,1,1)24",6612.45,False
+sarima,Nanhu,"(1,0,0)(1,1,1)24",6614.36,False
+sarima,Nanhu,"(1,0,1)(0,1,1)24",6603.12,False
+sarima,Nanhu,"(1,0,1)(1,1,1)24",6605.04,False
+sarima,Nanhu,"(2,0,0)(0,1,1)24",6609.63,False
+sarima,Nanhu,"(2,0,0)(1,1,1)24",6611.51,False
+sarima,Nanhu,"(2,0,1)(0,1,1)24",6601.47,True
+sarima,Nanhu,"(2,0,1)(1,1,1)24",6603.43,False
+ets,network,trend=none,2537.67,True
+ets,network,trend=damped,2540.83,False
+ets,Tongxiang,trend=none,4289.5,True
+ets,Tongxiang,trend=damped,4295.54,False
+ets,Xiuzhou,trend=none,6426.46,True
+ets,Xiuzhou,trend=damped,6432.2,False
+ets,Nanhu,trend=none,6674.61,True
+ets,Nanhu,trend=damped,6680.45,False
+mstl_arima,network,"ARIMA(1,0,0)+const",1809.66,False
+mstl_arima,network,"ARIMA(1,0,1)+const",295.62,False
+mstl_arima,network,"ARIMA(2,0,0)+const",1257.39,False
+mstl_arima,network,"ARIMA(2,0,1)+const",278.36,True
+mstl_arima,Tongxiang,"ARIMA(1,0,0)+const",3843.69,False
+mstl_arima,Tongxiang,"ARIMA(1,0,1)+const",2119.07,False
+mstl_arima,Tongxiang,"ARIMA(2,0,0)+const",3207.64,False
+mstl_arima,Tongxiang,"ARIMA(2,0,1)+const",2105.91,True
+mstl_arima,Xiuzhou,"ARIMA(1,0,0)+const",4674.69,False
+mstl_arima,Xiuzhou,"ARIMA(1,0,1)+const",4265.64,False
+mstl_arima,Xiuzhou,"ARIMA(2,0,0)+const",4599.65,False
+mstl_arima,Xiuzhou,"ARIMA(2,0,1)+const",4229.86,True
+mstl_arima,Nanhu,"ARIMA(1,0,0)+const",4619.41,False
+mstl_arima,Nanhu,"ARIMA(1,0,1)+const",4400.31,False
+mstl_arima,Nanhu,"ARIMA(2,0,0)+const",4591.95,False
+mstl_arima,Nanhu,"ARIMA(2,0,1)+const",4390.47,True
+sarimax_cal,network,"inherits sarima (2,0,1)(0,1,1)24",,True
+sarimax_weather,network,"inherits sarima (2,0,1)(0,1,1)24",,True
+sarimax_cal,Tongxiang,"inherits sarima (2,0,1)(0,1,1)24",,True
+sarimax_weather,Tongxiang,"inherits sarima (2,0,1)(0,1,1)24",,True
+sarimax_cal,Xiuzhou,"inherits sarima (2,0,1)(0,1,1)24",,True
+sarimax_weather,Xiuzhou,"inherits sarima (2,0,1)(0,1,1)24",,True
+sarimax_cal,Nanhu,"inherits sarima (2,0,1)(0,1,1)24",,True
+sarimax_weather,Nanhu,"inherits sarima (2,0,1)(0,1,1)24",,True
