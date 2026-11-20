@@ -9,20 +9,24 @@ of the statement is the source of requirements.
 | Path | Purpose |
 | --- | --- |
 | `Task1.ipynb` | Task 1: checked read, test drop, audit, hourly series, exploration, forecasting formulation, evaluation protocol and baseline scores |
+| `Task2.ipynb` | Task 2: statistical models (ETS, SARIMA, SARIMAX with calendar inputs and with temperature, MSTL + ARIMA) scored under the Task 1 protocol |
 | `prepared/` | Small files the notebooks save for one another. Never edited by hand |
-| `docs/` | Plan, memory, the LaTeX report (`docs/report/`) and the built report `docs/TASK1_REPORT.pdf` |
+| `docs/` | Plan, memory, the LaTeX report (`docs/report/`) and the built reports `docs/TASK1_REPORT.pdf` and `docs/TASK2_REPORT.pdf` |
 | `requirements.txt` | Pinned dependencies for this project (Python 3.12) |
 | `Charging_Data.csv` | Dataset from Moodle, placed here and never committed |
 
 ## Running
 
 ```sh
+uv pip install --python .venv/bin/python -r project2/requirements.txt   # from the repository root
 cd project2
 ../.venv/bin/jupyter nbconvert --to notebook --execute --inplace Task1.ipynb
+../.venv/bin/jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=3600 Task2.ipynb
 ```
 
-A full run needs less than ten seconds of computation. Run the notebooks in task order: later tasks read the files
-Task 1 saves. Two runs give byte-identical files, except `task1_run_info.json`.
+Run the notebooks in task order: later tasks read the files Task 1 saves. Task 1 needs less than ten seconds of
+computation; Task 2 needs about 25 minutes with 16 parallel workers, almost all of it in the 80 model fits of Section 6. Two runs give
+byte-identical files, except `task1_run_info.json` and `task2_run_info.json`.
 
 ## Files saved by Task 1
 
@@ -41,6 +45,31 @@ Task 1 saves. Two runs give byte-identical files, except `task1_run_info.json`.
 | `task1_decision_log.csv` | Decisions D01 to D14 with their evidence |
 | `task1_run_info.json` | Run date, run times and package versions |
 | `figures_task1/` | Notebook figures, copied into `docs/report/figures/` |
+
+## Task 2 notebook and files
+
+`Task2.ipynb` has 12 sections: setup; Task 1 inputs and the scoring check; daily weather as a day-D forecast;
+modelling choices shared by all models; structure selection on fold 1; fitting and forecasting in the four folds;
+residual diagnostics; comparison with the baselines; stability over folds, horizons, levels, months and day types;
+weather effect and computational cost; saved files and integrity checks; synthesis and decision log. It reads the
+Task 1 files unchanged and checks their SHA-256 at the start and the end of the run.
+
+| File | Purpose |
+| --- | --- |
+| `task2_structures.csv` | Every candidate structure tried on fold 1, with its AIC and the chosen one |
+| `task2_fits.csv` | Coefficients, convergence and run time of the 80 (model, level, fold) fits |
+| `task2_scores.csv` | MAE, RMSE and MASE of the five models by level, fold and horizon, in the Task 1 layout |
+| `task2_scores_by_period.csv` | The same errors by month and by day type |
+| `task2_comparison.csv` | One row per model and baseline: primary MASE, per fold, per level, cells beating the reference |
+| `task2_diagnostics.csv` | Ljung-Box tests, residual autocorrelation and mean residual by group |
+| `task2_weather_daily.csv` | Daily temperature per district and network, used as the day-D forecast |
+| `task2_results.json` | The numbers quoted in the notebook and the report |
+| `task2_decision_log.csv` | Decisions D15 to D25 with their evidence |
+| `task2_learned_operations_ledger.csv` | AIC selections, coefficient estimations and MSTL decompositions with their windows |
+| `task2_task1_checksums.json` | SHA-256 of every Task 1 file at the start and the end of the run |
+| `task2_run_info.json` | Run date, section times, core count and package versions |
+| `task2_forecasts.csv.gz` | Every validation forecast; rebuilt by the run and not committed |
+| `figures_task2/` | Notebook figures, partly copied into `docs/report/figures/` |
 
 ## Dataset
 

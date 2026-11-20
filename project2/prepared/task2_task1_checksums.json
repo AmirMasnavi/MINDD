@@ -1,0 +1,90 @@
+{
+ "task1_audit.csv": {
+  "start": "00d24d126c084716258aee36bd12ca256d87baab32a8961fa95f94afb8afffd4",
+  "end": "00d24d126c084716258aee36bd12ca256d87baab32a8961fa95f94afb8afffd4"
+ },
+ "task1_baseline_scores.csv": {
+  "start": "c76d41a79a70ccda8579eb5c07ea413e95496156112341b300beb72d7c1a5a70",
+  "end": "c76d41a79a70ccda8579eb5c07ea413e95496156112341b300beb72d7c1a5a70"
+ },
+ "task1_baseline_scores_by_period.csv": {
+  "start": "5537c4bf48bb9b1fe15f0d1c49515259e9a4c9487bd6be5170763672c4abbc12",
+  "end": "5537c4bf48bb9b1fe15f0d1c49515259e9a4c9487bd6be5170763672c4abbc12"
+ },
+ "task1_calendar.csv": {
+  "start": "574adbbd44c0b00bdec8736d1835a429054eafce4ba1c351edff029dd7bb817d",
+  "end": "574adbbd44c0b00bdec8736d1835a429054eafce4ba1c351edff029dd7bb817d"
+ },
+ "task1_decision_log.csv": {
+  "start": "44f0652de9cb96704ab525f6f5697c7d423d7f64ce0d8ebd66fb119554599a06",
+  "end": "44f0652de9cb96704ab525f6f5697c7d423d7f64ce0d8ebd66fb119554599a06"
+ },
+ "task1_folds.csv": {
+  "start": "0a980de2123eb0649d24c86ed795525d50cfc659bbc88a3fecd84114babca19e",
+  "end": "0a980de2123eb0649d24c86ed795525d50cfc659bbc88a3fecd84114babca19e"
+ },
+ "task1_hourly_series.csv": {
+  "start": "01b1e2a9ea97d14da30b6516e64ac05e233fd3a22f24e40457154aba47333249",
+  "end": "01b1e2a9ea97d14da30b6516e64ac05e233fd3a22f24e40457154aba47333249"
+ },
+ "task1_learned_operations_ledger.csv": {
+  "start": "bd4a6c2ea0b390a8dbe8ce6cac0afc86a600cce9ea3479267fc7a6a4eb9e4421",
+  "end": "bd4a6c2ea0b390a8dbe8ce6cac0afc86a600cce9ea3479267fc7a6a4eb9e4421"
+ },
+ "task1_predictor_catalogue.csv": {
+  "start": "e19f509840d69c4d14bbc7792fa0be26be2acba95a0643772d20297fb7503066",
+  "end": "e19f509840d69c4d14bbc7792fa0be26be2acba95a0643772d20297fb7503066"
+ },
+ "task1_protocol.json": {
+  "start": "1a7f52c09fbd69812d577d15a96cee47ed139272d4d44814f4a4d33c3a286205",
+  "end": "1a7f52c09fbd69812d577d15a96cee47ed139272d4d44814f4a4d33c3a286205"
+ },
+ "task1_results.json": {
+  "start": "3f03705b55f7b3d3bda0e4d02ccbb840f819c75c895cc9a9aa8810c623565bb2",
+  "end": "3f03705b55f7b3d3bda0e4d02ccbb840f819c75c895cc9a9aa8810c623565bb2"
+ },
+ "task1_run_info.json": {
+  "start": "cb94d72e5cfaa5b11a9e80cbebe2c50a897f98c1458ba848e97181cd6ace70ed",
+  "end": "cb94d72e5cfaa5b11a9e80cbebe2c50a897f98c1458ba848e97181cd6ace70ed"
+ },
+ "figures_task1/05_1_level_trend.png": {
+  "start": "cd90517d92d08dc2779f4661ca4d81f0967edf344fa68bcfa78607c644e11438",
+  "end": "cd90517d92d08dc2779f4661ca4d81f0967edf344fa68bcfa78607c644e11438"
+ },
+ "figures_task1/05_2_daily_weekly_profiles.png": {
+  "start": "6bf76d9cc046030d7a6e4d2fd0547f58579a81ba86530a7ab3ad54de52205134",
+  "end": "6bf76d9cc046030d7a6e4d2fd0547f58579a81ba86530a7ab3ad54de52205134"
+ },
+ "figures_task1/05_2_hour_weekday_heatmap.png": {
+  "start": "0d9457a36dd67fae80b605052214ebeefd6602f93af6f4164ba9fe74186517e7",
+  "end": "0d9457a36dd67fae80b605052214ebeefd6602f93af6f4164ba9fe74186517e7"
+ },
+ "figures_task1/05_3_autocorrelation.png": {
+  "start": "c3e9b199eb5edb4935a7cd3dde5163e8cb2d5379d7198055cff8d102debd4b05",
+  "end": "c3e9b199eb5edb4935a7cd3dde5163e8cb2d5379d7198055cff8d102debd4b05"
+ },
+ "figures_task1/05_4_holidays.png": {
+  "start": "488c3f664a3b381e57cc9765b07cb0e4009c2be913e4278436ea9c0aad2ff243",
+  "end": "488c3f664a3b381e57cc9765b07cb0e4009c2be913e4278436ea9c0aad2ff243"
+ },
+ "figures_task1/05_5_change_over_time.png": {
+  "start": "65fd611559741e6eaff5aa59bf16f041bd1dc56216b21cf4a0774e64208f83b6",
+  "end": "65fd611559741e6eaff5aa59bf16f041bd1dc56216b21cf4a0774e64208f83b6"
+ },
+ "figures_task1/05_6_districts.png": {
+  "start": "d207a705b1322feea42983b1a3f91bfb2814cf812f61ff1ef88fdbce3d43f0e7",
+  "end": "d207a705b1322feea42983b1a3f91bfb2814cf812f61ff1ef88fdbce3d43f0e7"
+ },
+ "figures_task1/05_7_weather.png": {
+  "start": "e7a36cdb4b28be75e10940bda066ab2ac791cb842d295a091fe0eb3ab3bb0555",
+  "end": "e7a36cdb4b28be75e10940bda066ab2ac791cb842d295a091fe0eb3ab3bb0555"
+ },
+ "figures_task1/06_4_worked_issuance.png": {
+  "start": "e589483cd12ff01a96214b7a7a438386de340b2e0e7c2132507f5244bfb257fb",
+  "end": "e589483cd12ff01a96214b7a7a438386de340b2e0e7c2132507f5244bfb257fb"
+ },
+ "figures_task1/07_5_baselines_by_horizon.png": {
+  "start": "cd1bd838d44ce03713405b521a7b17260388cfbd6dc80f1b5bbb9dc4994e0568",
+  "end": "cd1bd838d44ce03713405b521a7b17260388cfbd6dc80f1b5bbb9dc4994e0568"
+ }
+}

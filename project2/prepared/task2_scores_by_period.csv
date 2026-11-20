@@ -1,0 +1,561 @@
+method,level,fold,period_kind,period,n_rows,mae,rmse,mase
+ets,network,1,month,2020-10,744,5.27699,7.038323,0.745107
+ets,network,1,month,2020-11,720,5.587614,7.488544,0.788966
+ets,network,1,month,2020-12,744,6.072738,8.908679,0.857465
+ets,network,2,month,2021-01,744,5.639955,7.982016,0.791421
+ets,network,2,month,2021-02,672,3.977481,5.582591,0.558136
+ets,network,2,month,2021-03,744,4.345255,5.855585,0.609744
+ets,network,3,month,2021-04,720,4.934147,6.900655,0.719606
+ets,network,3,month,2021-05,744,5.75379,7.811953,0.839144
+ets,network,3,month,2021-06,720,5.513894,7.507083,0.804157
+ets,network,4,month,2021-07,744,5.792576,8.084489,0.838777
+ets,network,4,month,2021-08,744,6.120947,8.557998,0.886326
+ets,network,4,month,2021-09,720,6.537237,8.715804,0.946606
+ets,Tongxiang,1,month,2020-10,744,3.652391,4.881458,0.839507
+ets,Tongxiang,1,month,2020-11,720,3.652329,4.945194,0.839493
+ets,Tongxiang,1,month,2020-12,744,3.950975,5.741856,0.908137
+ets,Tongxiang,2,month,2021-01,744,3.568007,4.980527,0.791877
+ets,Tongxiang,2,month,2021-02,672,2.554023,3.581154,0.566835
+ets,Tongxiang,2,month,2021-03,744,2.873267,3.937783,0.637688
+ets,Tongxiang,3,month,2021-04,720,2.998302,4.191963,0.685881
+ets,Tongxiang,3,month,2021-05,744,3.464366,4.662967,0.792496
+ets,Tongxiang,3,month,2021-06,720,3.38,4.580803,0.773197
+ets,Tongxiang,4,month,2021-07,744,3.713781,5.093957,0.851693
+ets,Tongxiang,4,month,2021-08,744,3.744075,5.420429,0.85864
+ets,Tongxiang,4,month,2021-09,720,3.69172,4.946677,0.846633
+ets,Xiuzhou,1,month,2020-10,744,2.846186,3.827426,0.741075
+ets,Xiuzhou,1,month,2020-11,720,2.890239,4.021406,0.752545
+ets,Xiuzhou,1,month,2020-12,744,2.977296,4.530903,0.775213
+ets,Xiuzhou,2,month,2021-01,744,2.705536,3.857022,0.701494
+ets,Xiuzhou,2,month,2021-02,672,2.490851,3.588476,0.645831
+ets,Xiuzhou,2,month,2021-03,744,2.410099,3.398939,0.624893
+ets,Xiuzhou,3,month,2021-04,720,3.288471,4.713504,0.87286
+ets,Xiuzhou,3,month,2021-05,744,3.566088,4.972972,0.946548
+ets,Xiuzhou,3,month,2021-06,720,3.686507,5.031221,0.978511
+ets,Xiuzhou,4,month,2021-07,744,3.892109,5.422462,0.982226
+ets,Xiuzhou,4,month,2021-08,744,3.896328,5.303327,0.983291
+ets,Xiuzhou,4,month,2021-09,720,4.225553,5.815325,1.066376
+ets,Nanhu,1,month,2020-10,744,1.871538,2.580823,0.616038
+ets,Nanhu,1,month,2020-11,720,2.193013,3.350139,0.721855
+ets,Nanhu,1,month,2020-12,744,2.060958,3.069336,0.678388
+ets,Nanhu,2,month,2021-01,744,1.63247,2.296056,0.558225
+ets,Nanhu,2,month,2021-02,672,1.282583,1.846977,0.438581
+ets,Nanhu,2,month,2021-03,744,1.41143,2.084335,0.48264
+ets,Nanhu,3,month,2021-04,720,1.277666,1.846427,0.474614
+ets,Nanhu,3,month,2021-05,744,1.518063,2.06701,0.563914
+ets,Nanhu,3,month,2021-06,720,1.531551,2.225636,0.568925
+ets,Nanhu,4,month,2021-07,744,1.661991,2.338497,0.655075
+ets,Nanhu,4,month,2021-08,744,1.583436,2.276483,0.624113
+ets,Nanhu,4,month,2021-09,720,2.597713,3.575561,1.023891
+sarima,network,1,month,2020-10,744,5.199352,6.912763,0.734144
+sarima,network,1,month,2020-11,720,5.510401,7.45129,0.778064
+sarima,network,1,month,2020-12,744,5.998477,8.868966,0.84698
+sarima,network,2,month,2021-01,744,5.341621,7.305502,0.749558
+sarima,network,2,month,2021-02,672,4.008617,5.571148,0.562505
+sarima,network,2,month,2021-03,744,4.315357,5.834744,0.605548
+sarima,network,3,month,2021-04,720,4.937125,6.90364,0.72004
+sarima,network,3,month,2021-05,744,5.81361,7.88489,0.847869
+sarima,network,3,month,2021-06,720,5.554958,7.552803,0.810146
+sarima,network,4,month,2021-07,744,5.868374,8.243039,0.849753
+sarima,network,4,month,2021-08,744,6.075573,8.457286,0.879756
+sarima,network,4,month,2021-09,720,6.486245,8.736236,0.939222
+sarima,Tongxiang,1,month,2020-10,744,3.650456,4.868737,0.839062
+sarima,Tongxiang,1,month,2020-11,720,3.641131,4.94639,0.836919
+sarima,Tongxiang,1,month,2020-12,744,3.937929,5.757164,0.905138
+sarima,Tongxiang,2,month,2021-01,744,3.486513,4.825951,0.77379
+sarima,Tongxiang,2,month,2021-02,672,2.562027,3.581267,0.568612
+sarima,Tongxiang,2,month,2021-03,744,2.877179,3.956439,0.638556
+sarima,Tongxiang,3,month,2021-04,720,2.994931,4.186545,0.68511
+sarima,Tongxiang,3,month,2021-05,744,3.45301,4.654485,0.789898
+sarima,Tongxiang,3,month,2021-06,720,3.36878,4.567478,0.77063
+sarima,Tongxiang,4,month,2021-07,744,3.758378,5.187354,0.86192
+sarima,Tongxiang,4,month,2021-08,744,3.724493,5.379565,0.854149
+sarima,Tongxiang,4,month,2021-09,720,3.689384,4.951857,0.846097
+sarima,Xiuzhou,1,month,2020-10,744,2.856711,3.832971,0.743815
+sarima,Xiuzhou,1,month,2020-11,720,2.86503,3.986917,0.745981
+sarima,Xiuzhou,1,month,2020-12,744,2.957961,4.488388,0.770178
+sarima,Xiuzhou,2,month,2021-01,744,2.679624,3.809118,0.694776
+sarima,Xiuzhou,2,month,2021-02,672,2.472879,3.535916,0.641171
+sarima,Xiuzhou,2,month,2021-03,744,2.423059,3.429901,0.628253
+sarima,Xiuzhou,3,month,2021-04,720,3.378624,4.89324,0.89679
+sarima,Xiuzhou,3,month,2021-05,744,3.552394,5.012331,0.942913
+sarima,Xiuzhou,3,month,2021-06,720,3.669078,5.030706,0.973885
+sarima,Xiuzhou,4,month,2021-07,744,3.896189,5.471405,0.983256
+sarima,Xiuzhou,4,month,2021-08,744,3.877236,5.29454,0.978473
+sarima,Xiuzhou,4,month,2021-09,720,4.242791,5.88872,1.070726
+sarima,Nanhu,1,month,2020-10,744,1.867012,2.5687,0.614548
+sarima,Nanhu,1,month,2020-11,720,2.219305,3.390283,0.730509
+sarima,Nanhu,1,month,2020-12,744,2.046414,3.042246,0.6736
+sarima,Nanhu,2,month,2021-01,744,1.606274,2.231001,0.549267
+sarima,Nanhu,2,month,2021-02,672,1.295074,1.846839,0.442852
+sarima,Nanhu,2,month,2021-03,744,1.412325,2.099255,0.482946
+sarima,Nanhu,3,month,2021-04,720,1.275993,1.842777,0.473993
+sarima,Nanhu,3,month,2021-05,744,1.519635,2.078826,0.564498
+sarima,Nanhu,3,month,2021-06,720,1.53955,2.238114,0.571896
+sarima,Nanhu,4,month,2021-07,744,1.670899,2.359213,0.658587
+sarima,Nanhu,4,month,2021-08,744,1.586557,2.283075,0.625343
+sarima,Nanhu,4,month,2021-09,720,2.648327,3.707172,1.043841
+sarimax_cal,network,1,month,2020-10,744,5.244275,7.003069,0.740487
+sarimax_cal,network,1,month,2020-11,720,5.473273,7.49106,0.772822
+sarimax_cal,network,1,month,2020-12,744,5.979846,8.82487,0.844349
+sarimax_cal,network,2,month,2021-01,744,5.516229,7.680378,0.774059
+sarimax_cal,network,2,month,2021-02,672,4.037845,5.621008,0.566607
+sarimax_cal,network,2,month,2021-03,744,4.336352,5.854716,0.608494
+sarimax_cal,network,3,month,2021-04,720,4.80811,6.751454,0.701224
+sarimax_cal,network,3,month,2021-05,744,5.581156,7.553167,0.813967
+sarimax_cal,network,3,month,2021-06,720,5.418096,7.39852,0.790186
+sarimax_cal,network,4,month,2021-07,744,5.913055,8.300721,0.856223
+sarimax_cal,network,4,month,2021-08,744,6.086737,8.448684,0.881372
+sarimax_cal,network,4,month,2021-09,720,6.576551,8.8036,0.952299
+sarimax_cal,Tongxiang,1,month,2020-10,744,3.657187,4.908558,0.840609
+sarimax_cal,Tongxiang,1,month,2020-11,720,3.630644,4.976479,0.834508
+sarimax_cal,Tongxiang,1,month,2020-12,744,3.954577,5.774325,0.908965
+sarimax_cal,Tongxiang,2,month,2021-01,744,3.540057,4.950005,0.785674
+sarimax_cal,Tongxiang,2,month,2021-02,672,2.552991,3.562195,0.566606
+sarimax_cal,Tongxiang,2,month,2021-03,744,2.904014,3.96012,0.644512
+sarimax_cal,Tongxiang,3,month,2021-04,720,2.937995,4.104445,0.672085
+sarimax_cal,Tongxiang,3,month,2021-05,744,3.429462,4.626874,0.784512
+sarimax_cal,Tongxiang,3,month,2021-06,720,3.354861,4.566808,0.767446
+sarimax_cal,Tongxiang,4,month,2021-07,744,3.812009,5.232496,0.874219
+sarimax_cal,Tongxiang,4,month,2021-08,744,3.738188,5.368695,0.85729
+sarimax_cal,Tongxiang,4,month,2021-09,720,3.672362,4.930512,0.842194
+sarimax_cal,Xiuzhou,1,month,2020-10,744,2.828913,3.808068,0.736577
+sarimax_cal,Xiuzhou,1,month,2020-11,720,2.862966,3.982964,0.745444
+sarimax_cal,Xiuzhou,1,month,2020-12,744,2.958771,4.487704,0.770389
+sarimax_cal,Xiuzhou,2,month,2021-01,744,2.678771,3.815084,0.694555
+sarimax_cal,Xiuzhou,2,month,2021-02,672,2.501926,3.577197,0.648702
+sarimax_cal,Xiuzhou,2,month,2021-03,744,2.435018,3.452068,0.631354
+sarimax_cal,Xiuzhou,3,month,2021-04,720,3.291854,4.758602,0.873758
+sarimax_cal,Xiuzhou,3,month,2021-05,744,3.521983,4.922625,0.934841
+sarimax_cal,Xiuzhou,3,month,2021-06,720,3.648772,4.971399,0.968495
+sarimax_cal,Xiuzhou,4,month,2021-07,744,3.915721,5.47879,0.988185
+sarimax_cal,Xiuzhou,4,month,2021-08,744,3.879871,5.313737,0.979138
+sarimax_cal,Xiuzhou,4,month,2021-09,720,4.227945,5.903959,1.066979
+sarimax_cal,Nanhu,1,month,2020-10,744,1.880161,2.571149,0.618876
+sarimax_cal,Nanhu,1,month,2020-11,720,2.215161,3.38495,0.729145
+sarimax_cal,Nanhu,1,month,2020-12,744,2.045911,3.049547,0.673435
+sarimax_cal,Nanhu,2,month,2021-01,744,1.610122,2.231235,0.550583
+sarimax_cal,Nanhu,2,month,2021-02,672,1.305354,1.861555,0.446367
+sarimax_cal,Nanhu,2,month,2021-03,744,1.418102,2.103802,0.484922
+sarimax_cal,Nanhu,3,month,2021-04,720,1.268188,1.832142,0.471093
+sarimax_cal,Nanhu,3,month,2021-05,744,1.516115,2.068249,0.563191
+sarimax_cal,Nanhu,3,month,2021-06,720,1.543775,2.24429,0.573466
+sarimax_cal,Nanhu,4,month,2021-07,744,1.673685,2.355794,0.659685
+sarimax_cal,Nanhu,4,month,2021-08,744,1.586295,2.290192,0.62524
+sarimax_cal,Nanhu,4,month,2021-09,720,2.639855,3.684005,1.040502
+sarimax_weather,network,1,month,2020-10,744,5.329178,7.127867,0.752476
+sarimax_weather,network,1,month,2020-11,720,5.752904,8.009443,0.812305
+sarimax_weather,network,1,month,2020-12,744,6.484231,9.814296,0.915568
+sarimax_weather,network,2,month,2021-01,744,5.515635,7.679889,0.773976
+sarimax_weather,network,2,month,2021-02,672,4.037491,5.620753,0.566557
+sarimax_weather,network,2,month,2021-03,744,4.335828,5.854284,0.608421
+sarimax_weather,network,3,month,2021-04,720,4.824777,6.782967,0.703655
+sarimax_weather,network,3,month,2021-05,744,5.607483,7.588448,0.817807
+sarimax_weather,network,3,month,2021-06,720,5.444732,7.429433,0.794071
+sarimax_weather,network,4,month,2021-07,744,5.91659,8.307595,0.856735
+sarimax_weather,network,4,month,2021-08,744,6.087548,8.448852,0.88149
+sarimax_weather,network,4,month,2021-09,720,6.578633,8.804761,0.9526
+sarimax_weather,Tongxiang,1,month,2020-10,744,3.706113,4.950812,0.851855
+sarimax_weather,Tongxiang,1,month,2020-11,720,3.776267,5.264013,0.86798
+sarimax_weather,Tongxiang,1,month,2020-12,744,4.249359,6.317055,0.976721
+sarimax_weather,Tongxiang,2,month,2021-01,744,3.535386,4.9441,0.784637
+sarimax_weather,Tongxiang,2,month,2021-02,672,2.551488,3.560546,0.566273
+sarimax_weather,Tongxiang,2,month,2021-03,744,2.902885,3.958492,0.644261
+sarimax_weather,Tongxiang,3,month,2021-04,720,2.946091,4.123085,0.673937
+sarimax_weather,Tongxiang,3,month,2021-05,744,3.461862,4.674869,0.791923
+sarimax_weather,Tongxiang,3,month,2021-06,720,3.373085,4.595603,0.771615
+sarimax_weather,Tongxiang,4,month,2021-07,744,3.817267,5.239599,0.875425
+sarimax_weather,Tongxiang,4,month,2021-08,744,3.738943,5.368057,0.857463
+sarimax_weather,Tongxiang,4,month,2021-09,720,3.672835,4.931416,0.842302
+sarimax_weather,Xiuzhou,1,month,2020-10,744,2.903587,3.955481,0.756021
+sarimax_weather,Xiuzhou,1,month,2020-11,720,2.952895,4.133223,0.768859
+sarimax_weather,Xiuzhou,1,month,2020-12,744,3.111289,4.759538,0.810101
+sarimax_weather,Xiuzhou,2,month,2021-01,744,2.689905,3.82173,0.697441
+sarimax_weather,Xiuzhou,2,month,2021-02,672,2.500546,3.567855,0.648344
+sarimax_weather,Xiuzhou,2,month,2021-03,744,2.430458,3.44449,0.630172
+sarimax_weather,Xiuzhou,3,month,2021-04,720,3.291238,4.757755,0.873595
+sarimax_weather,Xiuzhou,3,month,2021-05,744,3.52179,4.922874,0.93479
+sarimax_weather,Xiuzhou,3,month,2021-06,720,3.6481,4.970681,0.968317
+sarimax_weather,Xiuzhou,4,month,2021-07,744,3.912629,5.474858,0.987405
+sarimax_weather,Xiuzhou,4,month,2021-08,744,3.878117,5.31253,0.978695
+sarimax_weather,Xiuzhou,4,month,2021-09,720,4.229059,5.910606,1.067261
+sarimax_weather,Nanhu,1,month,2020-10,744,1.881806,2.5926,0.619418
+sarimax_weather,Nanhu,1,month,2020-11,720,2.279294,3.477956,0.750255
+sarimax_weather,Nanhu,1,month,2020-12,744,2.094251,3.162962,0.689346
+sarimax_weather,Nanhu,2,month,2021-01,744,1.612748,2.230934,0.551481
+sarimax_weather,Nanhu,2,month,2021-02,672,1.308721,1.863963,0.447519
+sarimax_weather,Nanhu,2,month,2021-03,744,1.417939,2.103638,0.484866
+sarimax_weather,Nanhu,3,month,2021-04,720,1.268613,1.833207,0.471252
+sarimax_weather,Nanhu,3,month,2021-05,744,1.51617,2.068746,0.563211
+sarimax_weather,Nanhu,3,month,2021-06,720,1.544147,2.245459,0.573604
+sarimax_weather,Nanhu,4,month,2021-07,744,1.672836,2.354844,0.65935
+sarimax_weather,Nanhu,4,month,2021-08,744,1.585984,2.289887,0.625117
+sarimax_weather,Nanhu,4,month,2021-09,720,2.643397,3.690626,1.041898
+mstl_arima,network,1,month,2020-10,744,5.918778,7.980693,0.835727
+mstl_arima,network,1,month,2020-11,720,6.413203,8.513887,0.905539
+mstl_arima,network,1,month,2020-12,744,6.876828,9.822203,0.971002
+mstl_arima,network,2,month,2021-01,744,6.235257,9.105099,0.874956
+mstl_arima,network,2,month,2021-02,672,4.630702,6.344594,0.649799
+mstl_arima,network,2,month,2021-03,744,5.191412,6.981803,0.72848
+mstl_arima,network,3,month,2021-04,720,5.890523,8.148664,0.859086
+mstl_arima,network,3,month,2021-05,744,6.682005,9.076892,0.974517
+mstl_arima,network,3,month,2021-06,720,6.757607,9.110919,0.985543
+mstl_arima,network,4,month,2021-07,744,7.36465,10.040104,1.066417
+mstl_arima,network,4,month,2021-08,744,7.240615,10.079845,1.048456
+mstl_arima,network,4,month,2021-09,720,8.151052,10.90684,1.18029
+mstl_arima,Tongxiang,1,month,2020-10,744,4.045737,5.473625,0.929918
+mstl_arima,Tongxiang,1,month,2020-11,720,4.248094,5.782123,0.97643
+mstl_arima,Tongxiang,1,month,2020-12,744,4.521571,6.405137,1.039289
+mstl_arima,Tongxiang,2,month,2021-01,744,4.240056,5.921822,0.94103
+mstl_arima,Tongxiang,2,month,2021-02,672,2.960189,4.11893,0.656979
+mstl_arima,Tongxiang,2,month,2021-03,744,3.631954,4.856077,0.806069
+mstl_arima,Tongxiang,3,month,2021-04,720,3.668332,5.061036,0.839155
+mstl_arima,Tongxiang,3,month,2021-05,744,4.091163,5.634971,0.93588
+mstl_arima,Tongxiang,3,month,2021-06,720,3.919584,5.460802,0.89663
+mstl_arima,Tongxiang,4,month,2021-07,744,4.755819,6.359309,1.090666
+mstl_arima,Tongxiang,4,month,2021-08,744,4.623843,6.452028,1.0604
+mstl_arima,Tongxiang,4,month,2021-09,720,4.683693,6.313443,1.074125
+mstl_arima,Xiuzhou,1,month,2020-10,744,3.566257,4.870098,0.928563
+mstl_arima,Xiuzhou,1,month,2020-11,720,3.352169,4.673479,0.87282
+mstl_arima,Xiuzhou,1,month,2020-12,744,3.55213,5.239366,0.924885
+mstl_arima,Xiuzhou,2,month,2021-01,744,3.221126,4.494044,0.835177
+mstl_arima,Xiuzhou,2,month,2021-02,672,2.799584,3.926673,0.725879
+mstl_arima,Xiuzhou,2,month,2021-03,744,2.985155,4.06509,0.773994
+mstl_arima,Xiuzhou,3,month,2021-04,720,3.76351,5.278446,0.99895
+mstl_arima,Xiuzhou,3,month,2021-05,744,4.31891,5.933484,1.14637
+mstl_arima,Xiuzhou,3,month,2021-06,720,4.39107,5.99072,1.165523
+mstl_arima,Xiuzhou,4,month,2021-07,744,4.710108,6.615367,1.18866
+mstl_arima,Xiuzhou,4,month,2021-08,744,4.703741,6.438351,1.187053
+mstl_arima,Xiuzhou,4,month,2021-09,720,5.538378,7.633988,1.397685
+mstl_arima,Nanhu,1,month,2020-10,744,2.27988,3.15313,0.750448
+mstl_arima,Nanhu,1,month,2020-11,720,2.49464,3.524959,0.821139
+mstl_arima,Nanhu,1,month,2020-12,744,2.426457,3.515933,0.798696
+mstl_arima,Nanhu,2,month,2021-01,744,2.057969,2.809327,0.703725
+mstl_arima,Nanhu,2,month,2021-02,672,1.661514,2.364783,0.568157
+mstl_arima,Nanhu,2,month,2021-03,744,1.789017,2.505232,0.611756
+mstl_arima,Nanhu,3,month,2021-04,720,1.538771,2.165369,0.571607
+mstl_arima,Nanhu,3,month,2021-05,744,1.802536,2.407021,0.669588
+mstl_arima,Nanhu,3,month,2021-06,720,1.798094,2.565737,0.667937
+mstl_arima,Nanhu,4,month,2021-07,744,2.005972,2.749597,0.790656
+mstl_arima,Nanhu,4,month,2021-08,744,2.073506,2.849165,0.817275
+mstl_arima,Nanhu,4,month,2021-09,720,3.550396,4.878401,1.399392
+ets,network,1,day_type,holiday,192,5.85988,7.659897,0.82741
+ets,network,1,day_type,normal weekday,1440,5.660289,8.045691,0.799228
+ets,network,1,day_type,adjusted working day,24,5.708785,7.490478,0.806076
+ets,network,1,day_type,weekend,552,5.533253,7.427446,0.781291
+ets,network,2,day_type,holiday,240,5.716895,8.533315,0.802218
+ets,network,2,day_type,normal weekday,1392,4.476575,6.234205,0.628171
+ets,network,2,day_type,weekend,480,4.788403,6.593074,0.671928
+ets,network,2,day_type,adjusted working day,48,4.166325,5.427148,0.584635
+ets,network,3,day_type,normal weekday,1440,5.342833,7.454221,0.779209
+ets,network,3,day_type,holiday,264,6.02792,7.935612,0.879124
+ets,network,3,day_type,weekend,432,5.348486,7.129294,0.780034
+ets,network,3,day_type,adjusted working day,48,4.329449,5.897622,0.631416
+ets,network,4,day_type,normal weekday,1536,6.072388,8.266674,0.879295
+ets,network,4,day_type,weekend,552,6.14432,8.800969,0.889711
+ets,network,4,day_type,adjusted working day,48,5.694976,7.49287,0.824645
+ets,network,4,day_type,holiday,72,8.031392,10.13377,1.162963
+ets,Tongxiang,1,day_type,holiday,192,3.933342,5.227087,0.904084
+ets,Tongxiang,1,day_type,normal weekday,1440,3.757166,5.302194,0.86359
+ets,Tongxiang,1,day_type,adjusted working day,24,3.330091,4.100816,0.765426
+ets,Tongxiang,1,day_type,weekend,552,3.697714,4.987726,0.849925
+ets,Tongxiang,2,day_type,holiday,240,3.479019,5.046986,0.772127
+ets,Tongxiang,2,day_type,normal weekday,1392,2.92442,4.110942,0.649041
+ets,Tongxiang,2,day_type,weekend,480,3.084,4.186341,0.684458
+ets,Tongxiang,2,day_type,adjusted working day,48,2.5528,3.415791,0.566564
+ets,Tongxiang,3,day_type,normal weekday,1440,3.2619,4.535641,0.746181
+ets,Tongxiang,3,day_type,holiday,264,3.513732,4.548458,0.803789
+ets,Tongxiang,3,day_type,weekend,432,3.261121,4.354692,0.746003
+ets,Tongxiang,3,day_type,adjusted working day,48,2.839581,3.707738,0.649572
+ets,Tongxiang,4,day_type,normal weekday,1536,3.633103,4.914526,0.83319
+ets,Tongxiang,4,day_type,weekend,552,3.911157,5.834366,0.896957
+ets,Tongxiang,4,day_type,adjusted working day,48,3.509795,4.451856,0.804912
+ets,Tongxiang,4,day_type,holiday,72,4.150117,5.195603,0.951759
+ets,Xiuzhou,1,day_type,holiday,192,2.905196,3.770986,0.75644
+ets,Xiuzhou,1,day_type,normal weekday,1440,2.836642,4.063685,0.73859
+ets,Xiuzhou,1,day_type,adjusted working day,24,3.507491,4.356275,0.913262
+ets,Xiuzhou,1,day_type,weekend,552,3.05598,4.433691,0.7957
+ets,Xiuzhou,2,day_type,holiday,240,2.662534,3.795465,0.690345
+ets,Xiuzhou,2,day_type,normal weekday,1392,2.496974,3.58335,0.647418
+ets,Xiuzhou,2,day_type,weekend,480,2.597344,3.678725,0.673442
+ets,Xiuzhou,2,day_type,adjusted working day,48,2.46591,3.19477,0.639364
+ets,Xiuzhou,3,day_type,normal weekday,1440,3.457345,4.833363,0.917684
+ets,Xiuzhou,3,day_type,holiday,264,4.030304,5.605599,1.069765
+ets,Xiuzhou,3,day_type,weekend,432,3.41062,4.730123,0.905282
+ets,Xiuzhou,3,day_type,adjusted working day,48,3.316436,4.608998,0.880283
+ets,Xiuzhou,4,day_type,normal weekday,1536,3.995284,5.514086,1.008264
+ets,Xiuzhou,4,day_type,weekend,552,3.947763,5.437232,0.996272
+ets,Xiuzhou,4,day_type,adjusted working day,48,3.853289,5.484306,0.97243
+ets,Xiuzhou,4,day_type,holiday,72,4.668272,6.106684,1.178102
+ets,Nanhu,1,day_type,holiday,192,2.142921,2.916664,0.705367
+ets,Nanhu,1,day_type,normal weekday,1440,2.055141,3.133062,0.676473
+ets,Nanhu,1,day_type,adjusted working day,24,2.243875,2.787246,0.738597
+ets,Nanhu,1,day_type,weekend,552,1.95661,2.72221,0.64404
+ets,Nanhu,2,day_type,holiday,240,1.433248,1.969693,0.490101
+ets,Nanhu,2,day_type,normal weekday,1392,1.436991,2.106502,0.491381
+ets,Nanhu,2,day_type,weekend,480,1.503571,2.111167,0.514148
+ets,Nanhu,2,day_type,adjusted working day,48,1.261907,2.039543,0.431511
+ets,Nanhu,3,day_type,normal weekday,1440,1.391515,2.008184,0.516906
+ets,Nanhu,3,day_type,holiday,264,1.606994,2.251099,0.59695
+ets,Nanhu,3,day_type,weekend,432,1.517076,2.086148,0.563548
+ets,Nanhu,3,day_type,adjusted working day,48,1.43063,1.908471,0.531436
+ets,Nanhu,4,day_type,normal weekday,1536,1.932612,2.785373,0.761741
+ets,Nanhu,4,day_type,weekend,552,1.783557,2.528135,0.702991
+ets,Nanhu,4,day_type,adjusted working day,48,2.450546,3.084601,0.965885
+ets,Nanhu,4,day_type,holiday,72,2.976513,4.129314,1.173196
+sarima,network,1,day_type,holiday,192,5.706119,7.503229,0.805699
+sarima,network,1,day_type,normal weekday,1440,5.623984,8.049244,0.794102
+sarima,network,1,day_type,adjusted working day,24,5.501923,7.053033,0.776867
+sarima,network,1,day_type,weekend,552,5.384994,7.216796,0.760357
+sarima,network,2,day_type,holiday,240,4.853343,6.715231,0.681041
+sarima,network,2,day_type,normal weekday,1392,4.50799,6.253542,0.632579
+sarima,network,2,day_type,weekend,480,4.645671,6.312845,0.651899
+sarima,network,2,day_type,adjusted working day,48,4.348682,5.600471,0.610225
+sarima,network,3,day_type,normal weekday,1440,5.358904,7.469019,0.781553
+sarima,network,3,day_type,holiday,264,6.147042,8.094697,0.896497
+sarima,network,3,day_type,weekend,432,5.400353,7.192265,0.787598
+sarima,network,3,day_type,adjusted working day,48,4.313162,5.891209,0.62904
+sarima,network,4,day_type,normal weekday,1536,6.081928,8.308474,0.880676
+sarima,network,4,day_type,weekend,552,6.091765,8.7326,0.8821
+sarima,network,4,day_type,adjusted working day,48,5.872048,7.782442,0.850285
+sarima,network,4,day_type,holiday,72,7.917196,10.332603,1.146427
+sarima,Tongxiang,1,day_type,holiday,192,3.915832,5.206168,0.900059
+sarima,Tongxiang,1,day_type,normal weekday,1440,3.75761,5.320772,0.863692
+sarima,Tongxiang,1,day_type,adjusted working day,24,3.253629,3.989563,0.747851
+sarima,Tongxiang,1,day_type,weekend,552,3.671173,4.956119,0.843824
+sarima,Tongxiang,2,day_type,holiday,240,3.2697,4.571954,0.725671
+sarima,Tongxiang,2,day_type,normal weekday,1392,2.934476,4.132301,0.651272
+sarima,Tongxiang,2,day_type,weekend,480,3.041089,4.135175,0.674934
+sarima,Tongxiang,2,day_type,adjusted working day,48,2.646412,3.530504,0.58734
+sarima,Tongxiang,3,day_type,normal weekday,1440,3.256733,4.525522,0.744999
+sarima,Tongxiang,3,day_type,holiday,264,3.503971,4.563238,0.801556
+sarima,Tongxiang,3,day_type,weekend,432,3.24445,4.335754,0.742189
+sarima,Tongxiang,3,day_type,adjusted working day,48,2.803443,3.674818,0.641306
+sarima,Tongxiang,4,day_type,normal weekday,1536,3.644575,4.941301,0.835821
+sarima,Tongxiang,4,day_type,weekend,552,3.907736,5.836745,0.896173
+sarima,Tongxiang,4,day_type,adjusted working day,48,3.54531,4.465439,0.813057
+sarima,Tongxiang,4,day_type,holiday,72,4.143057,5.190942,0.95014
+sarima,Xiuzhou,1,day_type,holiday,192,2.934173,3.815262,0.763984
+sarima,Xiuzhou,1,day_type,normal weekday,1440,2.820784,4.031945,0.734461
+sarima,Xiuzhou,1,day_type,adjusted working day,24,3.495711,4.354426,0.910195
+sarima,Xiuzhou,1,day_type,weekend,552,3.043025,4.403634,0.792327
+sarima,Xiuzhou,2,day_type,holiday,240,2.627602,3.731321,0.681288
+sarima,Xiuzhou,2,day_type,normal weekday,1392,2.485269,3.564566,0.644383
+sarima,Xiuzhou,2,day_type,weekend,480,2.603686,3.665708,0.675087
+sarima,Xiuzhou,2,day_type,adjusted working day,48,2.464212,3.132573,0.638924
+sarima,Xiuzhou,3,day_type,normal weekday,1440,3.453829,4.852374,0.916751
+sarima,Xiuzhou,3,day_type,holiday,264,4.232009,5.973739,1.123304
+sarima,Xiuzhou,3,day_type,weekend,432,3.392522,4.753822,0.900479
+sarima,Xiuzhou,3,day_type,adjusted working day,48,3.354012,4.707932,0.890257
+sarima,Xiuzhou,4,day_type,normal weekday,1536,3.984316,5.542682,1.005496
+sarima,Xiuzhou,4,day_type,weekend,552,3.942273,5.446701,0.994886
+sarima,Xiuzhou,4,day_type,adjusted working day,48,3.958818,5.67317,0.999062
+sarima,Xiuzhou,4,day_type,holiday,72,4.891255,6.441194,1.234375
+sarima,Nanhu,1,day_type,holiday,192,2.099303,2.890207,0.691009
+sarima,Nanhu,1,day_type,normal weekday,1440,2.059923,3.130853,0.678047
+sarima,Nanhu,1,day_type,adjusted working day,24,2.226953,2.774604,0.733027
+sarima,Nanhu,1,day_type,weekend,552,1.968633,2.747481,0.647998
+sarima,Nanhu,2,day_type,holiday,240,1.385594,1.889433,0.473806
+sarima,Nanhu,2,day_type,normal weekday,1392,1.438066,2.092646,0.491749
+sarima,Nanhu,2,day_type,weekend,480,1.498208,2.10372,0.512314
+sarima,Nanhu,2,day_type,adjusted working day,48,1.305325,2.026096,0.446357
+sarima,Nanhu,3,day_type,normal weekday,1440,1.393874,2.015895,0.517782
+sarima,Nanhu,3,day_type,holiday,264,1.608701,2.257078,0.597584
+sarima,Nanhu,3,day_type,weekend,432,1.521201,2.094254,0.56508
+sarima,Nanhu,3,day_type,adjusted working day,48,1.432591,1.910735,0.532164
+sarima,Nanhu,4,day_type,normal weekday,1536,1.944292,2.832722,0.766345
+sarima,Nanhu,4,day_type,weekend,552,1.812452,2.611845,0.71438
+sarima,Nanhu,4,day_type,adjusted working day,48,2.512858,3.241755,0.990446
+sarima,Nanhu,4,day_type,holiday,72,3.094706,4.279715,1.219782
+sarimax_cal,network,1,day_type,holiday,192,6.010894,7.849533,0.848733
+sarimax_cal,network,1,day_type,normal weekday,1440,5.568851,8.020752,0.786317
+sarimax_cal,network,1,day_type,adjusted working day,24,5.884142,7.851143,0.830836
+sarimax_cal,network,1,day_type,weekend,552,5.3932,7.23377,0.761515
+sarimax_cal,network,2,day_type,holiday,240,5.739315,8.378779,0.805364
+sarimax_cal,network,2,day_type,normal weekday,1392,4.495646,6.200172,0.630847
+sarimax_cal,network,2,day_type,weekend,480,4.617203,6.276848,0.647904
+sarimax_cal,network,2,day_type,adjusted working day,48,4.002515,5.303956,0.561649
+sarimax_cal,network,3,day_type,normal weekday,1440,5.192487,7.257694,0.757283
+sarimax_cal,network,3,day_type,holiday,264,5.928494,7.790977,0.864623
+sarimax_cal,network,3,day_type,weekend,432,5.223869,6.975021,0.761859
+sarimax_cal,network,3,day_type,adjusted working day,48,4.504854,6.095501,0.656997
+sarimax_cal,network,4,day_type,normal weekday,1536,6.156289,8.402823,0.891444
+sarimax_cal,network,4,day_type,weekend,552,6.074273,8.645055,0.879568
+sarimax_cal,network,4,day_type,adjusted working day,48,6.163899,8.555285,0.892546
+sarimax_cal,network,4,day_type,holiday,72,7.750495,9.825788,1.122288
+sarimax_cal,Tongxiang,1,day_type,holiday,192,4.046051,5.375502,0.92999
+sarimax_cal,Tongxiang,1,day_type,normal weekday,1440,3.742663,5.329264,0.860256
+sarimax_cal,Tongxiang,1,day_type,adjusted working day,24,3.720272,4.644688,0.85511
+sarimax_cal,Tongxiang,1,day_type,weekend,552,3.662415,4.963764,0.841811
+sarimax_cal,Tongxiang,2,day_type,holiday,240,3.588233,5.158116,0.796366
+sarimax_cal,Tongxiang,2,day_type,normal weekday,1392,2.92924,4.105539,0.65011
+sarimax_cal,Tongxiang,2,day_type,weekend,480,3.036741,4.10545,0.673969
+sarimax_cal,Tongxiang,2,day_type,adjusted working day,48,2.368425,3.18312,0.525644
+sarimax_cal,Tongxiang,3,day_type,normal weekday,1440,3.228695,4.500607,0.738585
+sarimax_cal,Tongxiang,3,day_type,holiday,264,3.451,4.487666,0.789439
+sarimax_cal,Tongxiang,3,day_type,weekend,432,3.210429,4.286879,0.734406
+sarimax_cal,Tongxiang,3,day_type,adjusted working day,48,2.814294,3.678466,0.643788
+sarimax_cal,Tongxiang,4,day_type,normal weekday,1536,3.671789,4.972362,0.842063
+sarimax_cal,Tongxiang,4,day_type,weekend,552,3.89419,5.768467,0.893066
+sarimax_cal,Tongxiang,4,day_type,adjusted working day,48,3.65127,4.733491,0.837357
+sarimax_cal,Tongxiang,4,day_type,holiday,72,4.121179,5.133388,0.945123
+sarimax_cal,Xiuzhou,1,day_type,holiday,192,2.853221,3.706332,0.742906
+sarimax_cal,Xiuzhou,1,day_type,normal weekday,1440,2.817514,4.026629,0.733609
+sarimax_cal,Xiuzhou,1,day_type,adjusted working day,24,3.540703,4.537454,0.92191
+sarimax_cal,Xiuzhou,1,day_type,weekend,552,3.038692,4.405919,0.791198
+sarimax_cal,Xiuzhou,2,day_type,holiday,240,2.711769,3.82587,0.70311
+sarimax_cal,Xiuzhou,2,day_type,normal weekday,1392,2.488702,3.57355,0.645273
+sarimax_cal,Xiuzhou,2,day_type,weekend,480,2.601242,3.672424,0.674453
+sarimax_cal,Xiuzhou,2,day_type,adjusted working day,48,2.547052,3.326884,0.660402
+sarimax_cal,Xiuzhou,3,day_type,normal weekday,1440,3.418279,4.787801,0.907315
+sarimax_cal,Xiuzhou,3,day_type,holiday,264,4.048398,5.627291,1.074568
+sarimax_cal,Xiuzhou,3,day_type,weekend,432,3.378545,4.716257,0.896769
+sarimax_cal,Xiuzhou,3,day_type,adjusted working day,48,3.478656,4.893076,0.923341
+sarimax_cal,Xiuzhou,4,day_type,normal weekday,1536,4.001062,5.589761,1.009722
+sarimax_cal,Xiuzhou,4,day_type,weekend,552,3.955722,5.45182,0.99828
+sarimax_cal,Xiuzhou,4,day_type,adjusted working day,48,3.956232,5.659008,0.998409
+sarimax_cal,Xiuzhou,4,day_type,holiday,72,4.513214,5.892747,1.138971
+sarimax_cal,Nanhu,1,day_type,holiday,192,2.145248,2.880512,0.706133
+sarimax_cal,Nanhu,1,day_type,normal weekday,1440,2.057459,3.13497,0.677236
+sarimax_cal,Nanhu,1,day_type,adjusted working day,24,2.29542,2.8475,0.755564
+sarimax_cal,Nanhu,1,day_type,weekend,552,1.967744,2.740944,0.647705
+sarimax_cal,Nanhu,2,day_type,holiday,240,1.45217,1.95681,0.496571
+sarimax_cal,Nanhu,2,day_type,normal weekday,1392,1.436976,2.091246,0.491376
+sarimax_cal,Nanhu,2,day_type,weekend,480,1.500395,2.100011,0.513062
+sarimax_cal,Nanhu,2,day_type,adjusted working day,48,1.275329,2.052186,0.4361
+sarimax_cal,Nanhu,3,day_type,normal weekday,1440,1.392119,2.013392,0.51713
+sarimax_cal,Nanhu,3,day_type,holiday,264,1.60511,2.246513,0.59625
+sarimax_cal,Nanhu,3,day_type,weekend,432,1.516926,2.083466,0.563492
+sarimax_cal,Nanhu,3,day_type,adjusted working day,48,1.435208,1.941643,0.533136
+sarimax_cal,Nanhu,4,day_type,normal weekday,1536,1.945706,2.8302,0.766902
+sarimax_cal,Nanhu,4,day_type,weekend,552,1.801893,2.590315,0.710218
+sarimax_cal,Nanhu,4,day_type,adjusted working day,48,2.598011,3.390901,1.024009
+sarimax_cal,Nanhu,4,day_type,holiday,72,3.030095,4.156583,1.194315
+sarimax_weather,network,1,day_type,holiday,192,5.97896,7.823589,0.844224
+sarimax_weather,network,1,day_type,normal weekday,1440,6.006616,8.846095,0.848129
+sarimax_weather,network,1,day_type,adjusted working day,24,5.908282,7.89687,0.834244
+sarimax_weather,network,1,day_type,weekend,552,5.420257,7.337327,0.765336
+sarimax_weather,network,2,day_type,holiday,240,5.742403,8.380353,0.805797
+sarimax_weather,network,2,day_type,normal weekday,1392,4.494511,6.199149,0.630688
+sarimax_weather,network,2,day_type,weekend,480,4.616843,6.276867,0.647854
+sarimax_weather,network,2,day_type,adjusted working day,48,4.001287,5.303826,0.561477
+sarimax_weather,network,3,day_type,normal weekday,1440,5.219342,7.29812,0.761199
+sarimax_weather,network,3,day_type,holiday,264,5.914802,7.773065,0.862627
+sarimax_weather,network,3,day_type,weekend,432,5.260752,7.018239,0.767239
+sarimax_weather,network,3,day_type,adjusted working day,48,4.500194,6.094792,0.656317
+sarimax_weather,network,4,day_type,normal weekday,1536,6.158967,8.406298,0.891831
+sarimax_weather,network,4,day_type,weekend,552,6.075994,8.647158,0.879817
+sarimax_weather,network,4,day_type,adjusted working day,48,6.155614,8.543397,0.891346
+sarimax_weather,network,4,day_type,holiday,72,7.751438,9.82702,1.122425
+sarimax_weather,Tongxiang,1,day_type,holiday,192,4.109595,5.407043,0.944596
+sarimax_weather,Tongxiang,1,day_type,normal weekday,1440,3.965945,5.754079,0.911578
+sarimax_weather,Tongxiang,1,day_type,adjusted working day,24,3.687754,4.592245,0.847635
+sarimax_weather,Tongxiang,1,day_type,weekend,552,3.712454,5.050351,0.853312
+sarimax_weather,Tongxiang,2,day_type,holiday,240,3.583573,5.14968,0.795332
+sarimax_weather,Tongxiang,2,day_type,normal weekday,1392,2.926599,4.102826,0.649524
+sarimax_weather,Tongxiang,2,day_type,weekend,480,3.035943,4.103554,0.673792
+sarimax_weather,Tongxiang,2,day_type,adjusted working day,48,2.365369,3.177825,0.524966
+sarimax_weather,Tongxiang,3,day_type,normal weekday,1440,3.24952,4.537867,0.743349
+sarimax_weather,Tongxiang,3,day_type,holiday,264,3.443439,4.472506,0.787709
+sarimax_weather,Tongxiang,3,day_type,weekend,432,3.243394,4.33412,0.741947
+sarimax_weather,Tongxiang,3,day_type,adjusted working day,48,2.831428,3.699646,0.647708
+sarimax_weather,Tongxiang,4,day_type,normal weekday,1536,3.673907,4.975536,0.842548
+sarimax_weather,Tongxiang,4,day_type,weekend,552,3.897111,5.770005,0.893736
+sarimax_weather,Tongxiang,4,day_type,adjusted working day,48,3.650464,4.730426,0.837172
+sarimax_weather,Tongxiang,4,day_type,holiday,72,4.121001,5.133066,0.945082
+sarimax_weather,Xiuzhou,1,day_type,holiday,192,2.937978,3.829653,0.764975
+sarimax_weather,Xiuzhou,1,day_type,normal weekday,1440,2.940666,4.25449,0.765675
+sarimax_weather,Xiuzhou,1,day_type,adjusted working day,24,3.605144,4.70656,0.938688
+sarimax_weather,Xiuzhou,1,day_type,weekend,552,3.108655,4.540891,0.809415
+sarimax_weather,Xiuzhou,2,day_type,holiday,240,2.696623,3.803173,0.699183
+sarimax_weather,Xiuzhou,2,day_type,normal weekday,1392,2.494445,3.576585,0.646762
+sarimax_weather,Xiuzhou,2,day_type,weekend,480,2.604292,3.668259,0.675244
+sarimax_weather,Xiuzhou,2,day_type,adjusted working day,48,2.508342,3.263845,0.650366
+sarimax_weather,Xiuzhou,3,day_type,normal weekday,1440,3.417403,4.78622,0.907083
+sarimax_weather,Xiuzhou,3,day_type,holiday,264,4.051313,5.63252,1.075342
+sarimax_weather,Xiuzhou,3,day_type,weekend,432,3.376998,4.715244,0.896358
+sarimax_weather,Xiuzhou,3,day_type,adjusted working day,48,3.480514,4.895756,0.923834
+sarimax_weather,Xiuzhou,4,day_type,normal weekday,1536,3.998475,5.589558,1.00907
+sarimax_weather,Xiuzhou,4,day_type,weekend,552,3.95615,5.451496,0.998388
+sarimax_weather,Xiuzhou,4,day_type,adjusted working day,48,3.977099,5.698386,1.003675
+sarimax_weather,Xiuzhou,4,day_type,holiday,72,4.512271,5.891479,1.138733
+sarimax_weather,Nanhu,1,day_type,holiday,192,2.104814,2.849607,0.692823
+sarimax_weather,Nanhu,1,day_type,normal weekday,1440,2.110565,3.237183,0.694716
+sarimax_weather,Nanhu,1,day_type,adjusted working day,24,2.314737,2.878134,0.761922
+sarimax_weather,Nanhu,1,day_type,weekend,552,1.993455,2.792702,0.656168
+sarimax_weather,Nanhu,2,day_type,holiday,240,1.449855,1.954861,0.495779
+sarimax_weather,Nanhu,2,day_type,normal weekday,1392,1.441199,2.095083,0.49282
+sarimax_weather,Nanhu,2,day_type,weekend,480,1.497867,2.093382,0.512198
+sarimax_weather,Nanhu,2,day_type,adjusted working day,48,1.275021,2.038615,0.435995
+sarimax_weather,Nanhu,3,day_type,normal weekday,1440,1.392516,2.014467,0.517278
+sarimax_weather,Nanhu,3,day_type,holiday,264,1.604864,2.246093,0.596158
+sarimax_weather,Nanhu,3,day_type,weekend,432,1.517083,2.084702,0.563551
+sarimax_weather,Nanhu,3,day_type,adjusted working day,48,1.436046,1.942495,0.533448
+sarimax_weather,Nanhu,4,day_type,normal weekday,1536,1.946025,2.831951,0.767028
+sarimax_weather,Nanhu,4,day_type,weekend,552,1.802745,2.593169,0.710554
+sarimax_weather,Nanhu,4,day_type,adjusted working day,48,2.607457,3.40618,1.027732
+sarimax_weather,Nanhu,4,day_type,holiday,72,3.033901,4.160604,1.195815
+mstl_arima,network,1,day_type,holiday,192,6.441851,8.659173,0.909584
+mstl_arima,network,1,day_type,normal weekday,1440,6.372849,8.956607,0.899841
+mstl_arima,network,1,day_type,adjusted working day,24,5.864228,8.826082,0.828024
+mstl_arima,network,1,day_type,weekend,552,6.490866,8.46674,0.916505
+mstl_arima,network,2,day_type,holiday,240,6.665817,11.007934,0.935374
+mstl_arima,network,2,day_type,normal weekday,1392,5.212508,7.046119,0.73144
+mstl_arima,network,2,day_type,weekend,480,5.298338,7.208784,0.743484
+mstl_arima,network,2,day_type,adjusted working day,48,4.468006,6.227323,0.626969
+mstl_arima,network,3,day_type,normal weekday,1440,6.425019,8.807885,0.937038
+mstl_arima,network,3,day_type,holiday,264,6.793904,9.135852,0.990837
+mstl_arima,network,3,day_type,weekend,432,6.343748,8.572306,0.925185
+mstl_arima,network,3,day_type,adjusted working day,48,6.082239,8.391198,0.887046
+mstl_arima,network,4,day_type,normal weekday,1536,7.656406,10.340698,1.108664
+mstl_arima,network,4,day_type,weekend,552,7.235778,10.259546,1.047756
+mstl_arima,network,4,day_type,adjusted working day,48,7.202758,9.08196,1.042975
+mstl_arima,network,4,day_type,holiday,72,8.818804,11.746835,1.276982
+mstl_arima,Tongxiang,1,day_type,holiday,192,4.368593,5.859552,1.004127
+mstl_arima,Tongxiang,1,day_type,normal weekday,1440,4.329159,6.019356,0.995063
+mstl_arima,Tongxiang,1,day_type,adjusted working day,24,3.719602,4.746595,0.854956
+mstl_arima,Tongxiang,1,day_type,weekend,552,4.113543,5.643008,0.945503
+mstl_arima,Tongxiang,2,day_type,holiday,240,4.155712,6.544442,0.922311
+mstl_arima,Tongxiang,2,day_type,normal weekday,1392,3.533862,4.751241,0.784299
+mstl_arima,Tongxiang,2,day_type,weekend,480,3.773212,5.159255,0.83742
+mstl_arima,Tongxiang,2,day_type,adjusted working day,48,2.466118,3.406259,0.547326
+mstl_arima,Tongxiang,3,day_type,normal weekday,1440,3.870547,5.404074,0.885413
+mstl_arima,Tongxiang,3,day_type,holiday,264,4.131641,5.588778,0.94514
+mstl_arima,Tongxiang,3,day_type,weekend,432,3.866295,5.296558,0.88444
+mstl_arima,Tongxiang,3,day_type,adjusted working day,48,3.594666,4.826486,0.822303
+mstl_arima,Tongxiang,4,day_type,normal weekday,1536,4.72631,6.331133,1.083899
+mstl_arima,Tongxiang,4,day_type,weekend,552,4.537729,6.536354,1.040651
+mstl_arima,Tongxiang,4,day_type,adjusted working day,48,3.925508,4.923896,0.900249
+mstl_arima,Tongxiang,4,day_type,holiday,72,5.525894,6.915527,1.26727
+mstl_arima,Xiuzhou,1,day_type,holiday,192,3.718015,5.041775,0.968077
+mstl_arima,Xiuzhou,1,day_type,normal weekday,1440,3.305304,4.657487,0.860618
+mstl_arima,Xiuzhou,1,day_type,adjusted working day,24,4.778009,6.744364,1.244073
+mstl_arima,Xiuzhou,1,day_type,weekend,552,3.843248,5.481597,1.000685
+mstl_arima,Xiuzhou,2,day_type,holiday,240,3.132078,4.366258,0.812089
+mstl_arima,Xiuzhou,2,day_type,normal weekday,1392,2.964512,4.150903,0.768642
+mstl_arima,Xiuzhou,2,day_type,weekend,480,3.09076,4.191282,0.801376
+mstl_arima,Xiuzhou,2,day_type,adjusted working day,48,2.852685,3.79271,0.739647
+mstl_arima,Xiuzhou,3,day_type,normal weekday,1440,4.072116,5.711417,1.080863
+mstl_arima,Xiuzhou,3,day_type,holiday,264,4.806019,6.407083,1.275664
+mstl_arima,Xiuzhou,3,day_type,weekend,432,4.047348,5.432367,1.074289
+mstl_arima,Xiuzhou,3,day_type,adjusted working day,48,4.239101,5.654586,1.125186
+mstl_arima,Xiuzhou,4,day_type,normal weekday,1536,5.050059,6.998425,1.274451
+mstl_arima,Xiuzhou,4,day_type,weekend,552,4.523612,6.257393,1.141595
+mstl_arima,Xiuzhou,4,day_type,adjusted working day,48,5.390059,7.304506,1.360254
+mstl_arima,Xiuzhou,4,day_type,holiday,72,6.651227,9.094812,1.678527
+mstl_arima,Nanhu,1,day_type,holiday,192,2.734872,3.67884,0.900214
+mstl_arima,Nanhu,1,day_type,normal weekday,1440,2.405733,3.48976,0.791874
+mstl_arima,Nanhu,1,day_type,adjusted working day,24,2.840483,3.855653,0.934977
+mstl_arima,Nanhu,1,day_type,weekend,552,2.246617,3.024119,0.7395
+mstl_arima,Nanhu,2,day_type,holiday,240,1.927006,2.66231,0.658942
+mstl_arima,Nanhu,2,day_type,normal weekday,1392,1.886869,2.61906,0.645217
+mstl_arima,Nanhu,2,day_type,weekend,480,1.712584,2.428567,0.58562
+mstl_arima,Nanhu,2,day_type,adjusted working day,48,1.409405,2.135182,0.481948
+mstl_arima,Nanhu,3,day_type,normal weekday,1440,1.664736,2.343148,0.618399
+mstl_arima,Nanhu,3,day_type,holiday,264,1.817449,2.562294,0.675127
+mstl_arima,Nanhu,3,day_type,weekend,432,1.806294,2.417045,0.670984
+mstl_arima,Nanhu,3,day_type,adjusted working day,48,1.797583,2.341344,0.667748
+mstl_arima,Nanhu,4,day_type,normal weekday,1536,2.517806,3.634915,0.992396
+mstl_arima,Nanhu,4,day_type,weekend,552,2.362064,3.28697,0.93101
+mstl_arima,Nanhu,4,day_type,adjusted working day,48,3.191318,4.328547,1.257862
+mstl_arima,Nanhu,4,day_type,holiday,72,3.708654,4.775181,1.46177

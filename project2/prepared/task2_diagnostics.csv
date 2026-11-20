@@ -1,0 +1,641 @@
+method,level,fold,test,lag,statistic,p_value
+ets,network,1,ljung_box,24,112.536177,0.0
+ets,network,1,ljung_box,168,297.065267,0.0
+ets,network,1,group_mean,holiday,-0.01328,
+ets,network,1,group_mean,normal weekday,0.00469,
+ets,network,1,group_mean,night 00-05,0.016098,
+ets,network,1,group_mean,day 06-23,-0.000463,
+ets,network,1,acf,24,-0.004439,
+ets,network,1,acf,168,0.000253,
+ets,network,2,ljung_box,24,112.179949,0.0
+ets,network,2,ljung_box,168,306.513976,0.0
+ets,network,2,group_mean,holiday,-0.011288,
+ets,network,2,group_mean,normal weekday,0.007607,
+ets,network,2,group_mean,night 00-05,0.011547,
+ets,network,2,group_mean,day 06-23,0.000527,
+ets,network,2,acf,24,0.004326,
+ets,network,2,acf,168,0.026638,
+ets,network,3,ljung_box,24,99.659905,0.0
+ets,network,3,ljung_box,168,329.389438,0.0
+ets,network,3,group_mean,holiday,-0.015095,
+ets,network,3,group_mean,normal weekday,0.005001,
+ets,network,3,group_mean,night 00-05,-0.000631,
+ets,network,3,group_mean,day 06-23,0.001533,
+ets,network,3,acf,24,-0.002057,
+ets,network,3,acf,168,0.027861,
+ets,network,4,ljung_box,24,137.522413,0.0
+ets,network,4,ljung_box,168,399.325562,0.0
+ets,network,4,group_mean,holiday,-0.010812,
+ets,network,4,group_mean,normal weekday,0.005391,
+ets,network,4,group_mean,night 00-05,0.003975,
+ets,network,4,group_mean,day 06-23,0.00023,
+ets,network,4,acf,24,0.009034,
+ets,network,4,acf,168,0.019007,
+ets,Tongxiang,1,ljung_box,24,55.419129,0.000275
+ets,Tongxiang,1,ljung_box,168,229.967673,0.001064
+ets,Tongxiang,1,group_mean,holiday,0.009087,
+ets,Tongxiang,1,group_mean,normal weekday,0.000826,
+ets,Tongxiang,1,group_mean,night 00-05,-0.010514,
+ets,Tongxiang,1,group_mean,day 06-23,0.011574,
+ets,Tongxiang,1,acf,24,0.0104,
+ets,Tongxiang,1,acf,168,0.011806,
+ets,Tongxiang,2,ljung_box,24,71.541514,1e-06
+ets,Tongxiang,2,ljung_box,168,233.745743,0.000601
+ets,Tongxiang,2,group_mean,holiday,-0.001116,
+ets,Tongxiang,2,group_mean,normal weekday,0.004918,
+ets,Tongxiang,2,group_mean,night 00-05,-0.006613,
+ets,Tongxiang,2,group_mean,day 06-23,0.008918,
+ets,Tongxiang,2,acf,24,0.021757,
+ets,Tongxiang,2,acf,168,0.014403,
+ets,Tongxiang,3,ljung_box,24,63.616958,1.9e-05
+ets,Tongxiang,3,ljung_box,168,260.957884,6e-06
+ets,Tongxiang,3,group_mean,holiday,-0.007416,
+ets,Tongxiang,3,group_mean,normal weekday,0.002445,
+ets,Tongxiang,3,group_mean,night 00-05,-0.016788,
+ets,Tongxiang,3,group_mean,day 06-23,0.008427,
+ets,Tongxiang,3,acf,24,0.022863,
+ets,Tongxiang,3,acf,168,0.019616,
+ets,Tongxiang,4,ljung_box,24,72.336332,1e-06
+ets,Tongxiang,4,ljung_box,168,301.824795,0.0
+ets,Tongxiang,4,group_mean,holiday,-0.002493,
+ets,Tongxiang,4,group_mean,normal weekday,0.001836,
+ets,Tongxiang,4,group_mean,night 00-05,-0.015636,
+ets,Tongxiang,4,group_mean,day 06-23,0.007647,
+ets,Tongxiang,4,acf,24,0.028221,
+ets,Tongxiang,4,acf,168,0.015133,
+ets,Xiuzhou,1,ljung_box,24,104.965716,0.0
+ets,Xiuzhou,1,ljung_box,168,288.936768,0.0
+ets,Xiuzhou,1,group_mean,holiday,0.005762,
+ets,Xiuzhou,1,group_mean,normal weekday,0.007532,
+ets,Xiuzhou,1,group_mean,night 00-05,0.011866,
+ets,Xiuzhou,1,group_mean,day 06-23,0.001363,
+ets,Xiuzhou,1,acf,24,-0.016198,
+ets,Xiuzhou,1,acf,168,-1.1e-05,
+ets,Xiuzhou,2,ljung_box,24,138.047624,0.0
+ets,Xiuzhou,2,ljung_box,168,344.378222,0.0
+ets,Xiuzhou,2,group_mean,holiday,0.009891,
+ets,Xiuzhou,2,group_mean,normal weekday,0.008082,
+ets,Xiuzhou,2,group_mean,night 00-05,0.004429,
+ets,Xiuzhou,2,group_mean,day 06-23,0.003525,
+ets,Xiuzhou,2,acf,24,-0.005526,
+ets,Xiuzhou,2,acf,168,-0.002468,
+ets,Xiuzhou,3,ljung_box,24,146.624887,0.0
+ets,Xiuzhou,3,ljung_box,168,395.580499,0.0
+ets,Xiuzhou,3,group_mean,holiday,0.003268,
+ets,Xiuzhou,3,group_mean,normal weekday,0.002726,
+ets,Xiuzhou,3,group_mean,night 00-05,0.006007,
+ets,Xiuzhou,3,group_mean,day 06-23,9.7e-05,
+ets,Xiuzhou,3,acf,24,-0.006808,
+ets,Xiuzhou,3,acf,168,0.008567,
+ets,Xiuzhou,4,ljung_box,24,163.068364,0.0
+ets,Xiuzhou,4,ljung_box,168,426.556433,0.0
+ets,Xiuzhou,4,group_mean,holiday,0.00752,
+ets,Xiuzhou,4,group_mean,normal weekday,0.005177,
+ets,Xiuzhou,4,group_mean,night 00-05,0.005788,
+ets,Xiuzhou,4,group_mean,day 06-23,0.001081,
+ets,Xiuzhou,4,acf,24,0.002195,
+ets,Xiuzhou,4,acf,168,0.006755,
+ets,Nanhu,1,ljung_box,24,98.472222,0.0
+ets,Nanhu,1,ljung_box,168,320.666224,0.0
+ets,Nanhu,1,group_mean,holiday,0.040757,
+ets,Nanhu,1,group_mean,normal weekday,-0.002672,
+ets,Nanhu,1,group_mean,night 00-05,0.017685,
+ets,Nanhu,1,group_mean,day 06-23,-0.002638,
+ets,Nanhu,1,acf,24,0.006009,
+ets,Nanhu,1,acf,168,0.030974,
+ets,Nanhu,2,ljung_box,24,101.920238,0.0
+ets,Nanhu,2,ljung_box,168,336.840975,0.0
+ets,Nanhu,2,group_mean,holiday,-0.01355,
+ets,Nanhu,2,group_mean,normal weekday,0.003072,
+ets,Nanhu,2,group_mean,night 00-05,0.012008,
+ets,Nanhu,2,group_mean,day 06-23,-0.000575,
+ets,Nanhu,2,acf,24,0.007292,
+ets,Nanhu,2,acf,168,0.033461,
+ets,Nanhu,3,ljung_box,24,94.509276,0.0
+ets,Nanhu,3,ljung_box,168,372.709527,0.0
+ets,Nanhu,3,group_mean,holiday,-0.022198,
+ets,Nanhu,3,group_mean,normal weekday,-0.001754,
+ets,Nanhu,3,group_mean,night 00-05,0.008239,
+ets,Nanhu,3,group_mean,day 06-23,-0.004937,
+ets,Nanhu,3,acf,24,0.01465,
+ets,Nanhu,3,acf,168,0.032845,
+ets,Nanhu,4,ljung_box,24,107.156776,0.0
+ets,Nanhu,4,ljung_box,168,384.098182,0.0
+ets,Nanhu,4,group_mean,holiday,-0.007246,
+ets,Nanhu,4,group_mean,normal weekday,-0.002742,
+ets,Nanhu,4,group_mean,night 00-05,0.010574,
+ets,Nanhu,4,group_mean,day 06-23,-0.00462,
+ets,Nanhu,4,acf,24,0.015649,
+ets,Nanhu,4,acf,168,0.033767,
+sarima,network,1,ljung_box,24,45.093099,0.005679
+sarima,network,1,ljung_box,168,212.170676,0.011861
+sarima,network,1,group_mean,holiday,0.030502,
+sarima,network,1,group_mean,normal weekday,0.008456,
+sarima,network,1,group_mean,night 00-05,0.020237,
+sarima,network,1,group_mean,day 06-23,0.007338,
+sarima,network,1,acf,24,-0.007086,
+sarima,network,1,acf,168,-0.003975,
+sarima,network,2,ljung_box,24,36.781429,0.046006
+sarima,network,2,ljung_box,168,207.069748,0.021627
+sarima,network,2,group_mean,holiday,0.018628,
+sarima,network,2,group_mean,normal weekday,0.008972,
+sarima,network,2,group_mean,night 00-05,0.014201,
+sarima,network,2,group_mean,day 06-23,0.006342,
+sarima,network,2,acf,24,0.003337,
+sarima,network,2,acf,168,0.022927,
+sarima,network,3,ljung_box,24,37.050324,0.043257
+sarima,network,3,ljung_box,168,267.444531,2e-06
+sarima,network,3,group_mean,holiday,-0.016369,
+sarima,network,3,group_mean,normal weekday,0.003895,
+sarima,network,3,group_mean,night 00-05,-0.0016,
+sarima,network,3,group_mean,day 06-23,0.001008,
+sarima,network,3,acf,24,-0.000476,
+sarima,network,3,acf,168,0.028268,
+sarima,network,4,ljung_box,24,35.677715,0.058965
+sarima,network,4,ljung_box,168,250.328982,3.9e-05
+sarima,network,4,group_mean,holiday,0.009059,
+sarima,network,4,group_mean,normal weekday,0.00527,
+sarima,network,4,group_mean,night 00-05,0.006808,
+sarima,network,4,group_mean,day 06-23,0.003801,
+sarima,network,4,acf,24,0.007048,
+sarima,network,4,acf,168,0.016491,
+sarima,Tongxiang,1,ljung_box,24,22.239365,0.564982
+sarima,Tongxiang,1,ljung_box,168,181.528195,0.225053
+sarima,Tongxiang,1,group_mean,holiday,0.032904,
+sarima,Tongxiang,1,group_mean,normal weekday,0.004722,
+sarima,Tongxiang,1,group_mean,night 00-05,-0.004229,
+sarima,Tongxiang,1,group_mean,day 06-23,0.016793,
+sarima,Tongxiang,1,acf,24,0.010047,
+sarima,Tongxiang,1,acf,168,0.011211,
+sarima,Tongxiang,2,ljung_box,24,27.174423,0.296389
+sarima,Tongxiang,2,ljung_box,168,176.985418,0.30225
+sarima,Tongxiang,2,group_mean,holiday,0.017918,
+sarima,Tongxiang,2,group_mean,normal weekday,0.008727,
+sarima,Tongxiang,2,group_mean,night 00-05,-0.000845,
+sarima,Tongxiang,2,group_mean,day 06-23,0.014579,
+sarima,Tongxiang,2,acf,24,0.020317,
+sarima,Tongxiang,2,acf,168,0.012388,
+sarima,Tongxiang,3,ljung_box,24,27.632416,0.275849
+sarima,Tongxiang,3,ljung_box,168,204.872612,0.027649
+sarima,Tongxiang,3,group_mean,holiday,-0.001537,
+sarima,Tongxiang,3,group_mean,normal weekday,0.004382,
+sarima,Tongxiang,3,group_mean,night 00-05,-0.013064,
+sarima,Tongxiang,3,group_mean,day 06-23,0.011216,
+sarima,Tongxiang,3,acf,24,0.021289,
+sarima,Tongxiang,3,acf,168,0.019058,
+sarima,Tongxiang,4,ljung_box,24,28.798514,0.227806
+sarima,Tongxiang,4,ljung_box,168,229.359384,0.001164
+sarima,Tongxiang,4,group_mean,holiday,0.006747,
+sarima,Tongxiang,4,group_mean,normal weekday,0.004089,
+sarima,Tongxiang,4,group_mean,night 00-05,-0.010325,
+sarima,Tongxiang,4,group_mean,day 06-23,0.010817,
+sarima,Tongxiang,4,acf,24,0.027568,
+sarima,Tongxiang,4,acf,168,0.015475,
+sarima,Xiuzhou,1,ljung_box,24,37.144896,0.042325
+sarima,Xiuzhou,1,ljung_box,168,203.187811,0.033199
+sarima,Xiuzhou,1,group_mean,holiday,0.05267,
+sarima,Xiuzhou,1,group_mean,normal weekday,0.009842,
+sarima,Xiuzhou,1,group_mean,night 00-05,0.014778,
+sarima,Xiuzhou,1,group_mean,day 06-23,0.00771,
+sarima,Xiuzhou,1,acf,24,-0.020793,
+sarima,Xiuzhou,1,acf,168,-0.000943,
+sarima,Xiuzhou,2,ljung_box,24,29.323402,0.208197
+sarima,Xiuzhou,2,ljung_box,168,203.296469,0.032814
+sarima,Xiuzhou,2,group_mean,holiday,0.050781,
+sarima,Xiuzhou,2,group_mean,normal weekday,0.008947,
+sarima,Xiuzhou,2,group_mean,night 00-05,0.008214,
+sarima,Xiuzhou,2,group_mean,day 06-23,0.009266,
+sarima,Xiuzhou,2,acf,24,-0.008679,
+sarima,Xiuzhou,2,acf,168,-0.001278,
+sarima,Xiuzhou,3,ljung_box,24,36.321505,0.051067
+sarima,Xiuzhou,3,ljung_box,168,230.40014,0.000998
+sarima,Xiuzhou,3,group_mean,holiday,0.02314,
+sarima,Xiuzhou,3,group_mean,normal weekday,0.001288,
+sarima,Xiuzhou,3,group_mean,night 00-05,0.006054,
+sarima,Xiuzhou,3,group_mean,day 06-23,0.001684,
+sarima,Xiuzhou,3,acf,24,-0.009569,
+sarima,Xiuzhou,3,acf,168,0.008606,
+sarima,Xiuzhou,4,ljung_box,24,34.127799,0.082423
+sarima,Xiuzhou,4,ljung_box,168,239.391609,0.000247
+sarima,Xiuzhou,4,group_mean,holiday,0.040061,
+sarima,Xiuzhou,4,group_mean,normal weekday,0.006517,
+sarima,Xiuzhou,4,group_mean,night 00-05,0.009772,
+sarima,Xiuzhou,4,group_mean,day 06-23,0.007113,
+sarima,Xiuzhou,4,acf,24,-0.000926,
+sarima,Xiuzhou,4,acf,168,0.005432,
+sarima,Nanhu,1,ljung_box,24,31.360569,0.143656
+sarima,Nanhu,1,ljung_box,168,224.077265,0.00249
+sarima,Nanhu,1,group_mean,holiday,0.081848,
+sarima,Nanhu,1,group_mean,normal weekday,-0.000359,
+sarima,Nanhu,1,group_mean,night 00-05,0.018042,
+sarima,Nanhu,1,group_mean,day 06-23,0.001771,
+sarima,Nanhu,1,acf,24,0.001419,
+sarima,Nanhu,1,acf,168,0.02355,
+sarima,Nanhu,2,ljung_box,24,32.044381,0.125896
+sarima,Nanhu,2,ljung_box,168,242.134265,0.000158
+sarima,Nanhu,2,group_mean,holiday,0.020555,
+sarima,Nanhu,2,group_mean,normal weekday,0.000628,
+sarima,Nanhu,2,group_mean,night 00-05,0.010516,
+sarima,Nanhu,2,group_mean,day 06-23,0.000217,
+sarima,Nanhu,2,acf,24,0.004701,
+sarima,Nanhu,2,acf,168,0.02723,
+sarima,Nanhu,3,ljung_box,24,30.47513,0.1695
+sarima,Nanhu,3,ljung_box,168,260.917959,6e-06
+sarima,Nanhu,3,group_mean,holiday,-0.021397,
+sarima,Nanhu,3,group_mean,normal weekday,-0.005976,
+sarima,Nanhu,3,group_mean,night 00-05,0.003541,
+sarima,Nanhu,3,group_mean,day 06-23,-0.008867,
+sarima,Nanhu,3,acf,24,0.009088,
+sarima,Nanhu,3,acf,168,0.029822,
+sarima,Nanhu,4,ljung_box,24,37.045215,0.043308
+sarima,Nanhu,4,ljung_box,168,262.922751,4e-06
+sarima,Nanhu,4,group_mean,holiday,-0.003763,
+sarima,Nanhu,4,group_mean,normal weekday,-0.004881,
+sarima,Nanhu,4,group_mean,night 00-05,0.007718,
+sarima,Nanhu,4,group_mean,day 06-23,-0.006461,
+sarima,Nanhu,4,acf,24,0.010304,
+sarima,Nanhu,4,acf,168,0.031204,
+sarimax_cal,network,1,ljung_box,24,50.092074,0.001378
+sarimax_cal,network,1,ljung_box,168,216.712671,0.006709
+sarimax_cal,network,1,group_mean,holiday,-0.001043,
+sarimax_cal,network,1,group_mean,normal weekday,0.011226,
+sarimax_cal,network,1,group_mean,night 00-05,0.020333,
+sarimax_cal,network,1,group_mean,day 06-23,0.007053,
+sarimax_cal,network,1,acf,24,-0.009388,
+sarimax_cal,network,1,acf,168,-0.004904,
+sarimax_cal,network,2,ljung_box,24,38.972613,0.02749
+sarimax_cal,network,2,ljung_box,168,203.112756,0.033467
+sarimax_cal,network,2,group_mean,holiday,-0.008351,
+sarimax_cal,network,2,group_mean,normal weekday,0.009847,
+sarimax_cal,network,2,group_mean,night 00-05,0.014371,
+sarimax_cal,network,2,group_mean,day 06-23,0.006308,
+sarimax_cal,network,2,acf,24,0.000673,
+sarimax_cal,network,2,acf,168,0.021086,
+sarimax_cal,network,3,ljung_box,24,33.430274,0.095315
+sarimax_cal,network,3,ljung_box,168,223.113108,0.002848
+sarimax_cal,network,3,group_mean,holiday,-0.018565,
+sarimax_cal,network,3,group_mean,normal weekday,0.005319,
+sarimax_cal,network,3,group_mean,night 00-05,0.0009,
+sarimax_cal,network,3,group_mean,day 06-23,0.003522,
+sarimax_cal,network,3,acf,24,-0.00485,
+sarimax_cal,network,3,acf,168,0.024598,
+sarimax_cal,network,4,ljung_box,24,39.529515,0.02401
+sarimax_cal,network,4,ljung_box,168,244.046556,0.000115
+sarimax_cal,network,4,group_mean,holiday,-0.012314,
+sarimax_cal,network,4,group_mean,normal weekday,0.007823,
+sarimax_cal,network,4,group_mean,night 00-05,0.006776,
+sarimax_cal,network,4,group_mean,day 06-23,0.003569,
+sarimax_cal,network,4,acf,24,0.004111,
+sarimax_cal,network,4,acf,168,0.014645,
+sarimax_cal,Tongxiang,1,ljung_box,24,23.397244,0.496461
+sarimax_cal,Tongxiang,1,ljung_box,168,180.366817,0.243544
+sarimax_cal,Tongxiang,1,group_mean,holiday,0.014222,
+sarimax_cal,Tongxiang,1,group_mean,normal weekday,0.006615,
+sarimax_cal,Tongxiang,1,group_mean,night 00-05,-0.006545,
+sarimax_cal,Tongxiang,1,group_mean,day 06-23,0.014364,
+sarimax_cal,Tongxiang,1,acf,24,0.010218,
+sarimax_cal,Tongxiang,1,acf,168,0.009071,
+sarimax_cal,Tongxiang,2,ljung_box,24,27.864558,0.265794
+sarimax_cal,Tongxiang,2,ljung_box,168,174.798768,0.343741
+sarimax_cal,Tongxiang,2,group_mean,holiday,0.000723,
+sarimax_cal,Tongxiang,2,group_mean,normal weekday,0.008675,
+sarimax_cal,Tongxiang,2,group_mean,night 00-05,-0.001951,
+sarimax_cal,Tongxiang,2,group_mean,day 06-23,0.013516,
+sarimax_cal,Tongxiang,2,acf,24,0.019374,
+sarimax_cal,Tongxiang,2,acf,168,0.010488,
+sarimax_cal,Tongxiang,3,ljung_box,24,29.293683,0.209274
+sarimax_cal,Tongxiang,3,ljung_box,168,204.209709,0.029729
+sarimax_cal,Tongxiang,3,group_mean,holiday,-0.010082,
+sarimax_cal,Tongxiang,3,group_mean,normal weekday,0.00471,
+sarimax_cal,Tongxiang,3,group_mean,night 00-05,-0.013488,
+sarimax_cal,Tongxiang,3,group_mean,day 06-23,0.010849,
+sarimax_cal,Tongxiang,3,acf,24,0.02089,
+sarimax_cal,Tongxiang,3,acf,168,0.017715,
+sarimax_cal,Tongxiang,4,ljung_box,24,31.046113,0.152458
+sarimax_cal,Tongxiang,4,ljung_box,168,227.738634,0.001476
+sarimax_cal,Tongxiang,4,group_mean,holiday,-0.005493,
+sarimax_cal,Tongxiang,4,group_mean,normal weekday,0.005641,
+sarimax_cal,Tongxiang,4,group_mean,night 00-05,-0.011075,
+sarimax_cal,Tongxiang,4,group_mean,day 06-23,0.0103,
+sarimax_cal,Tongxiang,4,acf,24,0.02728,
+sarimax_cal,Tongxiang,4,acf,168,0.014338,
+sarimax_cal,Xiuzhou,1,ljung_box,24,36.76632,0.046165
+sarimax_cal,Xiuzhou,1,ljung_box,168,202.163633,0.037018
+sarimax_cal,Xiuzhou,1,group_mean,holiday,-0.019917,
+sarimax_cal,Xiuzhou,1,group_mean,normal weekday,0.012161,
+sarimax_cal,Xiuzhou,1,group_mean,night 00-05,0.014992,
+sarimax_cal,Xiuzhou,1,group_mean,day 06-23,0.007744,
+sarimax_cal,Xiuzhou,1,acf,24,-0.020607,
+sarimax_cal,Xiuzhou,1,acf,168,-0.001595,
+sarimax_cal,Xiuzhou,2,ljung_box,24,28.831826,0.226524
+sarimax_cal,Xiuzhou,2,ljung_box,168,202.420037,0.036028
+sarimax_cal,Xiuzhou,2,group_mean,holiday,-0.014717,
+sarimax_cal,Xiuzhou,2,group_mean,normal weekday,0.010129,
+sarimax_cal,Xiuzhou,2,group_mean,night 00-05,0.008163,
+sarimax_cal,Xiuzhou,2,group_mean,day 06-23,0.009101,
+sarimax_cal,Xiuzhou,2,acf,24,-0.008121,
+sarimax_cal,Xiuzhou,2,acf,168,-0.002781,
+sarimax_cal,Xiuzhou,3,ljung_box,24,36.539659,0.048609
+sarimax_cal,Xiuzhou,3,ljung_box,168,231.896762,0.000797
+sarimax_cal,Xiuzhou,3,group_mean,holiday,-0.019568,
+sarimax_cal,Xiuzhou,3,group_mean,normal weekday,0.004545,
+sarimax_cal,Xiuzhou,3,group_mean,night 00-05,0.006638,
+sarimax_cal,Xiuzhou,3,group_mean,day 06-23,0.001926,
+sarimax_cal,Xiuzhou,3,acf,24,-0.008834,
+sarimax_cal,Xiuzhou,3,acf,168,0.006783,
+sarimax_cal,Xiuzhou,4,ljung_box,24,35.115175,0.066711
+sarimax_cal,Xiuzhou,4,ljung_box,168,242.663684,0.000144
+sarimax_cal,Xiuzhou,4,group_mean,holiday,-0.014388,
+sarimax_cal,Xiuzhou,4,group_mean,normal weekday,0.009535,
+sarimax_cal,Xiuzhou,4,group_mean,night 00-05,0.008773,
+sarimax_cal,Xiuzhou,4,group_mean,day 06-23,0.005694,
+sarimax_cal,Xiuzhou,4,acf,24,-9e-06,
+sarimax_cal,Xiuzhou,4,acf,168,0.003505,
+sarimax_cal,Nanhu,1,ljung_box,24,29.911018,0.187719
+sarimax_cal,Nanhu,1,ljung_box,168,218.740892,0.005148
+sarimax_cal,Nanhu,1,group_mean,holiday,0.016712,
+sarimax_cal,Nanhu,1,group_mean,normal weekday,0.007581,
+sarimax_cal,Nanhu,1,group_mean,night 00-05,0.019736,
+sarimax_cal,Nanhu,1,group_mean,day 06-23,0.003549,
+sarimax_cal,Nanhu,1,acf,24,-0.000671,
+sarimax_cal,Nanhu,1,acf,168,0.023055,
+sarimax_cal,Nanhu,2,ljung_box,24,31.448983,0.141254
+sarimax_cal,Nanhu,2,ljung_box,168,236.405086,0.000397
+sarimax_cal,Nanhu,2,group_mean,holiday,-0.0159,
+sarimax_cal,Nanhu,2,group_mean,normal weekday,0.004855,
+sarimax_cal,Nanhu,2,group_mean,night 00-05,0.010908,
+sarimax_cal,Nanhu,2,group_mean,day 06-23,0.000632,
+sarimax_cal,Nanhu,2,acf,24,0.003575,
+sarimax_cal,Nanhu,2,acf,168,0.025907,
+sarimax_cal,Nanhu,3,ljung_box,24,30.167184,0.179272
+sarimax_cal,Nanhu,3,ljung_box,168,255.275623,1.6e-05
+sarimax_cal,Nanhu,3,group_mean,holiday,-0.034837,
+sarimax_cal,Nanhu,3,group_mean,normal weekday,-0.003916,
+sarimax_cal,Nanhu,3,group_mean,night 00-05,0.003797,
+sarimax_cal,Nanhu,3,group_mean,day 06-23,-0.008628,
+sarimax_cal,Nanhu,3,acf,24,0.00893,
+sarimax_cal,Nanhu,3,acf,168,0.028296,
+sarimax_cal,Nanhu,4,ljung_box,24,35.104361,0.066868
+sarimax_cal,Nanhu,4,ljung_box,168,255.407299,1.6e-05
+sarimax_cal,Nanhu,4,group_mean,holiday,-0.023944,
+sarimax_cal,Nanhu,4,group_mean,normal weekday,-0.001106,
+sarimax_cal,Nanhu,4,group_mean,night 00-05,0.008017,
+sarimax_cal,Nanhu,4,group_mean,day 06-23,-0.006257,
+sarimax_cal,Nanhu,4,acf,24,0.010271,
+sarimax_cal,Nanhu,4,acf,168,0.02962,
+sarimax_weather,network,1,ljung_box,24,53.790135,0.000455
+sarimax_weather,network,1,ljung_box,168,220.473656,0.004086
+sarimax_weather,network,1,group_mean,holiday,-0.001667,
+sarimax_weather,network,1,group_mean,normal weekday,0.012148,
+sarimax_weather,network,1,group_mean,night 00-05,0.021955,
+sarimax_weather,network,1,group_mean,day 06-23,0.008353,
+sarimax_weather,network,1,acf,24,-0.010083,
+sarimax_weather,network,1,acf,168,-0.002524,
+sarimax_weather,network,2,ljung_box,24,38.942671,0.02769
+sarimax_weather,network,2,ljung_box,168,203.052725,0.033683
+sarimax_weather,network,2,group_mean,holiday,-0.008394,
+sarimax_weather,network,2,group_mean,normal weekday,0.009854,
+sarimax_weather,network,2,group_mean,night 00-05,0.01437,
+sarimax_weather,network,2,group_mean,day 06-23,0.006306,
+sarimax_weather,network,2,acf,24,0.000705,
+sarimax_weather,network,2,acf,168,0.021084,
+sarimax_weather,network,3,ljung_box,24,34.021801,0.084282
+sarimax_weather,network,3,ljung_box,168,223.663774,0.002638
+sarimax_weather,network,3,group_mean,holiday,-0.018942,
+sarimax_weather,network,3,group_mean,normal weekday,0.005299,
+sarimax_weather,network,3,group_mean,night 00-05,0.000816,
+sarimax_weather,network,3,group_mean,day 06-23,0.003428,
+sarimax_weather,network,3,acf,24,-0.004964,
+sarimax_weather,network,3,acf,168,0.024516,
+sarimax_weather,network,4,ljung_box,24,39.621709,0.023474
+sarimax_weather,network,4,ljung_box,168,244.194085,0.000112
+sarimax_weather,network,4,group_mean,holiday,-0.01233,
+sarimax_weather,network,4,group_mean,normal weekday,0.007835,
+sarimax_weather,network,4,group_mean,night 00-05,0.006787,
+sarimax_weather,network,4,group_mean,day 06-23,0.003579,
+sarimax_weather,network,4,acf,24,0.004139,
+sarimax_weather,network,4,acf,168,0.014666,
+sarimax_weather,Tongxiang,1,ljung_box,24,25.313061,0.388912
+sarimax_weather,Tongxiang,1,ljung_box,168,183.630549,0.193869
+sarimax_weather,Tongxiang,1,group_mean,holiday,0.012652,
+sarimax_weather,Tongxiang,1,group_mean,normal weekday,0.006206,
+sarimax_weather,Tongxiang,1,group_mean,night 00-05,-0.006338,
+sarimax_weather,Tongxiang,1,group_mean,day 06-23,0.013907,
+sarimax_weather,Tongxiang,1,acf,24,0.011363,
+sarimax_weather,Tongxiang,1,acf,168,0.012393,
+sarimax_weather,Tongxiang,2,ljung_box,24,27.845297,0.266619
+sarimax_weather,Tongxiang,2,ljung_box,168,174.737895,0.344932
+sarimax_weather,Tongxiang,2,group_mean,holiday,0.000722,
+sarimax_weather,Tongxiang,2,group_mean,normal weekday,0.008602,
+sarimax_weather,Tongxiang,2,group_mean,night 00-05,-0.002022,
+sarimax_weather,Tongxiang,2,group_mean,day 06-23,0.013445,
+sarimax_weather,Tongxiang,2,acf,24,0.019357,
+sarimax_weather,Tongxiang,2,acf,168,0.010454,
+sarimax_weather,Tongxiang,3,ljung_box,24,29.759472,0.192852
+sarimax_weather,Tongxiang,3,ljung_box,168,204.632879,0.028386
+sarimax_weather,Tongxiang,3,group_mean,holiday,-0.010139,
+sarimax_weather,Tongxiang,3,group_mean,normal weekday,0.004418,
+sarimax_weather,Tongxiang,3,group_mean,night 00-05,-0.013895,
+sarimax_weather,Tongxiang,3,group_mean,day 06-23,0.010513,
+sarimax_weather,Tongxiang,3,acf,24,0.021085,
+sarimax_weather,Tongxiang,3,acf,168,0.01741,
+sarimax_weather,Tongxiang,4,ljung_box,24,31.127851,0.15013
+sarimax_weather,Tongxiang,4,ljung_box,168,227.765673,0.001471
+sarimax_weather,Tongxiang,4,group_mean,holiday,-0.005477,
+sarimax_weather,Tongxiang,4,group_mean,normal weekday,0.005639,
+sarimax_weather,Tongxiang,4,group_mean,night 00-05,-0.011088,
+sarimax_weather,Tongxiang,4,group_mean,day 06-23,0.010292,
+sarimax_weather,Tongxiang,4,acf,24,0.027278,
+sarimax_weather,Tongxiang,4,acf,168,0.014288,
+sarimax_weather,Xiuzhou,1,ljung_box,24,38.016378,0.034539
+sarimax_weather,Xiuzhou,1,ljung_box,168,215.263818,0.008075
+sarimax_weather,Xiuzhou,1,group_mean,holiday,-0.00646,
+sarimax_weather,Xiuzhou,1,group_mean,normal weekday,0.010646,
+sarimax_weather,Xiuzhou,1,group_mean,night 00-05,0.014875,
+sarimax_weather,Xiuzhou,1,group_mean,day 06-23,0.00815,
+sarimax_weather,Xiuzhou,1,acf,24,-0.014601,
+sarimax_weather,Xiuzhou,1,acf,168,0.001362,
+sarimax_weather,Xiuzhou,2,ljung_box,24,28.788473,0.228193
+sarimax_weather,Xiuzhou,2,ljung_box,168,202.287146,0.036538
+sarimax_weather,Xiuzhou,2,group_mean,holiday,-0.011677,
+sarimax_weather,Xiuzhou,2,group_mean,normal weekday,0.011485,
+sarimax_weather,Xiuzhou,2,group_mean,night 00-05,0.009688,
+sarimax_weather,Xiuzhou,2,group_mean,day 06-23,0.010582,
+sarimax_weather,Xiuzhou,2,acf,24,-0.008479,
+sarimax_weather,Xiuzhou,2,acf,168,-0.002811,
+sarimax_weather,Xiuzhou,3,ljung_box,24,36.479077,0.049281
+sarimax_weather,Xiuzhou,3,ljung_box,168,231.996507,0.000785
+sarimax_weather,Xiuzhou,3,group_mean,holiday,-0.019668,
+sarimax_weather,Xiuzhou,3,group_mean,normal weekday,0.004549,
+sarimax_weather,Xiuzhou,3,group_mean,night 00-05,0.006652,
+sarimax_weather,Xiuzhou,3,group_mean,day 06-23,0.001939,
+sarimax_weather,Xiuzhou,3,acf,24,-0.00883,
+sarimax_weather,Xiuzhou,3,acf,168,0.006832,
+sarimax_weather,Xiuzhou,4,ljung_box,24,34.97242,0.068811
+sarimax_weather,Xiuzhou,4,ljung_box,168,242.308649,0.000153
+sarimax_weather,Xiuzhou,4,group_mean,holiday,-0.013938,
+sarimax_weather,Xiuzhou,4,group_mean,normal weekday,0.009611,
+sarimax_weather,Xiuzhou,4,group_mean,night 00-05,0.008896,
+sarimax_weather,Xiuzhou,4,group_mean,day 06-23,0.005817,
+sarimax_weather,Xiuzhou,4,acf,24,-0.000111,
+sarimax_weather,Xiuzhou,4,acf,168,0.003472,
+sarimax_weather,Nanhu,1,ljung_box,24,31.430776,0.141746
+sarimax_weather,Nanhu,1,ljung_box,168,221.938711,0.003349
+sarimax_weather,Nanhu,1,group_mean,holiday,-0.022951,
+sarimax_weather,Nanhu,1,group_mean,normal weekday,-0.000362,
+sarimax_weather,Nanhu,1,group_mean,night 00-05,0.011595,
+sarimax_weather,Nanhu,1,group_mean,day 06-23,-0.005225,
+sarimax_weather,Nanhu,1,acf,24,0.000511,
+sarimax_weather,Nanhu,1,acf,168,0.025009,
+sarimax_weather,Nanhu,2,ljung_box,24,31.704802,0.134483
+sarimax_weather,Nanhu,2,ljung_box,168,237.310401,0.000344
+sarimax_weather,Nanhu,2,group_mean,holiday,-0.015696,
+sarimax_weather,Nanhu,2,group_mean,normal weekday,0.00546,
+sarimax_weather,Nanhu,2,group_mean,night 00-05,0.011671,
+sarimax_weather,Nanhu,2,group_mean,day 06-23,0.001306,
+sarimax_weather,Nanhu,2,acf,24,0.004123,
+sarimax_weather,Nanhu,2,acf,168,0.025599,
+sarimax_weather,Nanhu,3,ljung_box,24,30.148109,0.179891
+sarimax_weather,Nanhu,3,ljung_box,168,255.361606,1.6e-05
+sarimax_weather,Nanhu,3,group_mean,holiday,-0.034895,
+sarimax_weather,Nanhu,3,group_mean,normal weekday,-0.003817,
+sarimax_weather,Nanhu,3,group_mean,night 00-05,0.00387,
+sarimax_weather,Nanhu,3,group_mean,day 06-23,-0.008553,
+sarimax_weather,Nanhu,3,acf,24,0.008936,
+sarimax_weather,Nanhu,3,acf,168,0.028299,
+sarimax_weather,Nanhu,4,ljung_box,24,35.15172,0.066183
+sarimax_weather,Nanhu,4,ljung_box,168,254.978026,1.7e-05
+sarimax_weather,Nanhu,4,group_mean,holiday,-0.024115,
+sarimax_weather,Nanhu,4,group_mean,normal weekday,-0.001281,
+sarimax_weather,Nanhu,4,group_mean,night 00-05,0.007781,
+sarimax_weather,Nanhu,4,group_mean,day 06-23,-0.00648,
+sarimax_weather,Nanhu,4,acf,24,0.010118,
+sarimax_weather,Nanhu,4,acf,168,0.02964,
+mstl_arima,network,1,ljung_box,24,365.159773,0.0
+mstl_arima,network,1,ljung_box,168,987.153075,0.0
+mstl_arima,network,1,group_mean,holiday,-0.016706,
+mstl_arima,network,1,group_mean,normal weekday,0.006074,
+mstl_arima,network,1,group_mean,night 00-05,0.004102,
+mstl_arima,network,1,group_mean,day 06-23,0.004831,
+mstl_arima,network,1,acf,24,-0.275994,
+mstl_arima,network,1,acf,168,-0.157826,
+mstl_arima,network,2,ljung_box,24,461.310132,0.0
+mstl_arima,network,2,ljung_box,168,1225.600758,0.0
+mstl_arima,network,2,group_mean,holiday,-0.011919,
+mstl_arima,network,2,group_mean,normal weekday,0.003616,
+mstl_arima,network,2,group_mean,night 00-05,0.002808,
+mstl_arima,network,2,group_mean,day 06-23,0.003177,
+mstl_arima,network,2,acf,24,-0.260812,
+mstl_arima,network,2,acf,168,-0.135956,
+mstl_arima,network,3,ljung_box,24,615.838813,0.0
+mstl_arima,network,3,ljung_box,168,1581.760768,0.0
+mstl_arima,network,3,group_mean,holiday,-0.015691,
+mstl_arima,network,3,group_mean,normal weekday,0.003475,
+mstl_arima,network,3,group_mean,night 00-05,0.001457,
+mstl_arima,network,3,group_mean,day 06-23,0.002146,
+mstl_arima,network,3,acf,24,-0.262768,
+mstl_arima,network,3,acf,168,-0.142188,
+mstl_arima,network,4,ljung_box,24,708.619782,0.0
+mstl_arima,network,4,ljung_box,168,1954.052247,0.0
+mstl_arima,network,4,group_mean,holiday,-0.006526,
+mstl_arima,network,4,group_mean,normal weekday,0.002997,
+mstl_arima,network,4,group_mean,night 00-05,0.001463,
+mstl_arima,network,4,group_mean,day 06-23,0.001954,
+mstl_arima,network,4,acf,24,-0.252144,
+mstl_arima,network,4,acf,168,-0.157683,
+mstl_arima,Tongxiang,1,ljung_box,24,295.713057,0.0
+mstl_arima,Tongxiang,1,ljung_box,168,922.299683,0.0
+mstl_arima,Tongxiang,1,group_mean,holiday,0.000225,
+mstl_arima,Tongxiang,1,group_mean,normal weekday,0.00597,
+mstl_arima,Tongxiang,1,group_mean,night 00-05,0.00602,
+mstl_arima,Tongxiang,1,group_mean,day 06-23,0.007215,
+mstl_arima,Tongxiang,1,acf,24,-0.254893,
+mstl_arima,Tongxiang,1,acf,168,-0.170811,
+mstl_arima,Tongxiang,2,ljung_box,24,417.633824,0.0
+mstl_arima,Tongxiang,2,ljung_box,168,1279.350999,0.0
+mstl_arima,Tongxiang,2,group_mean,holiday,-0.004197,
+mstl_arima,Tongxiang,2,group_mean,normal weekday,0.004469,
+mstl_arima,Tongxiang,2,group_mean,night 00-05,0.004914,
+mstl_arima,Tongxiang,2,group_mean,day 06-23,0.005559,
+mstl_arima,Tongxiang,2,acf,24,-0.246637,
+mstl_arima,Tongxiang,2,acf,168,-0.15919,
+mstl_arima,Tongxiang,3,ljung_box,24,538.264435,0.0
+mstl_arima,Tongxiang,3,ljung_box,168,1631.509487,0.0
+mstl_arima,Tongxiang,3,group_mean,holiday,-0.009167,
+mstl_arima,Tongxiang,3,group_mean,normal weekday,0.003766,
+mstl_arima,Tongxiang,3,group_mean,night 00-05,0.003021,
+mstl_arima,Tongxiang,3,group_mean,day 06-23,0.003788,
+mstl_arima,Tongxiang,3,acf,24,-0.242932,
+mstl_arima,Tongxiang,3,acf,168,-0.157398,
+mstl_arima,Tongxiang,4,ljung_box,24,615.838707,0.0
+mstl_arima,Tongxiang,4,ljung_box,168,2022.748887,0.0
+mstl_arima,Tongxiang,4,group_mean,holiday,-0.002094,
+mstl_arima,Tongxiang,4,group_mean,normal weekday,0.003358,
+mstl_arima,Tongxiang,4,group_mean,night 00-05,0.0028,
+mstl_arima,Tongxiang,4,group_mean,day 06-23,0.003365,
+mstl_arima,Tongxiang,4,acf,24,-0.233922,
+mstl_arima,Tongxiang,4,acf,168,-0.168057,
+mstl_arima,Xiuzhou,1,ljung_box,24,364.19325,0.0
+mstl_arima,Xiuzhou,1,ljung_box,168,925.256156,0.0
+mstl_arima,Xiuzhou,1,group_mean,holiday,-0.001461,
+mstl_arima,Xiuzhou,1,group_mean,normal weekday,0.007688,
+mstl_arima,Xiuzhou,1,group_mean,night 00-05,0.00551,
+mstl_arima,Xiuzhou,1,group_mean,day 06-23,0.005395,
+mstl_arima,Xiuzhou,1,acf,24,-0.275346,
+mstl_arima,Xiuzhou,1,acf,168,-0.165514,
+mstl_arima,Xiuzhou,2,ljung_box,24,487.654875,0.0
+mstl_arima,Xiuzhou,2,ljung_box,168,1259.432571,0.0
+mstl_arima,Xiuzhou,2,group_mean,holiday,0.008201,
+mstl_arima,Xiuzhou,2,group_mean,normal weekday,0.004053,
+mstl_arima,Xiuzhou,2,group_mean,night 00-05,0.003607,
+mstl_arima,Xiuzhou,2,group_mean,day 06-23,0.003953,
+mstl_arima,Xiuzhou,2,acf,24,-0.264844,
+mstl_arima,Xiuzhou,2,acf,168,-0.169176,
+mstl_arima,Xiuzhou,3,ljung_box,24,649.308285,0.0
+mstl_arima,Xiuzhou,3,ljung_box,168,1583.256427,0.0
+mstl_arima,Xiuzhou,3,group_mean,holiday,-0.005143,
+mstl_arima,Xiuzhou,3,group_mean,normal weekday,0.003265,
+mstl_arima,Xiuzhou,3,group_mean,night 00-05,0.001908,
+mstl_arima,Xiuzhou,3,group_mean,day 06-23,0.00226,
+mstl_arima,Xiuzhou,3,acf,24,-0.264744,
+mstl_arima,Xiuzhou,3,acf,168,-0.157531,
+mstl_arima,Xiuzhou,4,ljung_box,24,762.246372,0.0
+mstl_arima,Xiuzhou,4,ljung_box,168,1899.438314,0.0
+mstl_arima,Xiuzhou,4,group_mean,holiday,0.017161,
+mstl_arima,Xiuzhou,4,group_mean,normal weekday,0.002875,
+mstl_arima,Xiuzhou,4,group_mean,night 00-05,0.002157,
+mstl_arima,Xiuzhou,4,group_mean,day 06-23,0.002253,
+mstl_arima,Xiuzhou,4,acf,24,-0.256316,
+mstl_arima,Xiuzhou,4,acf,168,-0.158367,
+mstl_arima,Nanhu,1,ljung_box,24,306.120946,0.0
+mstl_arima,Nanhu,1,ljung_box,168,869.965998,0.0
+mstl_arima,Nanhu,1,group_mean,holiday,-0.021445,
+mstl_arima,Nanhu,1,group_mean,normal weekday,0.004596,
+mstl_arima,Nanhu,1,group_mean,night 00-05,0.003036,
+mstl_arima,Nanhu,1,group_mean,day 06-23,0.002844,
+mstl_arima,Nanhu,1,acf,24,-0.259828,
+mstl_arima,Nanhu,1,acf,168,-0.153736,
+mstl_arima,Nanhu,2,ljung_box,24,464.175149,0.0
+mstl_arima,Nanhu,2,ljung_box,168,1211.752494,0.0
+mstl_arima,Nanhu,2,group_mean,holiday,-0.018053,
+mstl_arima,Nanhu,2,group_mean,normal weekday,0.002512,
+mstl_arima,Nanhu,2,group_mean,night 00-05,0.001626,
+mstl_arima,Nanhu,2,group_mean,day 06-23,0.001446,
+mstl_arima,Nanhu,2,acf,24,-0.261042,
+mstl_arima,Nanhu,2,acf,168,-0.154849,
+mstl_arima,Nanhu,3,ljung_box,24,583.500368,0.0
+mstl_arima,Nanhu,3,ljung_box,168,1519.973506,0.0
+mstl_arima,Nanhu,3,group_mean,holiday,-0.034037,
+mstl_arima,Nanhu,3,group_mean,normal weekday,0.001856,
+mstl_arima,Nanhu,3,group_mean,night 00-05,8.3e-05,
+mstl_arima,Nanhu,3,group_mean,day 06-23,0.000213,
+mstl_arima,Nanhu,3,acf,24,-0.253451,
+mstl_arima,Nanhu,3,acf,168,-0.153664,
+mstl_arima,Nanhu,4,ljung_box,24,773.539131,0.0
+mstl_arima,Nanhu,4,ljung_box,168,1872.431817,0.0
+mstl_arima,Nanhu,4,group_mean,holiday,-0.018494,
+mstl_arima,Nanhu,4,group_mean,normal weekday,0.000477,
+mstl_arima,Nanhu,4,group_mean,night 00-05,-0.000269,
+mstl_arima,Nanhu,4,group_mean,day 06-23,-3e-05,
+mstl_arima,Nanhu,4,acf,24,-0.26101,
+mstl_arima,Nanhu,4,acf,168,-0.152816,

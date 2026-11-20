@@ -1,0 +1,109 @@
+operation,fitted_on,level,fold,value
+AIC selection of the sarima structure,2020-04-01 to 2020-09-30,network,1,"(2,0,1)(0,1,1)24"
+AIC selection of the sarima structure,2020-04-01 to 2020-09-30,Tongxiang,1,"(2,0,1)(0,1,1)24"
+AIC selection of the sarima structure,2020-04-01 to 2020-09-30,Xiuzhou,1,"(2,0,1)(0,1,1)24"
+AIC selection of the sarima structure,2020-04-01 to 2020-09-30,Nanhu,1,"(2,0,1)(0,1,1)24"
+AIC selection of the ets structure,2020-04-01 to 2020-09-30,network,1,trend=none
+AIC selection of the ets structure,2020-04-01 to 2020-09-30,Tongxiang,1,trend=none
+AIC selection of the ets structure,2020-04-01 to 2020-09-30,Xiuzhou,1,trend=none
+AIC selection of the ets structure,2020-04-01 to 2020-09-30,Nanhu,1,trend=none
+AIC selection of the mstl_arima structure,2020-04-01 to 2020-09-30,network,1,"ARIMA(2,0,1)+const"
+AIC selection of the mstl_arima structure,2020-04-01 to 2020-09-30,Tongxiang,1,"ARIMA(2,0,1)+const"
+AIC selection of the mstl_arima structure,2020-04-01 to 2020-09-30,Xiuzhou,1,"ARIMA(2,0,1)+const"
+AIC selection of the mstl_arima structure,2020-04-01 to 2020-09-30,Nanhu,1,"ARIMA(2,0,1)+const"
+coefficients of sarimax_cal,2020-04-01 to 2021-06-30,network,4,13
+coefficients of sarimax_cal,2020-04-01 to 2021-06-30,Tongxiang,4,13
+coefficients of sarimax_cal,2020-04-01 to 2021-06-30,Xiuzhou,4,13
+coefficients of sarimax_cal,2020-04-01 to 2021-06-30,Nanhu,4,13
+coefficients of sarimax_weather,2020-04-01 to 2021-06-30,network,4,14
+coefficients of sarimax_weather,2020-04-01 to 2021-06-30,Tongxiang,4,14
+coefficients of sarimax_weather,2020-04-01 to 2021-06-30,Xiuzhou,4,14
+coefficients of sarimax_weather,2020-04-01 to 2021-06-30,Nanhu,4,14
+coefficients of sarimax_cal,2020-04-01 to 2021-03-31,network,3,13
+coefficients of sarimax_cal,2020-04-01 to 2021-03-31,Tongxiang,3,13
+coefficients of sarimax_cal,2020-04-01 to 2021-03-31,Xiuzhou,3,13
+coefficients of sarimax_cal,2020-04-01 to 2021-03-31,Nanhu,3,13
+coefficients of sarimax_weather,2020-04-01 to 2021-03-31,network,3,14
+coefficients of sarimax_weather,2020-04-01 to 2021-03-31,Tongxiang,3,14
+coefficients of sarimax_weather,2020-04-01 to 2021-03-31,Xiuzhou,3,14
+coefficients of sarimax_weather,2020-04-01 to 2021-03-31,Nanhu,3,14
+coefficients of sarimax_cal,2020-04-01 to 2020-12-31,network,2,13
+coefficients of sarimax_cal,2020-04-01 to 2020-12-31,Tongxiang,2,13
+coefficients of sarimax_cal,2020-04-01 to 2020-12-31,Xiuzhou,2,13
+coefficients of sarimax_cal,2020-04-01 to 2020-12-31,Nanhu,2,13
+coefficients of sarimax_weather,2020-04-01 to 2020-12-31,network,2,14
+coefficients of sarimax_weather,2020-04-01 to 2020-12-31,Tongxiang,2,14
+coefficients of sarimax_weather,2020-04-01 to 2020-12-31,Xiuzhou,2,14
+coefficients of sarimax_weather,2020-04-01 to 2020-12-31,Nanhu,2,14
+coefficients of sarima,2020-04-01 to 2021-06-30,network,4,5
+coefficients of sarima,2020-04-01 to 2021-06-30,Tongxiang,4,5
+coefficients of sarima,2020-04-01 to 2021-06-30,Xiuzhou,4,5
+coefficients of sarima,2020-04-01 to 2021-06-30,Nanhu,4,5
+coefficients of sarima,2020-04-01 to 2021-03-31,network,3,5
+coefficients of sarima,2020-04-01 to 2021-03-31,Tongxiang,3,5
+coefficients of sarima,2020-04-01 to 2021-03-31,Xiuzhou,3,5
+coefficients of sarima,2020-04-01 to 2021-03-31,Nanhu,3,5
+coefficients of sarimax_cal,2020-04-01 to 2020-09-30,network,1,13
+coefficients of sarimax_cal,2020-04-01 to 2020-09-30,Tongxiang,1,13
+coefficients of sarimax_cal,2020-04-01 to 2020-09-30,Xiuzhou,1,13
+coefficients of sarimax_cal,2020-04-01 to 2020-09-30,Nanhu,1,13
+coefficients of sarimax_weather,2020-04-01 to 2020-09-30,network,1,14
+coefficients of sarimax_weather,2020-04-01 to 2020-09-30,Tongxiang,1,14
+coefficients of sarimax_weather,2020-04-01 to 2020-09-30,Xiuzhou,1,14
+coefficients of sarimax_weather,2020-04-01 to 2020-09-30,Nanhu,1,14
+coefficients of ets,2020-04-01 to 2021-06-30,network,4,26
+coefficients of ets,2020-04-01 to 2021-06-30,Tongxiang,4,26
+coefficients of ets,2020-04-01 to 2021-06-30,Xiuzhou,4,26
+coefficients of ets,2020-04-01 to 2021-06-30,Nanhu,4,26
+coefficients of sarima,2020-04-01 to 2020-12-31,network,2,5
+coefficients of sarima,2020-04-01 to 2020-12-31,Tongxiang,2,5
+coefficients of sarima,2020-04-01 to 2020-12-31,Xiuzhou,2,5
+coefficients of sarima,2020-04-01 to 2020-12-31,Nanhu,2,5
+coefficients of mstl_arima,2020-04-01 to 2021-06-30,network,4,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2021-06-30,network,4,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2021-06-30,Tongxiang,4,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2021-06-30,Tongxiang,4,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2021-06-30,Xiuzhou,4,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2021-06-30,Xiuzhou,4,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2021-06-30,Nanhu,4,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2021-06-30,Nanhu,4,seasonal part
+coefficients of ets,2020-04-01 to 2021-03-31,network,3,26
+coefficients of ets,2020-04-01 to 2021-03-31,Tongxiang,3,26
+coefficients of ets,2020-04-01 to 2021-03-31,Xiuzhou,3,26
+coefficients of ets,2020-04-01 to 2021-03-31,Nanhu,3,26
+coefficients of mstl_arima,2020-04-01 to 2021-03-31,network,3,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2021-03-31,network,3,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2021-03-31,Tongxiang,3,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2021-03-31,Tongxiang,3,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2021-03-31,Xiuzhou,3,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2021-03-31,Xiuzhou,3,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2021-03-31,Nanhu,3,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2021-03-31,Nanhu,3,seasonal part
+coefficients of ets,2020-04-01 to 2020-12-31,network,2,26
+coefficients of ets,2020-04-01 to 2020-12-31,Tongxiang,2,26
+coefficients of ets,2020-04-01 to 2020-12-31,Xiuzhou,2,26
+coefficients of ets,2020-04-01 to 2020-12-31,Nanhu,2,26
+coefficients of sarima,2020-04-01 to 2020-09-30,network,1,5
+coefficients of sarima,2020-04-01 to 2020-09-30,Tongxiang,1,5
+coefficients of sarima,2020-04-01 to 2020-09-30,Xiuzhou,1,5
+coefficients of sarima,2020-04-01 to 2020-09-30,Nanhu,1,5
+coefficients of mstl_arima,2020-04-01 to 2020-12-31,network,2,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2020-12-31,network,2,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2020-12-31,Tongxiang,2,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2020-12-31,Tongxiang,2,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2020-12-31,Xiuzhou,2,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2020-12-31,Xiuzhou,2,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2020-12-31,Nanhu,2,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2020-12-31,Nanhu,2,seasonal part
+coefficients of ets,2020-04-01 to 2020-09-30,network,1,26
+coefficients of ets,2020-04-01 to 2020-09-30,Tongxiang,1,26
+coefficients of ets,2020-04-01 to 2020-09-30,Xiuzhou,1,26
+coefficients of ets,2020-04-01 to 2020-09-30,Nanhu,1,26
+coefficients of mstl_arima,2020-04-01 to 2020-09-30,network,1,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2020-09-30,network,1,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2020-09-30,Tongxiang,1,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2020-09-30,Tongxiang,1,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2020-09-30,Xiuzhou,1,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2020-09-30,Xiuzhou,1,seasonal part
+coefficients of mstl_arima,2020-04-01 to 2020-09-30,Nanhu,1,5
+"MSTL decomposition, periods 24 and 168",2020-04-01 to 2020-09-30,Nanhu,1,seasonal part

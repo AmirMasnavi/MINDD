@@ -1,0 +1,866 @@
+{
+ "weather": {
+  "days": 548,
+  "min_district_corr": 0.9985,
+  "network_mean": 20.3,
+  "network_min": -3.03,
+  "network_max": 32.93
+ },
+ "transform": {
+  "network": {
+   "raw_ratio": 5.21,
+   "log_ratio": 2.02
+  },
+  "Tongxiang": {
+   "raw_ratio": 5.07,
+   "log_ratio": 1.49
+  },
+  "Xiuzhou": {
+   "raw_ratio": 4.52,
+   "log_ratio": 1.65
+  },
+  "Nanhu": {
+   "raw_ratio": 5.4,
+   "log_ratio": 1.62
+  }
+ },
+ "stationarity": {
+  "d": {
+   "network": 0,
+   "Tongxiang": 0,
+   "Xiuzhou": 0,
+   "Nanhu": 0
+  },
+  "acf_lag24_difference": {
+   "network": {
+    "1": 0.115,
+    "2": 0.056,
+    "24": -0.479,
+    "168": 0.006
+   },
+   "Tongxiang": {
+    "1": 0.104,
+    "2": 0.034,
+    "24": -0.484,
+    "168": 0.013
+   },
+   "Xiuzhou": {
+    "1": 0.093,
+    "2": 0.024,
+    "24": -0.508,
+    "168": 0.008
+   },
+   "Nanhu": {
+    "1": 0.076,
+    "2": 0.04,
+    "24": -0.491,
+    "168": 0.024
+   }
+  },
+  "table": [
+   {
+    "level": "network",
+    "series": "log series",
+    "adf_stat": -3.2176,
+    "adf_p": 0.019,
+    "kpss_stat": 8.9319,
+    "kpss_p": 0.01
+   },
+   {
+    "level": "network",
+    "series": "lag-24 difference",
+    "adf_stat": -14.3866,
+    "adf_p": 0.0,
+    "kpss_stat": 0.0309,
+    "kpss_p": 0.1
+   },
+   {
+    "level": "Tongxiang",
+    "series": "log series",
+    "adf_stat": -2.9527,
+    "adf_p": 0.0395,
+    "kpss_stat": 9.7015,
+    "kpss_p": 0.01
+   },
+   {
+    "level": "Tongxiang",
+    "series": "lag-24 difference",
+    "adf_stat": -15.2662,
+    "adf_p": 0.0,
+    "kpss_stat": 0.0479,
+    "kpss_p": 0.1
+   },
+   {
+    "level": "Xiuzhou",
+    "series": "log series",
+    "adf_stat": -5.7125,
+    "adf_p": 0.0,
+    "kpss_stat": 4.8611,
+    "kpss_p": 0.01
+   },
+   {
+    "level": "Xiuzhou",
+    "series": "lag-24 difference",
+    "adf_stat": -13.9615,
+    "adf_p": 0.0,
+    "kpss_stat": 0.0069,
+    "kpss_p": 0.1
+   },
+   {
+    "level": "Nanhu",
+    "series": "log series",
+    "adf_stat": -6.8017,
+    "adf_p": 0.0,
+    "kpss_stat": 4.1103,
+    "kpss_p": 0.01
+   },
+   {
+    "level": "Nanhu",
+    "series": "lag-24 difference",
+    "adf_stat": -15.1072,
+    "adf_p": 0.0,
+    "kpss_stat": 0.0062,
+    "kpss_p": 0.1
+   }
+  ]
+ },
+ "structures": {
+  "sarima|network": "(2,0,1)(0,1,1)24",
+  "sarima|Tongxiang": "(2,0,1)(0,1,1)24",
+  "sarima|Xiuzhou": "(2,0,1)(0,1,1)24",
+  "sarima|Nanhu": "(2,0,1)(0,1,1)24",
+  "ets|network": "trend=none",
+  "ets|Tongxiang": "trend=none",
+  "ets|Xiuzhou": "trend=none",
+  "ets|Nanhu": "trend=none",
+  "mstl_arima|network": "ARIMA(2,0,1)+const",
+  "mstl_arima|Tongxiang": "ARIMA(2,0,1)+const",
+  "mstl_arima|Xiuzhou": "ARIMA(2,0,1)+const",
+  "mstl_arima|Nanhu": "ARIMA(2,0,1)+const",
+  "sarimax_cal|network": "(2,0,1)(0,1,1)24",
+  "sarimax_weather|network": "(2,0,1)(0,1,1)24",
+  "sarimax_cal|Tongxiang": "(2,0,1)(0,1,1)24",
+  "sarimax_weather|Tongxiang": "(2,0,1)(0,1,1)24",
+  "sarimax_cal|Xiuzhou": "(2,0,1)(0,1,1)24",
+  "sarimax_weather|Xiuzhou": "(2,0,1)(0,1,1)24",
+  "sarimax_cal|Nanhu": "(2,0,1)(0,1,1)24",
+  "sarimax_weather|Nanhu": "(2,0,1)(0,1,1)24"
+ },
+ "aic_gap": {
+  "ets": {
+   "network": 3.2,
+   "Tongxiang": 6.0,
+   "Xiuzhou": 5.7,
+   "Nanhu": 5.8
+  },
+  "sarima": {
+   "network": 1.9,
+   "Tongxiang": 1.4,
+   "Xiuzhou": 0.2,
+   "Nanhu": 1.6
+  },
+  "mstl_arima": {
+   "network": 17.3,
+   "Tongxiang": 13.2,
+   "Xiuzhou": 35.8,
+   "Nanhu": 9.8
+  }
+ },
+ "perturbation_max_change": {
+  "ets": 0.0,
+  "sarima": 0.0,
+  "sarimax_cal": 0.0,
+  "sarimax_weather": 0.0,
+  "mstl_arima": 0.0
+ },
+ "ljung_box_p_max": {
+  "ets": 0.001064,
+  "sarima": 0.564982,
+  "sarimax_cal": 0.496461,
+  "sarimax_weather": 0.388912,
+  "mstl_arima": 0.0
+ },
+ "residual_acf": {
+  "ets": {
+   "network": {
+    "24": 0.002,
+    "168": 0.018
+   },
+   "Tongxiang": {
+    "24": 0.021,
+    "168": 0.015
+   },
+   "Xiuzhou": {
+    "24": -0.007,
+    "168": 0.003
+   },
+   "Nanhu": {
+    "24": 0.011,
+    "168": 0.033
+   }
+  },
+  "sarima": {
+   "network": {
+    "24": 0.001,
+    "168": 0.016
+   },
+   "Tongxiang": {
+    "24": 0.02,
+    "168": 0.015
+   },
+   "Xiuzhou": {
+    "24": -0.01,
+    "168": 0.003
+   },
+   "Nanhu": {
+    "24": 0.006,
+    "168": 0.028
+   }
+  },
+  "sarimax_cal": {
+   "network": {
+    "24": -0.002,
+    "168": 0.014
+   },
+   "Tongxiang": {
+    "24": 0.019,
+    "168": 0.013
+   },
+   "Xiuzhou": {
+    "24": -0.009,
+    "168": 0.001
+   },
+   "Nanhu": {
+    "24": 0.006,
+    "168": 0.027
+   }
+  },
+  "sarimax_weather": {
+   "network": {
+    "24": -0.003,
+    "168": 0.014
+   },
+   "Tongxiang": {
+    "24": 0.02,
+    "168": 0.014
+   },
+   "Xiuzhou": {
+    "24": -0.008,
+    "168": 0.002
+   },
+   "Nanhu": {
+    "24": 0.006,
+    "168": 0.027
+   }
+  },
+  "mstl_arima": {
+   "network": {
+    "24": -0.263,
+    "168": -0.148
+   },
+   "Tongxiang": {
+    "24": -0.245,
+    "168": -0.164
+   },
+   "Xiuzhou": {
+    "24": -0.265,
+    "168": -0.163
+   },
+   "Nanhu": {
+    "24": -0.259,
+    "168": -0.154
+   }
+  }
+ },
+ "residual_group_mean": {
+  "ets": {
+   "day 06-23": 0.002,
+   "holiday": -0.0018,
+   "night 00-05": 0.0036,
+   "normal weekday": 0.0033
+  },
+  "sarima": {
+   "day 06-23": 0.0053,
+   "holiday": 0.0214,
+   "night 00-05": 0.0056,
+   "normal weekday": 0.004
+  },
+  "sarimax_cal": {
+   "day 06-23": 0.0052,
+   "holiday": -0.0105,
+   "night 00-05": 0.0056,
+   "normal weekday": 0.0065
+  },
+  "sarimax_weather": {
+   "day 06-23": 0.0048,
+   "holiday": -0.0121,
+   "night 00-05": 0.0054,
+   "normal weekday": 0.006
+  },
+  "mstl_arima": {
+   "day 06-23": 0.0031,
+   "holiday": -0.0087,
+   "night 00-05": 0.0028,
+   "normal weekday": 0.0038
+  }
+ },
+ "primary_score": {
+  "ets": 0.7557,
+  "mean_4w": 0.8691,
+  "mstl_arima": 0.9097,
+  "sarima": 0.7544,
+  "sarimax_cal": 0.7536,
+  "sarimax_weather": 0.7616,
+  "snaive_day": 0.9999,
+  "snaive_week": 1.0474
+ },
+ "primary_score_per_fold": {
+  "ets": {
+   "1": 0.7719,
+   "2": 0.6194,
+   "3": 0.752,
+   "4": 0.8793
+  },
+  "mean_4w": {
+   "1": 0.8539,
+   "2": 0.7816,
+   "3": 0.8287,
+   "4": 1.0122
+  },
+  "mstl_arima": {
+   "1": 0.8962,
+   "2": 0.7426,
+   "3": 0.893,
+   "4": 1.1067
+  },
+  "sarima": {
+   "1": 0.7682,
+   "2": 0.6134,
+   "3": 0.7543,
+   "4": 0.8816
+  },
+  "sarimax_cal": {
+   "1": 0.7679,
+   "2": 0.6189,
+   "3": 0.7432,
+   "4": 0.8843
+  },
+  "sarimax_weather": {
+   "1": 0.7976,
+   "2": 0.619,
+   "3": 0.7452,
+   "4": 0.8845
+  },
+  "snaive_day": {
+   "1": 1.0065,
+   "2": 0.8274,
+   "3": 0.9986,
+   "4": 1.167
+  },
+  "snaive_week": {
+   "1": 1.0664,
+   "2": 0.8598,
+   "3": 1.0477,
+   "4": 1.2158
+  }
+ },
+ "mase_per_level": {
+  "ets": {
+   "network": 0.7829,
+   "Tongxiang": 0.7837,
+   "Xiuzhou": 0.8392,
+   "Nanhu": 0.6169
+  },
+  "mean_4w": {
+   "network": 0.9159,
+   "Tongxiang": 0.9261,
+   "Xiuzhou": 0.9398,
+   "Nanhu": 0.6947
+  },
+  "mstl_arima": {
+   "network": 0.924,
+   "Tongxiang": 0.9386,
+   "Xiuzhou": 1.0124,
+   "Nanhu": 0.7636
+  },
+  "sarima": {
+   "network": 0.7776,
+   "Tongxiang": 0.7818,
+   "Xiuzhou": 0.8392,
+   "Nanhu": 0.6189
+  },
+  "sarimax_cal": {
+   "network": 0.7759,
+   "Tongxiang": 0.7826,
+   "Xiuzhou": 0.8365,
+   "Nanhu": 0.6193
+  },
+  "sarimax_weather": {
+   "network": 0.787,
+   "Tongxiang": 0.7931,
+   "Xiuzhou": 0.8434,
+   "Nanhu": 0.6227
+  },
+  "snaive_day": {
+   "network": 1.022,
+   "Tongxiang": 1.0333,
+   "Xiuzhou": 1.1299,
+   "Nanhu": 0.8143
+  },
+  "snaive_week": {
+   "network": 1.0957,
+   "Tongxiang": 1.1114,
+   "Xiuzhou": 1.1583,
+   "Nanhu": 0.8243
+  }
+ },
+ "mae_per_level": {
+  "ets": {
+   "network": 5.468,
+   "Tongxiang": 3.441,
+   "Xiuzhou": 3.24,
+   "Nanhu": 1.718
+  },
+  "mean_4w": {
+   "network": 6.4,
+   "Tongxiang": 4.071,
+   "Xiuzhou": 3.627,
+   "Nanhu": 1.936
+  },
+  "mstl_arima": {
+   "network": 6.451,
+   "Tongxiang": 4.122,
+   "Xiuzhou": 3.91,
+   "Nanhu": 2.122
+  },
+  "sarima": {
+   "network": 5.431,
+   "Tongxiang": 3.433,
+   "Xiuzhou": 3.239,
+   "Nanhu": 1.723
+  },
+  "sarimax_cal": {
+   "network": 5.419,
+   "Tongxiang": 3.437,
+   "Xiuzhou": 3.229,
+   "Nanhu": 1.724
+  },
+  "sarimax_weather": {
+   "network": 5.498,
+   "Tongxiang": 3.482,
+   "Xiuzhou": 3.256,
+   "Nanhu": 1.734
+  },
+  "snaive_day": {
+   "network": 7.137,
+   "Tongxiang": 4.538,
+   "Xiuzhou": 4.361,
+   "Nanhu": 2.27
+  },
+  "snaive_week": {
+   "network": 7.652,
+   "Tongxiang": 4.88,
+   "Xiuzhou": 4.471,
+   "Nanhu": 2.297
+  }
+ },
+ "rmse_per_level": {
+  "ets": {
+   "network": 7.121,
+   "Tongxiang": 4.481,
+   "Xiuzhou": 4.296,
+   "Nanhu": 2.302
+  },
+  "mean_4w": {
+   "network": 8.223,
+   "Tongxiang": 5.174,
+   "Xiuzhou": 4.698,
+   "Nanhu": 2.536
+  },
+  "mstl_arima": {
+   "network": 8.318,
+   "Tongxiang": 5.313,
+   "Xiuzhou": 5.07,
+   "Nanhu": 2.763
+  },
+  "sarima": {
+   "network": 7.064,
+   "Tongxiang": 4.473,
+   "Xiuzhou": 4.312,
+   "Nanhu": 2.312
+  },
+  "sarimax_cal": {
+   "network": 7.062,
+   "Tongxiang": 4.48,
+   "Xiuzhou": 4.296,
+   "Nanhu": 2.31
+  },
+  "sarimax_weather": {
+   "network": 7.196,
+   "Tongxiang": 4.553,
+   "Xiuzhou": 4.339,
+   "Nanhu": 2.328
+  },
+  "snaive_day": {
+   "network": 9.203,
+   "Tongxiang": 5.887,
+   "Xiuzhou": 5.673,
+   "Nanhu": 3.016
+  },
+  "snaive_week": {
+   "network": 9.85,
+   "Tongxiang": 6.29,
+   "Xiuzhou": 5.799,
+   "Nanhu": 3.068
+  }
+ },
+ "cells_beating_mean_4w": {
+  "ets": 16,
+  "sarima": 16,
+  "sarimax_cal": 16,
+  "sarimax_weather": 16,
+  "mstl_arima": 2
+ },
+ "clipped_forecasts": {
+  "ets": 3,
+  "sarima": 0,
+  "sarimax_cal": 1,
+  "sarimax_weather": 4,
+  "mstl_arima": 392
+ },
+ "missing_cells": {
+  "ets": 0,
+  "sarima": 0,
+  "sarimax_cal": 0,
+  "sarimax_weather": 0,
+  "mstl_arima": 0
+ },
+ "mase_by_day_type": {
+  "ets": {
+   "normal weekday": 0.746,
+   "weekend": 0.756,
+   "holiday": 0.8602,
+   "adjusted working day": 0.7316
+  },
+  "sarima": {
+   "normal weekday": 0.7462,
+   "weekend": 0.7526,
+   "holiday": 0.8558,
+   "adjusted working day": 0.7373
+  },
+  "sarimax_cal": {
+   "normal weekday": 0.7441,
+   "weekend": 0.7493,
+   "holiday": 0.8597,
+   "adjusted working day": 0.7535
+  },
+  "sarimax_weather": {
+   "normal weekday": 0.755,
+   "weekend": 0.7528,
+   "holiday": 0.8604,
+   "adjusted working day": 0.7548
+  },
+  "mstl_arima": {
+   "normal weekday": 0.9036,
+   "weekend": 0.8929,
+   "holiday": 1.0426,
+   "adjusted working day": 0.8951
+  },
+  "mean_4w": {
+   "normal weekday": 0.8648,
+   "weekend": 0.8438,
+   "holiday": 0.9848,
+   "adjusted working day": 0.8906
+  }
+ },
+ "mase_by_month": {
+  "ets": {
+   "2020-10": 0.7354,
+   "2020-11": 0.7757,
+   "2020-12": 0.8048,
+   "2021-01": 0.7108,
+   "2021-02": 0.5523,
+   "2021-03": 0.5887,
+   "2021-04": 0.6882,
+   "2021-05": 0.7855,
+   "2021-06": 0.7812,
+   "2021-07": 0.8319,
+   "2021-08": 0.8381,
+   "2021-09": 0.9709
+  },
+  "sarima": {
+   "2020-10": 0.7329,
+   "2020-11": 0.7729,
+   "2020-12": 0.799,
+   "2021-01": 0.6918,
+   "2021-02": 0.5538,
+   "2021-03": 0.5888,
+   "2021-04": 0.694,
+   "2021-05": 0.7863,
+   "2021-06": 0.7816,
+   "2021-07": 0.8384,
+   "2021-08": 0.8344,
+   "2021-09": 0.975
+  },
+  "sarimax_cal": {
+   "2020-10": 0.7341,
+   "2020-11": 0.7705,
+   "2020-12": 0.7993,
+   "2021-01": 0.7012,
+   "2021-02": 0.5571,
+   "2021-03": 0.5923,
+   "2021-04": 0.6795,
+   "2021-05": 0.7741,
+   "2021-06": 0.7749,
+   "2021-07": 0.8446,
+   "2021-08": 0.8358,
+   "2021-09": 0.9755
+  },
+  "sarimax_weather": {
+   "2020-10": 0.7449,
+   "2020-11": 0.7998,
+   "2020-12": 0.8479,
+   "2021-01": 0.7019,
+   "2021-02": 0.5572,
+   "2021-03": 0.5919,
+   "2021-04": 0.6806,
+   "2021-05": 0.7769,
+   "2021-06": 0.7769,
+   "2021-07": 0.8447,
+   "2021-08": 0.8357,
+   "2021-09": 0.976
+  },
+  "mstl_arima": {
+   "2020-10": 0.8612,
+   "2020-11": 0.894,
+   "2020-12": 0.9335,
+   "2021-01": 0.8387,
+   "2021-02": 0.6502,
+   "2021-03": 0.7301,
+   "2021-04": 0.8172,
+   "2021-05": 0.9316,
+   "2021-06": 0.9289,
+   "2021-07": 1.0341,
+   "2021-08": 1.0283,
+   "2021-09": 1.2629
+  },
+  "mean_4w": {
+   "2020-10": 0.8165,
+   "2020-11": 0.8463,
+   "2020-12": 0.8987,
+   "2021-01": 0.8997,
+   "2021-02": 0.7677,
+   "2021-03": 0.676,
+   "2021-04": 0.7669,
+   "2021-05": 0.8623,
+   "2021-06": 0.8558,
+   "2021-07": 0.977,
+   "2021-08": 0.9509,
+   "2021-09": 1.1119
+  }
+ },
+ "mase_by_horizon": {
+  "ets": {
+   "1": 0.6211,
+   "2": 0.4668,
+   "3": 0.3858,
+   "4": 0.3505,
+   "5": 0.3175,
+   "6": 0.3156,
+   "7": 0.3823,
+   "8": 0.4525,
+   "9": 0.5729,
+   "10": 0.78,
+   "11": 0.8514,
+   "12": 1.0283,
+   "13": 1.0827,
+   "14": 1.0654,
+   "15": 1.0605,
+   "16": 1.0976,
+   "17": 1.0686,
+   "18": 0.9419,
+   "19": 0.9432,
+   "20": 0.9762,
+   "21": 0.8754,
+   "22": 0.8187,
+   "23": 0.9064,
+   "24": 0.7752
+  },
+  "sarima": {
+   "1": 0.6191,
+   "2": 0.4694,
+   "3": 0.3861,
+   "4": 0.3502,
+   "5": 0.3167,
+   "6": 0.3158,
+   "7": 0.3841,
+   "8": 0.4535,
+   "9": 0.5732,
+   "10": 0.7793,
+   "11": 0.8462,
+   "12": 1.0259,
+   "13": 1.0839,
+   "14": 1.0656,
+   "15": 1.0501,
+   "16": 1.0919,
+   "17": 1.0703,
+   "18": 0.9393,
+   "19": 0.942,
+   "20": 0.972,
+   "21": 0.8705,
+   "22": 0.8134,
+   "23": 0.9102,
+   "24": 0.7765
+  },
+  "sarimax_cal": {
+   "1": 0.6151,
+   "2": 0.4683,
+   "3": 0.385,
+   "4": 0.3498,
+   "5": 0.3155,
+   "6": 0.3148,
+   "7": 0.3825,
+   "8": 0.4532,
+   "9": 0.572,
+   "10": 0.7802,
+   "11": 0.8465,
+   "12": 1.0363,
+   "13": 1.0889,
+   "14": 1.0568,
+   "15": 1.047,
+   "16": 1.0945,
+   "17": 1.0669,
+   "18": 0.9402,
+   "19": 0.9431,
+   "20": 0.9687,
+   "21": 0.8715,
+   "22": 0.8103,
+   "23": 0.9101,
+   "24": 0.7685
+  },
+  "sarimax_weather": {
+   "1": 0.6185,
+   "2": 0.4695,
+   "3": 0.3847,
+   "4": 0.3508,
+   "5": 0.3155,
+   "6": 0.3154,
+   "7": 0.384,
+   "8": 0.4561,
+   "9": 0.5752,
+   "10": 0.7878,
+   "11": 0.8567,
+   "12": 1.0451,
+   "13": 1.1019,
+   "14": 1.0739,
+   "15": 1.0563,
+   "16": 1.1138,
+   "17": 1.082,
+   "18": 0.9508,
+   "19": 0.9588,
+   "20": 0.9832,
+   "21": 0.8808,
+   "22": 0.8219,
+   "23": 0.9192,
+   "24": 0.7752
+  },
+  "mstl_arima": {
+   "1": 0.7152,
+   "2": 0.5216,
+   "3": 0.444,
+   "4": 0.4007,
+   "5": 0.3835,
+   "6": 0.3648,
+   "7": 0.4704,
+   "8": 0.5553,
+   "9": 0.6744,
+   "10": 1.0207,
+   "11": 1.0584,
+   "12": 1.2686,
+   "13": 1.2129,
+   "14": 1.2966,
+   "15": 1.3329,
+   "16": 1.3181,
+   "17": 1.2661,
+   "18": 1.1428,
+   "19": 1.1749,
+   "20": 1.1032,
+   "21": 1.0665,
+   "22": 0.9299,
+   "23": 1.0664,
+   "24": 1.0439
+  },
+  "mean_4w": {
+   "1": 0.7032,
+   "2": 0.5381,
+   "3": 0.4293,
+   "4": 0.3881,
+   "5": 0.355,
+   "6": 0.3568,
+   "7": 0.4438,
+   "8": 0.5177,
+   "9": 0.6418,
+   "10": 0.9475,
+   "11": 1.0001,
+   "12": 1.1743,
+   "13": 1.2528,
+   "14": 1.2372,
+   "15": 1.2248,
+   "16": 1.2796,
+   "17": 1.2316,
+   "18": 1.0616,
+   "19": 1.0931,
+   "20": 1.1334,
+   "21": 0.9872,
+   "22": 0.9244,
+   "23": 1.0569,
+   "24": 0.8805
+  }
+ },
+ "weather_effect": {
+  "primary_difference": 0.00798,
+  "fold_difference": {
+   "1": 0.02961,
+   "2": 0.00013,
+   "3": 0.00197,
+   "4": 0.0002
+  },
+  "cells_improved": 4,
+  "folds": {
+   "1": {
+    "train_min": 11.1667,
+    "train_max": 32.6667,
+    "valid_min": -3.0333,
+    "valid_max": 24.3,
+    "valid_days_below_train_min": 37,
+    "temperature_coef_network": 0.0196
+   },
+   "2": {
+    "train_min": -3.0333,
+    "train_max": 32.6667,
+    "valid_min": 0.5,
+    "valid_max": 19.6667,
+    "valid_days_below_train_min": 0,
+    "temperature_coef_network": -0.0001
+   },
+   "3": {
+    "train_min": -3.0333,
+    "train_max": 32.6667,
+    "valid_min": 12.9667,
+    "valid_max": 30.1333,
+    "valid_days_below_train_min": 0,
+    "temperature_coef_network": -0.0028
+   },
+   "4": {
+    "train_min": -3.0333,
+    "train_max": 32.6667,
+    "valid_min": 23.8333,
+    "valid_max": 32.9333,
+    "valid_days_below_train_min": 0,
+    "temperature_coef_network": -0.0004
+   }
+  }
+ },
+ "weather_kept": false,
+ "carried_forward": "sarimax_cal"
+}

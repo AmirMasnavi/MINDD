@@ -33,9 +33,9 @@ These come from the Task 1 specification (2026-11-18) and are written into the n
 
 | Deliverable | Content | Owner / reviewer | Status |
 | --- | --- | --- | --- |
-| `Task2.ipynb` | Task 1 inputs and scoring check, daily weather, shared modelling choices, structure selection on fold 1, fits and forecasts in four folds, residual diagnostics, comparison with the baselines, stability, weather effect and cost, synthesis | TBD / TBD | In progress since 2026-11-19 on `feature/task-2` |
-| `prepared/task2_*` | Structures, fits, scores (also by period), comparison, diagnostics, daily weather, results, run information, decision log (D15 to D25), ledger, Task 1 checksums, figures; `task2_forecasts.csv.gz` is regenerated and not committed | TBD / TBD | Not started |
-| Task 2 chapter in `docs/report/main.tex` and `docs/TASK2_REPORT.pdf` | Task 2 chapter before a rewritten Synthesis | TBD / TBD | Not started |
+| `Task2.ipynb` | Task 1 inputs and scoring check, daily weather, shared modelling choices, structure selection on fold 1, fits and forecasts in four folds, residual diagnostics, comparison with the baselines, stability, weather effect and cost, synthesis | TBD / TBD | Complete on 2026-11-20; runs in about 25 minutes on 16 workers, two runs give identical files |
+| `prepared/task2_*` | Structures, fits, scores (also by period), comparison, diagnostics, daily weather, results, run information, decision log (D15 to D25), ledger, Task 1 checksums, figures; `task2_forecasts.csv.gz` is regenerated and not committed | TBD / TBD | Generated on 2026-11-20 |
+| Task 2 chapter in `docs/report/main.tex` and `docs/TASK2_REPORT.pdf` | Task 2 chapter before a rewritten Synthesis | TBD / TBD | Complete on 2026-11-20; teammate review pending |
 
 ## Decisions fixed before the Task 2 modelling
 
